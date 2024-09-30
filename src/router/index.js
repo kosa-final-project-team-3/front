@@ -1,17 +1,12 @@
-import { createRouter } from 'vue-router';
-import LoginCompo from '@/components/login/LoginCompo.vue';
+import { createMemoryHistory, createRouter } from 'vue-router';
 
 const routes = [
     {
         path: '/',
-        name: 'Main',
-        component: LoginCompo,
-        children: [],
     },
 ];
-
 const router = createRouter({
+    history: createMemoryHistory(),
     routes,
 });
-
 export default router;
