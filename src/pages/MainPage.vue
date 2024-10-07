@@ -82,7 +82,6 @@ const handleLogout = () => {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
 }
 
@@ -94,18 +93,41 @@ const handleLogout = () => {
 
 .lesson-container {
     display: flex;
+    margin: 20px;
 }
 
 .lesson-type {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 100px;
     height: 100px;
     border-radius: 10px;
-    border: 1px solid black;
-    margin: 10px;
+    margin: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .lesson-icon {
     width: 50px;
     height: 50px;
+}
+
+.popular-lesson {
+    width: 80vw;
+}
+
+.lesson-list {
+    display: flex;
+    margin: 20px;
+    gap: 20px;
+    justify-content: center;
+}
+
+.lesson-item {
+    width: 400px;
+    height: 400px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 </style>

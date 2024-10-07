@@ -1,7 +1,7 @@
 <template>
     <header class="header">
         <div class="logo">
-            <h2>정도인</h2>
+            <img class="logo" src="../assets/logo.png" alt="정도인" />
         </div>
         <div class="navbar">
             <div class="left-nav">
@@ -24,9 +24,16 @@
     align-items: center;
 }
 
+.logo {
+    width: 80px;
+    height: 40px;
+}
+
 .navbar {
     display: flex;
     flex-grow: 1;
+    align-items: center;
+    text-align: center;
 }
 
 .left-nav {

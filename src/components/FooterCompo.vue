@@ -1,6 +1,6 @@
 <template>
     <footer class="footer">
-        <p class="copyright">&copy; 정도인. All rights reserved.</p>
+        <p class="copyright">&copy; 신박한이팀. All rights reserved.</p>
         <div class="support-links">
             <a href="#" @click.prevent="showUserAgreementModal"
                 >이용약관<br /><span class="support-subtext">개인정보처리약관</span>
