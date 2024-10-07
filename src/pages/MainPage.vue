@@ -1,12 +1,42 @@
 <template>
-    <div>
-        <div v-if="!isAuthenticated">
-            <button type="button" @click="$router.push('/login')">로그인 페이지로 이동</button><br />
+    <div class="base-container">
+        <header-compo />
+        <div class="main">
+            <div v-if="!isAuthenticated">
+                <button type="button" @click="$router.push('/login')">로그인 페이지로 이동</button><br />
+            </div>
+            <div v-if="isAuthenticated"><button type="button" @click="handleLogout()">로그아웃</button><br /></div>
+            <button type="button" @click="accessPrivateResource()">access private resource</button><br />
+            <button type="button" @click="$router.replace('/feedback/ai')">AI 피드백</button><br />
+            <button type="button" @click="$router.replace('/trainerpage')">트레이너 페이지</button><br />
+
+            <div class="banner">
+                <img class="banner-ad" src="../assets/banner-ad.jpg" alt="배너 광고" />
+            </div>
+            <div class="lesson-container">
+                <div class="lesson-type">
+                    <img src="../assets/personal-icon.png" alt="개인 레슨 아이콘" class="lesson-icon" />개인 레슨
+                </div>
+                <div class="lesson-type">
+                    <img src="../assets/group-icon.png" alt="그룹 레슨 아이콘" class="lesson-icon" />그룹 레슨
+                </div>
+                <div class="lesson-type">
+                    <img src="../assets/online-icon.png" alt="온라인 레슨 아이콘" class="lesson-icon" />온라인 레슨
+                </div>
+                <div class="lesson-type">
+                    <img src="../assets/ai-icon.png" alt="AI 피드백 아이콘" class="lesson-icon" />AI 피드백
+                </div>
+            </div>
+            <div class="popular-lesson">
+                <h2>지금 가장 인기 있는 레슨</h2>
+                <div class="lesson-list">
+                    <div class="lesson-item">레슨1</div>
+                    <div class="lesson-item">레슨2</div>
+                    <div class="lesson-item">레슨3</div>
+                </div>
+            </div>
         </div>
-        <div v-if="isAuthenticated"><button type="button" @click="handleLogout()">로그아웃</button><br /></div>
-        <button type="button" @click="accessPrivateResource()">access private resource</button><br />
-        <button type="button" @click="$router.replace('/feedback/ai')">AI 피드백</button><br />
-        <button type="button" @click="$router.replace('/trainerpage')">트레이너 페이지</button><br />
+        <footer-compo />
     </div>
 </template>
 
@@ -14,6 +44,8 @@
 import { computed } from 'vue';
 import { useAuthStore } from '../stores/authStore';
 import jwtAxios from '../util/jwtUtil';
+import HeaderCompo from '../components/HeaderCompo.vue';
+import FooterCompo from '../components/FooterCompo.vue';
 
 const host = import.meta.env.VITE_APP_HOST;
 const authStore = useAuthStore();
@@ -39,4 +71,41 @@ const handleLogout = () => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.base-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.banner-ad {
+    width: 80vw;
+    height: 40vh;
+    border-radius: 10px;
+}
+
+.lesson-container {
+    display: flex;
+}
+
+.lesson-type {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    border: 1px solid black;
+    margin: 10px;
+}
+
+.lesson-icon {
+    width: 50px;
+    height: 50px;
+}
+</style>
