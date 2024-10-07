@@ -51,8 +51,28 @@ const enableWebcam = async () => {
         return;
     }
 
+    // 사용 가능한 비디오 입력 장치 나열
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const videoDevices = devices.filter((device) => device.kind === 'videoinput');
+
+    // 웹캠 카메라
+    const selectedDeviceId = videoDevices[0]?.deviceId;
+
+    // USB 웹캠
+    // const selectedDeviceId = videoDevices[1]?.deviceId;
+
+    if (!selectedDeviceId) {
+        console.log('사용 가능한 비디오 장치가 없습니다.');
+        return;
+    }
+
     // getUserMedia를 이용하여 웹캠 스트림 요청
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    // const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+
+    // 선택된 비디오 장치를 사용하여 웹캠 스트림 요청
+    const stream = await navigator.mediaDevices.getUserMedia({
+        video: { deviceId: selectedDeviceId },
+    });
     video.value.srcObject = stream;
 
     // 웹캠 데이터가 로드된 후 예측 시작
@@ -80,41 +100,52 @@ const renderLoop = async () => {
     requestAnimationFrame(renderLoop);
 };
 
+let isSquat = false;
 // 포즈 감지 결과를 처리하는 함수
 const processResults = (results) => {
     // 랜드마크와 월드 랜드마크를 콘솔에 출력
     if (results.landmarks) {
-        console.log('PoseLandmarkerResult:');
-        console.log('  Landmarks:');
-
         // 각 포즈의 33개의 랜드마크를 출력
-        results.landmarks.forEach((landmarkList, poseIndex) => {
-            landmarkList.forEach((landmark, index) => {
-                console.log(`    Landmark #${index}:`);
-                console.log(`      x            : ${landmark.x}`);
-                console.log(`      y            : ${landmark.y}`);
-                console.log(`      z            : ${landmark.z}`);
-                console.log(`      visibility   : ${landmark.visibility}`);
-                console.log(`      presence     : ${landmark.presence}`);
-            });
+        results.landmarks.forEach((landmarkList) => {
+            console.log(landmarkList.RIGHT_SHOULDER);
+            console.log(landmarkList);
+
+            // 최소 신뢰도 체크
+            const isReliable = landmarkList.every((landmark) => landmark.visibility >= 0.5);
+
+            if (isReliable) {
+                // 오른쪽 어깨, 엉덩이, 무릎의 인덱스
+                const rightShoulder = landmarkList[12];
+                const rightHip = landmarkList[24];
+                const rightKnee = landmarkList[26];
+
+                // 각도 계산
+                const angle = calculateAngle(rightShoulder, rightHip, rightKnee);
+                console.log(`Calculated Angle: ${angle}`);
+
+                // 각도가 70도 이하인 경우
+                if (angle <= 70 && angle >= 50) {
+                    console.log('Angle is greater than or equal to 70 degrees.');
+                    alert('올바른 자세입니다.');
+                    isSquat = true;
+                } else {
+                }
+            }
         });
     }
+};
 
-    if (results.worldLandmarks) {
-        console.log('  WorldLandmarks:');
+// 두 점 사이의 각도를 계산하는 함수
+const calculateAngle = (pointA, pointB, pointC) => {
+    const vectorAB = { x: pointB.x - pointA.x, y: pointB.y - pointA.y };
+    const vectorBC = { x: pointC.x - pointB.x, y: pointC.y - pointB.y };
 
-        // 각 포즈의 33개의 월드 랜드마크를 출력
-        results.worldLandmarks.forEach((worldLandmarkList, poseIndex) => {
-            worldLandmarkList.forEach((landmark, index) => {
-                console.log(`    Landmark #${index}:`);
-                console.log(`      x            : ${landmark.x}`);
-                console.log(`      y            : ${landmark.y}`);
-                console.log(`      z            : ${landmark.z}`);
-                console.log(`      visibility   : ${landmark.visibility}`);
-                console.log(`      presence     : ${landmark.presence}`);
-            });
-        });
-    }
+    const dotProduct = vectorAB.x * vectorBC.x + vectorAB.y * vectorBC.y;
+    const magnitudeAB = Math.sqrt(vectorAB.x ** 2 + vectorAB.y ** 2);
+    const magnitudeBC = Math.sqrt(vectorBC.x ** 2 + vectorBC.y ** 2);
+
+    const angle = Math.acos(dotProduct / (magnitudeAB * magnitudeBC));
+    return (angle * 180) / Math.PI; // 라디안을 각도로 변환
 };
 
 // 웹캠 예측 함수
