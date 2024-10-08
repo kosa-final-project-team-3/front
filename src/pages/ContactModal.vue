@@ -1,9 +1,9 @@
 <template>
-    <div class="contact-content">
+    <div class="contact-container">
         <h2>Contact Us</h2>
         <form @submit.prevent="submitForm">
-            <label for="name">이름:</label>
-            <input type="text" id="name" v-model="name" required />
+            <label for="title">제목:</label>
+            <input type="text" id="title" v-model="title" required />
 
             <label for="email">이메일:</label>
             <input type="email" id="email" v-model="email" required />
@@ -17,18 +17,17 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits } from 'vue';
+import { ref, defineEmits } from 'vue';
 
-const props = defineProps(['title']);
 const emit = defineEmits(['close']);
 
-const name = ref('');
+const title = ref('');
 const email = ref('');
 const message = ref('');
 
 const submitForm = () => {
     console.log('폼 데이터:', {
-        name: name.value,
+        title: title.value,
         email: email.value,
         message: message.value,
     });
@@ -43,16 +42,11 @@ body {
     background-color: #f9f9f9;
 }
 
-.contact-content {
+.contact-container {
     padding: 30px;
     max-width: 500px;
     margin: auto;
     margin-top: 50px;
-}
-
-h2 {
-    text-align: center;
-    color: #333;
 }
 
 form {
@@ -61,29 +55,36 @@ form {
 }
 
 form label {
-    margin-top: 15px;
+    margin-top: 20px;
     font-weight: bold;
 }
 
-form input,
+form input {
+    padding: 10px;
+    margin-top: 5px;
+    border: none;
+    outline: none;
+    border-bottom: 2px solid #ccc;
+    transition: border-color 0.3s;
+}
+
 form textarea {
     padding: 10px;
     margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 2px solid #ccc;
+    height: 100px;
     transition: border-color 0.3s;
 }
 
 form input:focus,
 form textarea:focus {
-    border-color: #28a745;
-    outline: none;
+    border-color: black;
 }
 
 .submit-btn {
     margin-top: 20px;
     padding: 10px;
-    background-color: #28a745;
+    background-color: black;
     color: white;
     border: none;
     border-radius: 4px;
@@ -92,6 +93,6 @@ form textarea:focus {
 }
 
 .submit-btn:hover {
-    background-color: #218838;
+    background-color: #4f4f4f;
 }
 </style>

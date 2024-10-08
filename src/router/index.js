@@ -1,6 +1,7 @@
 import { createWebHistory, createRouter } from 'vue-router';
 import MainPage from '../pages/MainPage.vue';
 import loginRoutes from './loginRoutes';
+import HomePage from '../pages/HomePage.vue';
 import TrainerPage from '../components/TrainerPage.vue';
 import Room from '../components/Room.vue';
 import OnlineFeedbackForm from '../pages/OnlineFeedbackForm.vue';
@@ -11,6 +12,18 @@ const routes = [
     {
         path: '/',
         component: MainPage,
+        children: [
+            {
+                path: '',
+                name: 'HomePage',
+                component: HomePage,
+            },
+            {
+                path: '/onlinefeedbackform',
+                name: 'OnlineFeedbackForm',
+                component: OnlineFeedbackForm,
+            },
+        ],
     },
     {
         path: '/trainerpage',
@@ -22,11 +35,6 @@ const routes = [
         name: 'Room',
         component: Room,
         props: true,
-    },
-    {
-        path: '/onlinefeedbackform',
-        name: 'OnlineFeedbackForm',
-        component: OnlineFeedbackForm,
     },
     {
         path: '/useragreement',

@@ -1,181 +1,193 @@
 <template>
-    <div id="app">
-        <header class="header">
-            <div class="logo">
-                <h2>정도인</h2>
-            </div>
-            <nav class="navbar">
-                <ul>
-                    <li><a href="#">홈</a></li>
-                    <li><a href="#">운동 정보</a></li>
-                    <li><a href="#">피트니스 서비스</a></li>
-                    <li><a href="#">회원가입</a></li>
-                    <li><a href="#">블로그</a></li>
-                </ul>
-            </nav>
-        </header>
-        <main class="main-content">
-            <div class="feedback-container">
-                <h1>피드백</h1>
-                <textarea v-model="question" placeholder="Ask a question..."></textarea>
-                <button class="generate-button" @click="getFeedback">제출하기</button>
-                <div v-if="feedback">
-                    <h2>Response:</h2>
-                    <p>{{ feedback }}</p>
+    <div class="feedback-response-container">
+        <div class="content-wrapper">
+            <!-- 왼쪽: 요청자 및 운동 정보, 동영상 -->
+            <div class="left-section">
+                <!-- 요청자 정보 카드 -->
+                <div class="info-card">
+                    <p>
+                        <strong>{{ requesterName }}</strong>
+                    </p>
+                    <p>{{ requestTitle }}</p>
+                    <p>{{ requestContent }}</p>
+                    <p class="expiry-date">{{ feedbackExpiryDate }}</p>
+                </div>
+
+                <!-- 운동 동영상 표시 (크기 확대) -->
+                <div class="video-section" v-if="videoUrl">
+                    <video :src="videoUrl" controls></video>
                 </div>
             </div>
-        </main>
-        <footer class="footer">
-            <p class="copyright">&copy; . All rights reserved.</p>
-            <ul class="support-links">
-                <li>
-                    <a href="#">이용약관<br /><span class="support-subtext">개인정보처리약관</span></a>
-                </li>
-                <li>
-                    <ContactModal
-                        :isVisible="isContactModalVisible"
-                        @close="closeModal"
-                        title="문의하기"
-                    ></ContactModal>
-                    <a href="#" @click.prevent="showContactModal"
-                        >고객지원<br /><span class="support-subtext">문의하기</span></a
-                    >
-                </li>
-            </ul>
-        </footer>
+
+            <!-- 오른쪽: 피드백 작성 섹션 -->
+            <div class="right-section">
+                <!-- 피드백 입력란 -->
+                <textarea v-model="feedbackText" placeholder="피드백을 입력하세요..." rows="6"></textarea>
+
+                <!-- AI 초안 작성 버튼 -->
+                <button class="ai-button" @click="generateAIFeedback">AI 초안 작성</button>
+
+                <!-- 피드백 제출 버튼 -->
+                <button class="submit-button" @click="submitFeedback">피드백 제출</button>
+            </div>
+        </div>
+
+        <!-- 피드백 제출 완료 메시지 -->
+        <div v-if="isFeedbackSubmitted" class="confirmation-message">
+            <p>피드백이 성공적으로 제출되었습니다!</p>
+        </div>
     </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import ContactModal from './ContactModal.vue';
 
-const isModalVisible = ref(false);
-const isContactModalVisible = ref(false);
+// 요청받은 피드백 관련 정보
+const requesterName = ref('홍길동'); // 요청자의 이름
+const requestTitle = ref('운동 피드백 요청 제목'); // 요청 제목
+const requestContent = ref('운동에 대한 구체적인 요청 내용'); // 요청 내용
+const feedbackExpiryDate = ref('2024-10-15'); // 피드백 만료 일자
+const videoUrl = ref('https://www.example.com/sample-video.mp4'); // 운동 동영상 URL
 
-const showTerms = () => {
-    isModalVisible.value = true; // 모달을 열어줌
+// 피드백 작성 및 제출 상태
+const feedbackText = ref('');
+const isFeedbackSubmitted = ref(false);
+
+// 피드백 제출 함수
+const submitFeedback = () => {
+    if (!feedbackText.value.trim()) {
+        alert('피드백을 입력해주세요.');
+        return;
+    }
+    isFeedbackSubmitted.value = true;
+    feedbackText.value = ''; // 입력란 초기화
 };
 
-const showContactModal = () => {
-    isContactModalVisible.value = true; // 문의하기 모달 열기
-};
-
-const closeModal = () => {
-    isModalVisible.value = false; // 이용약관 모달 닫기
-    isContactModalVisible.value = false; // 문의하기 모달 닫기
+// AI 초안 작성 함수
+const generateAIFeedback = () => {
+    feedbackText.value = 'AI가 자동으로 작성한 피드백입니다.';
 };
 </script>
 
 <style scoped>
-html,
-body {
-    height: 100%;
-    margin: 0;
+/* 전체 레이아웃 */
+.feedback-response-container {
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: row; /* 왼쪽과 오른쪽으로 구분 */
+    gap: 30px;
 }
 
-#app {
+/* 왼쪽 섹션 (요청자 및 동영상) */
+.left-section {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    height: 100vh;
 }
 
-.header {
-    background-color: #faebd7;
+.info-card {
     padding: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.navbar ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-}
-
-.navbar li {
-    margin-left: 20px;
-}
-
-.navbar a {
-    color: black;
-    text-decoration: none;
-}
-
-.main-content {
-    flex-grow: 1;
-    padding: 40px;
-    text-align: center;
-}
-
-.intro h2 {
-    font-size: 2em;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
 }
 
-.services {
-    margin-top: 40px;
+.info-card p {
+    font-size: 16px;
+    color: #333;
+    margin: 8px 0;
 }
 
-.service-list {
-    display: flex;
-    justify-content: space-around;
+.video-section {
+    margin-bottom: 20px;
 }
 
-.service-item {
-    width: 30%;
-    background-color: #ecf0f1;
-    padding: 20px;
-    border-radius: 8px;
-}
-
-.footer {
-    background-color: #f0f0f0;
-    padding: 5px;
-    display: flex;
-    justify-content: space-between;
-    text-align: center;
-}
-
-.support-links {
-    display: flex;
-    margin: 20px;
-}
-
-.support-links li {
-    display: inline;
-    margin-right: 10px;
-}
-
-.support-links a {
-    color: black;
-    text-decoration: none;
-}
-
-.support-subtext {
-    display: block;
-    font-size: 0.8em;
-}
-
-.feedback-container {
-    width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-textarea {
+.video-section video {
     width: 100%;
-    height: 100px;
+    max-width: 100%;
+    height: 400px; /* 동영상 높이 고정 */
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 오른쪽 섹션 (피드백 입력) */
+.right-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.right-section textarea {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    resize: none;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
     margin-bottom: 10px;
 }
 
-.generate-button {
-    padding: 10px 20px;
-    background-color: #42b983;
+.right-section textarea:focus {
+    border-color: #4a90e2;
+}
+
+/* AI 초안 작성 버튼 */
+.ai-button {
+    padding: 12px 20px;
+    background-color: #4a90e2;
     color: white;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+}
+
+.ai-button:hover {
+    background-color: #357ab7;
+}
+
+/* 피드백 제출 버튼 */
+.submit-button {
+    padding: 12px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #218838;
+}
+
+/* 피드백 제출 완료 메시지 */
+.confirmation-message {
+    text-align: center;
+    font-size: 18px;
+    color: #4a90e2;
+    margin-top: 30px;
+}
+
+/* 피드백 만료일 스타일 */
+.expiry-date {
+    font-size: 14px;
+    color: #888;
 }
 </style>

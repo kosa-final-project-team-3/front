@@ -18,10 +18,11 @@
 <script setup></script>
 <style scoped>
 .header {
-    padding: 15px;
+    padding: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 15px;
 }
 
 .logo {
