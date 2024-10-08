@@ -3,16 +3,50 @@
         <p>AI 피드백 1001</p>
     </div>
 
-    <div>
+    <div class="container">
         <div style="position: relative">
             <video ref="video" width="640" height="480" autoplay playsinline></video>
             <canvas ref="canvas" width="640" height="480" style="position: absolute; top: 0; left: 0"></canvas>
+
+            <div v-if="isRunning" class="countdown-overlay">
+                <svg class="w-full h-full" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="20" fill="none" stroke="#e6e6e6" stroke-width="5" />
+                    <circle
+                        cx="50"
+                        cy="50"
+                        r="20"
+                        fill="none"
+                        stroke="#4a5568"
+                        stroke-width="5"
+                        :stroke-dasharray="circumference"
+                        :stroke-dashoffset="dashOffset"
+                        transform="rotate(-90 50 50)"
+                    />
+                    <text
+                        x="50"
+                        y="52"
+                        text-anchor="middle"
+                        dominant-baseline="central"
+                        font-size="24"
+                        font-weight="bold"
+                        fill="#4a5568"
+                    >
+                        {{ count }}
+                    </text>
+                </svg>
+            </div>
+        </div>
+
+        <div class="controls">
+            {{ duration }}
+            <input type="range" v-model="duration" min="7" max="30" :disabled="isRunning" />
+            <button @click="startCountdown" :disabled="isRunning" class="start-button">Start Countdown</button>
         </div>
     </div>
 </template>
 
 <script setup>
-import { onMounted, ref, onUnmounted } from 'vue';
+import { onMounted, ref, onUnmounted, computed } from 'vue';
 import { PoseLandmarker, FilesetResolver, DrawingUtils } from '@mediapipe/tasks-vision';
 
 const video = ref(null);
@@ -20,6 +54,33 @@ const canvas = ref(null);
 let poseLandmarker = null;
 let canvasCtx = null;
 let lastVideoTime = -1; // 마지막으로 처리된 비디오 시간
+
+const count = ref(7);
+const isRunning = ref(false);
+const duration = ref(7);
+const circumference = 2 * Math.PI * 20;
+
+const dashOffset = computed(() => {
+    const progress = (duration.value - count.value) / duration.value;
+    return circumference * (1 - progress);
+});
+
+const startCountdown = () => {
+    count.value = duration.value;
+    isRunning.value = true;
+    countdown();
+};
+
+const countdown = () => {
+    if (count.value > 0) {
+        setTimeout(() => {
+            count.value--;
+            countdown();
+        }, 1000);
+    } else {
+        isRunning.value = false;
+    }
+};
 
 // 컴포넌트가 마운트되면 poseLandmarker 모델을 불러옴
 onMounted(async () => {
@@ -55,7 +116,7 @@ const enableWebcam = async () => {
     const devices = await navigator.mediaDevices.enumerateDevices();
     const videoDevices = devices.filter((device) => device.kind === 'videoinput');
 
-    // 웹캠 카메라
+    // 노트북 카메라
     const selectedDeviceId = videoDevices[0]?.deviceId;
 
     // USB 웹캠
@@ -103,32 +164,65 @@ const renderLoop = async () => {
 let isSquat = false;
 // 포즈 감지 결과를 처리하는 함수
 const processResults = (results) => {
-    // 랜드마크와 월드 랜드마크를 콘솔에 출력
-    if (results.landmarks) {
-        // 각 포즈의 33개의 랜드마크를 출력
-        results.landmarks.forEach((landmarkList) => {
-            console.log(landmarkList.RIGHT_SHOULDER);
-            console.log(landmarkList);
+    // // 랜드마크와 월드 랜드마크를 콘솔에 출력
+    // if (results.landmarks) {
+    //     // 각 포즈의 33개의 랜드마크를 출력
+    //     results.landmarks.forEach((landmarkList) => {
+    //         console.log(landmarkList.RIGHT_SHOULDER);
+    //         console.log(landmarkList);
+    //         console.log(landmarkList.min_detection_confidence);
+
+    //         // 최소 신뢰도 체크
+    //         const isReliable = landmarkList.every((landmark) => landmark.visibility >= 0.5);
+
+    //         if (isReliable) {
+    //             // 오른쪽 어깨, 엉덩이, 무릎의 인덱스
+    //             const rightShoulder = landmarkList[12];
+    //             const rightHip = landmarkList[24];
+    //             const rightKnee = landmarkList[26];
+
+    //             // 각도 계산
+    //             const angle = calculateAngle(rightShoulder, rightHip, rightKnee);
+    //             console.log(`Calculated Angle: ${angle}`);
+
+    //             // 각도가 70도 이하인 경우
+    //             if (angle <= 70 && angle >= 50) {
+    //                 console.log('Angle is greater than or equal to 70 degrees.');
+    //                 alert('올바른 자세입니다.');
+    //                 isSquat = true;
+    //             } else {
+    //             }
+    //         }
+    //     });
+    // }
+
+    // 월드 랜드마크 값
+    if (results.worldLandmarks) {
+        // 각 포즈의 33개의 월드 랜드마크를 출력
+        results.worldLandmarks.forEach((worldLandmarkList) => {
+            const rightShoulder = worldLandmarkList[12];
+            const rightHip = worldLandmarkList[24];
+            const rightKnee = worldLandmarkList[26];
 
             // 최소 신뢰도 체크
-            const isReliable = landmarkList.every((landmark) => landmark.visibility >= 0.5);
+            const isReliable = worldLandmarkList.every((landmark) => landmark.visibility >= 0.5);
 
             if (isReliable) {
-                // 오른쪽 어깨, 엉덩이, 무릎의 인덱스
-                const rightShoulder = landmarkList[12];
-                const rightHip = landmarkList[24];
-                const rightKnee = landmarkList[26];
-
-                // 각도 계산
                 const angle = calculateAngle(rightShoulder, rightHip, rightKnee);
-                console.log(`Calculated Angle: ${angle}`);
 
                 // 각도가 70도 이하인 경우
                 if (angle <= 70 && angle >= 50) {
                     console.log('Angle is greater than or equal to 70 degrees.');
-                    alert('올바른 자세입니다.');
-                    isSquat = true;
-                } else {
+                    alert(
+                        `올바른 자세입니다.
+                        ${rightShoulder.x},
+                        ${rightHip.x},
+                        ${rightKnee.x},
+                        ${rightShoulder.y},
+                        ${rightHip.y},
+                        ${rightKnee.y},
+                        `,
+                    );
                 }
             }
         });
@@ -177,4 +271,40 @@ onUnmounted(() => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.countdown-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.start-button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    background-color: #4a5568;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+</style>
