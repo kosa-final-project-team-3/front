@@ -4,6 +4,7 @@ import loginRoutes from './loginRoutes';
 import HomePage from '../pages/HomePage.vue';
 import TrainerPage from '../components/TrainerPage.vue';
 import Room from '../components/Room.vue';
+import AIFeedback from '../components/lesson/AIFeedback.vue';
 import OnlineFeedbackForm from '../pages/OnlineFeedbackForm.vue';
 import ContactModal from '../pages/ContactModal.vue';
 import UserAgreementModal from '../pages/UserAgreementModal.vue';
@@ -41,6 +42,11 @@ const routes = [
         name: 'Room',
         component: Room,
         props: true,
+    },
+    {
+        path: '/feedback/ai',
+        name: 'AIFeedback',
+        component: AIFeedback,
     },
     {
         path: '/useragreement',
