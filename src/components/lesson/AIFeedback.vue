@@ -211,9 +211,6 @@ const processResults = (results) => {
             if (angleHip > 90) {
                 feedback += '가동범위가 짧습니다. 더 깊이 앉아주세요. \n';
             }
-            // if (angleKnee > 90) {
-            //     feedback += '무릎의 간격이 너무 멀리 있습니다. 무릎 사이의 간격을 좁혀주세요. \n';
-            // }
             if (angleKnee < 50) {
                 feedback += '무릎의 간격이 너무 가까이 있습니다. 무릎 사이의 간격을 멀리 떨어트려주세요. \n';
             }
@@ -221,6 +218,7 @@ const processResults = (results) => {
             if (feedback === '') {
                 feedback = '올바른 자세입니다.';
             }
+            console.log(angleWaist);
         } else {
             feedback = '자세를 정확히 감지할 수 없습니다. 다시 시도해주세요.';
         }
@@ -230,7 +228,9 @@ const processResults = (results) => {
 
     // 안내 -> tts 이식
     textToSpeech(feedback);
-
+    setTimeout(() => {
+        alert(feedback);
+    }, 5000);
 };
 
 // 두 점 사이의 각도를 계산하는 함수
