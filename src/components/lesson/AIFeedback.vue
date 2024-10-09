@@ -48,6 +48,7 @@
 <script setup>
 import { onMounted, ref, onUnmounted, computed } from 'vue';
 import { PoseLandmarker, FilesetResolver, DrawingUtils } from '@mediapipe/tasks-vision';
+import axios from 'axios';
 
 const video = ref(null);
 const canvas = ref(null);
@@ -71,7 +72,11 @@ const startCountdown = () => {
     count.value = duration.value;
     isRunning.value = true;
     shouldProcessResults.value = false;
-    countdown();
+    textToSpeech(count.value + "초 안에 자세를 맞춰주세요");
+    setTimeout(() => {
+        countdown();
+        textToSpeech(count.value);
+    }, 3000);
 };
 
 const countdown = () => {
@@ -79,6 +84,7 @@ const countdown = () => {
         setTimeout(() => {
             count.value--;
             countdown();
+            textToSpeech(count.value);
         }, 1000);
     } else {
         isRunning.value = false;
@@ -205,9 +211,9 @@ const processResults = (results) => {
             if (angleHip > 90) {
                 feedback += '가동범위가 짧습니다. 더 깊이 앉아주세요. \n';
             }
-            if (angleKnee > 80) {
-                feedback += '무릎의 간격이 너무 멀리 있습니다. 무릎 사이의 간격을 좁혀주세요. \n';
-            }
+            // if (angleKnee > 90) {
+            //     feedback += '무릎의 간격이 너무 멀리 있습니다. 무릎 사이의 간격을 좁혀주세요. \n';
+            // }
             if (angleKnee < 50) {
                 feedback += '무릎의 간격이 너무 가까이 있습니다. 무릎 사이의 간격을 멀리 떨어트려주세요. \n';
             }
@@ -223,7 +229,8 @@ const processResults = (results) => {
     }
 
     // 안내 -> tts 이식
-    alert(feedback);
+    textToSpeech(feedback);
+
 };
 
 // 두 점 사이의 각도를 계산하는 함수
@@ -245,6 +252,32 @@ onUnmounted(() => {
     const tracks = stream.getTracks();
     tracks.forEach((track) => track.stop());
 });
+
+const audio = new Audio();
+
+// TTS 함수 추가
+const textToSpeech = async (text) => {
+    try {
+        const response = await axios.post(
+            'http://localhost:8083/api/tts',
+            {
+                text: text,
+            },
+            {
+                responseType: 'arraybuffer',
+            },
+        );
+
+        const audioBlob = new Blob([response.data], { type: 'audio/mp3' });
+        const audioUrl = URL.createObjectURL(audioBlob);
+
+        audio.src = audioUrl;
+        await audio.play();
+    } catch (error) {
+        console.error('Error with TTS API:', error);
+    }
+};
+
 </script>
 
 <style scoped>
