@@ -7,6 +7,7 @@ import Room from '../components/Room.vue';
 import OnlineFeedbackForm from '../pages/OnlineFeedbackForm.vue';
 import ContactModal from '../pages/ContactModal.vue';
 import UserAgreementModal from '../pages/UserAgreementModal.vue';
+import OfflineLessonList from '../pages/OfflineLessonList.vue';
 
 const routes = [
     {
@@ -17,6 +18,11 @@ const routes = [
                 path: '',
                 name: 'HomePage',
                 component: HomePage,
+            },
+            {
+                path: '/offlinelessonlist',
+                name: 'OfflineLessonList',
+                component: OfflineLessonList,
             },
             {
                 path: '/onlinefeedbackform',
