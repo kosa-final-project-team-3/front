@@ -53,7 +53,7 @@ const responseFail = async (err) => {
     console.log('response fail error.............');
 
     const res = err.response;
-    if (res !== null && res.status === 401) {
+    if (res !== undefined && res.status === 401) {
         const result = await refreshJWT();
         console.log('refreshJWT RESULT', result);
 

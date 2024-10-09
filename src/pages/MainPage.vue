@@ -5,13 +5,15 @@
         </div>
         <div v-if="isAuthenticated"><button type="button" @click="handleLogout()">로그아웃</button><br /></div>
         <button type="button" @click="accessPrivateResource()">access private resource</button><br />
-        <button type="button" @click="$router.replace('/feedback/ai')">AI 피드백</button><br />
-        <button type="button" @click="$router.replace('/trainerpage')">트레이너 페이지</button><br />
+        <button type="button" @click="$router.push('/feedback/ai')">AI 피드백</button><br />
+        <button type="button" @click="$router.push('/trainerpage')">트레이너 페이지</button><br />
+        <button type="button" @click="$router.push('/fileupload')">파일 업로드</button><br />
+        <button type="button" @click="$router.push('/filesearch')">파일 검색</button><br />
     </div>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { onMounted, computed } from 'vue';
 import { useAuthStore } from '../stores/authStore';
 import jwtAxios from '../util/jwtUtil';
 
@@ -19,7 +21,9 @@ const host = import.meta.env.VITE_APP_HOST;
 const authStore = useAuthStore();
 const isAuthenticated = computed(() => authStore.isAuthenticated);
 
-authStore.checkAuthStatus();
+onMounted(() => {
+    authStore.checkAuthStatus();
+});
 
 const accessPrivateResource = () => [
     jwtAxios
