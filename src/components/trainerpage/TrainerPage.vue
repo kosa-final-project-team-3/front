@@ -16,7 +16,7 @@
             <router-link :to="{ name: 'TrainerPageUserInfo' }" class="sub-nav-item">나의 정보</router-link>
             <router-link :to="{ name: 'TrainerPageLessons' }" class="sub-nav-item">내 레슨 관리</router-link>
             <router-link :to="{ name: 'TrainerPageUserDiary' }" class="sub-nav-item">회원 일지 관리</router-link>
-            <router-link :to="{ name: '' }" class="sub-nav-item">일정 관리</router-link>
+            <router-link :to="{ name: '' }" class="sub-nav-item">미정</router-link>
           </nav>
         </aside>
         <main class="main-content">

@@ -8,7 +8,7 @@ import TrainerPageLessons from '../components/trainerpage/TrainerPageLessons.vue
 import TrainerPage from '../components/trainerpage/TrainerPage.vue';
 import TrainerPageUserInfo from '../components/trainerpage/TrainerPageUserInfo.vue';
 import TrainerPageUserDiary from '../components/trainerpage/userdiary/TrainerPageUserDiary.vue';
-
+import MyPageUserDiary from '../components/mypage/MyPageUserDiary.vue';
 const routes = [
     {
         path: '/',
@@ -28,6 +28,11 @@ const routes = [
                 path: 'userinfo',
                 name: 'MyPageUserInfo',
                 component: MyPageUserInfo,
+            },
+            {
+                path: 'userdiary',
+                name: 'MyPageUserDiary',
+                component: MyPageUserDiary,
             },
         ],
     },

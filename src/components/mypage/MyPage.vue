@@ -13,10 +13,9 @@
             <aside class="sidebar">
                 <nav class="sub-nav">
                     <h1>마이페이지</h1>
-                    <router-link :to="{ name: 'MyPageUserInfo' }" class="sub-nav-item">나의 정보</router-link>
-                    <router-link :to="{ name: '' }" class="sub-nav-item">수강 신청 내역</router-link>
-                    <router-link :to="{ name: '' }" class="sub-nav-item">나의 운동 일지</router-link>
-                    <router-link :to="{ name: '' }" class="sub-nav-item">내가 쓴 글 조회</router-link>
+                    <router-link :to="{ name: 'MyPageUserInfo' }" class="sub-nav-item">나의 정보</router-link>                    
+                    <router-link :to="{ name: 'MyPageUserDiary' }" class="sub-nav-item">나의 운동 일지</router-link>
+                    <router-link :to="{ name: '' }" class="sub-nav-item"></router-link>
                 </nav>
             </aside>
             <main class="main-content">
@@ -27,18 +26,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
 
-const userType = ref('regular'); // 기본값은 일반 사용자
-onMounted(async () => {
-    // 여기서 사용자 정보를 가져오는 API 호출을 수행합니다.
-    // 예를 들어:
-    // const userData = await fetchUserData();
-    // userType.value = userData.type;
-
-    // 임시로 사용자 유형을 설정 (실제로는 API 응답에 따라 설정해야 함)
-    userType.value = 'instructor'; // 또는 'instructor'
-});
 </script>
 
 <style scoped>

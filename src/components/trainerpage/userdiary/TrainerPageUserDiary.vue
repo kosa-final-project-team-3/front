@@ -9,6 +9,7 @@
                 @dayclick="onDayClick"
                 @update:from-page="onUpdateFromPage"
                 :first-day-of-week="2"
+                :expanded="true"
             >
                 <template #day-content="{ day }">
                     <div class="day-content" @mouseover="showAddButton(day)" @mouseleave="hideAddButton">
@@ -329,7 +330,7 @@ const isAnyPopupVisible = computed(() => {
 
 :deep(.vc-header) {
     background-color: #f0f0f0;
-    padding: 10px 0;
+    margin-top: 0px;
 }
 
 :deep(.vc-weeks) {
