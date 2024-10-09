@@ -3,6 +3,7 @@ import MainPage from '../pages/MainPage.vue';
 import loginRoutes from './loginRoutes';
 import TrainerPage from '../components/TrainerPage.vue';
 import Room from '../components/Room.vue';
+import fileUploadRoutes from './fileUploadRoutes';
 
 const routes = [
     {
