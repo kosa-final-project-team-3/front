@@ -1,28 +1,46 @@
 import { createWebHistory, createRouter } from 'vue-router';
 import MainPage from '../pages/MainPage.vue';
 import loginRoutes from './loginRoutes';
-import TrainerPage from '../components/TrainerPage.vue';
 import Room from '../components/Room.vue';
-
-
+import MyPage from '../components/mypage/MyPage.vue';
+import MyPageUserInfo from '../components/mypage/MyPageUserInfo.vue';
+import TrainerPageLessons from '../components/trainerpage/TrainerPageLessons.vue';
+import TrainerPage from '../components/trainerpage/TrainerPage.vue';
+import TrainerPageUserInfo from '../components/trainerpage/TrainerPageUserInfo.vue';
+import TrainerPageUserDiary from '../components/trainerpage/userdiary/TrainerPageUserDiary.vue';
 
 const routes = [
     {
         path: '/',
         component: MainPage,
-      },
-    {
-      path: '/trainerpage',
-      name: 'TrainerPage',
-      component: TrainerPage,
     },
     {
-      path: '/room/:roomId',
-      name: 'Room',
-      component: Room,
-      props: true,
+        path: '/room/:roomId',
+        name: 'Room',
+        component: Room,
+        props: true,
     },
-  ];
+    {
+        path: '/mypage',
+        component: MyPage,
+        children: [
+            {
+                path: 'userinfo',
+                name: 'MyPageUserInfo',
+                component: MyPageUserInfo,
+            },
+        ],
+    },
+    {
+        path: '/trainerpage',
+        component: TrainerPage,
+        children: [
+            { path: 'trainerpageuserinfo', name: 'TrainerPageUserInfo', component: TrainerPageUserInfo },
+            { path: 'lessons', name: 'TrainerPageLessons', component: TrainerPageLessons },
+            { path: 'userdiary', name: 'TrainerPageUserDiary', component: TrainerPageUserDiary },
+        ],
+    },
+];
 
 const router = createRouter({
     history: createWebHistory(),
