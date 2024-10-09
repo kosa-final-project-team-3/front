@@ -29,7 +29,7 @@
                         dominant-baseline="central"
                         font-size="24"
                         font-weight="bold"
-                        fill="#4a5568"
+                        fill="#e6e6e6"
                     >
                         {{ count }}
                     </text>
@@ -53,13 +53,15 @@ const video = ref(null);
 const canvas = ref(null);
 let poseLandmarker = null;
 let canvasCtx = null;
-let lastVideoTime = -1; // 마지막으로 처리된 비디오 시간
+let lastVideoTime = -1;
 
 const count = ref(7);
 const isRunning = ref(false);
 const duration = ref(7);
 const circumference = 2 * Math.PI * 20;
+const shouldProcessResults = ref(false);
 
+// 카운트다운 애니메이션
 const dashOffset = computed(() => {
     const progress = (duration.value - count.value) / duration.value;
     return circumference * (1 - progress);
@@ -68,6 +70,7 @@ const dashOffset = computed(() => {
 const startCountdown = () => {
     count.value = duration.value;
     isRunning.value = true;
+    shouldProcessResults.value = false;
     countdown();
 };
 
@@ -79,6 +82,10 @@ const countdown = () => {
         }, 1000);
     } else {
         isRunning.value = false;
+
+        setTimeout(() => {
+            shouldProcessResults.value = true;
+        }, 1000);
     }
 };
 
@@ -98,10 +105,8 @@ onMounted(async () => {
         numPoses: 2,
     });
 
-    // 캔버스의 2D 컨텍스트를 가져옴
     canvasCtx = canvas.value.getContext('2d');
 
-    // 웹캠 활성화
     await enableWebcam();
 });
 
@@ -112,7 +117,6 @@ const enableWebcam = async () => {
         return;
     }
 
-    // 사용 가능한 비디오 입력 장치 나열
     const devices = await navigator.mediaDevices.enumerateDevices();
     const videoDevices = devices.filter((device) => device.kind === 'videoinput');
 
@@ -127,17 +131,11 @@ const enableWebcam = async () => {
         return;
     }
 
-    // getUserMedia를 이용하여 웹캠 스트림 요청
-    // const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-
-    // 선택된 비디오 장치를 사용하여 웹캠 스트림 요청
     const stream = await navigator.mediaDevices.getUserMedia({
         video: { deviceId: selectedDeviceId },
     });
     video.value.srcObject = stream;
 
-    // 웹캠 데이터가 로드된 후 예측 시작
-    video.value.addEventListener('loadeddata', predictWebcam);
     video.value.addEventListener('loadeddata', renderLoop);
 };
 
@@ -147,86 +145,85 @@ const renderLoop = async () => {
 
     // 현재 프레임의 비디오 시간이 마지막 처리된 시간과 다른지 확인
     if (videoElement.currentTime !== lastVideoTime) {
-        // 포즈 감지 실행 (PoseLandmarkerResult 반환)
         const poseLandmarkerResult = await poseLandmarker.detectForVideo(videoElement, performance.now());
 
-        // 결과값을 처리하는 함수 호출
-        processResults(poseLandmarkerResult);
+        canvasCtx.clearRect(0, 0, canvas.value.width, canvas.value.height);
 
-        // 마지막 처리된 비디오 시간을 업데이트
+        // 랜드마크 그리기
+        if (poseLandmarkerResult.landmarks) {
+            const drawingUtils = new DrawingUtils(canvasCtx);
+            poseLandmarkerResult.landmarks.forEach((landmark) => {
+                drawingUtils.drawLandmarks(landmark, {
+                    radius: (data) => (data.from ? DrawingUtils.lerp(data.from.z, -0.15, 0.1, 5, 1) : 1),
+                });
+                drawingUtils.drawConnectors(landmark, PoseLandmarker.POSE_CONNECTIONS);
+            });
+        }
+
+        // 포즈 감지 결과 처리
+        if (shouldProcessResults.value) {
+            processResults(poseLandmarkerResult);
+            shouldProcessResults.value = false; // 한 번만 처리하도록 설정
+        }
+
         lastVideoTime = videoElement.currentTime;
     }
 
-    // 다음 프레임에 renderLoop를 다시 호출하여 예측을 지속
     requestAnimationFrame(renderLoop);
 };
 
-let isSquat = false;
 // 포즈 감지 결과를 처리하는 함수
 const processResults = (results) => {
-    // // 랜드마크와 월드 랜드마크를 콘솔에 출력
-    // if (results.landmarks) {
-    //     // 각 포즈의 33개의 랜드마크를 출력
-    //     results.landmarks.forEach((landmarkList) => {
-    //         console.log(landmarkList.RIGHT_SHOULDER);
-    //         console.log(landmarkList);
-    //         console.log(landmarkList.min_detection_confidence);
+    let feedback = '';
+    if (results.worldLandmarks && results.worldLandmarks.length > 0) {
+        const worldLandmarkList = results.worldLandmarks[0];
+        const rightShoulder = worldLandmarkList[12];
+        const rightHip = worldLandmarkList[24];
+        const leftKnee = worldLandmarkList[25];
+        const rightKnee = worldLandmarkList[26];
+        const rightAnkle = worldLandmarkList[28];
+        const leftFoot = worldLandmarkList[31];
+        const rightFoot = worldLandmarkList[32];
+        const middleFoot = {
+            x: (leftFoot.x + rightFoot.x) / 2,
+            y: (leftFoot.y + rightFoot.y) / 2,
+            z: (leftFoot.z + rightFoot.z) / 2,
+        };
 
-    //         // 최소 신뢰도 체크
-    //         const isReliable = landmarkList.every((landmark) => landmark.visibility >= 0.5);
+        const isReliable = [rightShoulder, rightHip, leftKnee, rightKnee, rightAnkle, leftFoot, rightFoot].every(
+            (landmark) => landmark.visibility >= 0.5,
+        );
 
-    //         if (isReliable) {
-    //             // 오른쪽 어깨, 엉덩이, 무릎의 인덱스
-    //             const rightShoulder = landmarkList[12];
-    //             const rightHip = landmarkList[24];
-    //             const rightKnee = landmarkList[26];
+        if (isReliable) {
+            const angleWaist = calculateAngle(rightShoulder, rightHip, rightKnee);
+            const angleHip = calculateAngle(rightHip, rightKnee, rightAnkle);
+            const angleKnee = calculateAngle(leftKnee, middleFoot, rightKnee);
 
-    //             // 각도 계산
-    //             const angle = calculateAngle(rightShoulder, rightHip, rightKnee);
-    //             console.log(`Calculated Angle: ${angle}`);
-
-    //             // 각도가 70도 이하인 경우
-    //             if (angle <= 70 && angle >= 50) {
-    //                 console.log('Angle is greater than or equal to 70 degrees.');
-    //                 alert('올바른 자세입니다.');
-    //                 isSquat = true;
-    //             } else {
-    //             }
-    //         }
-    //     });
-    // }
-
-    // 월드 랜드마크 값
-    if (results.worldLandmarks) {
-        // 각 포즈의 33개의 월드 랜드마크를 출력
-        results.worldLandmarks.forEach((worldLandmarkList) => {
-            const rightShoulder = worldLandmarkList[12];
-            const rightHip = worldLandmarkList[24];
-            const rightKnee = worldLandmarkList[26];
-
-            // 최소 신뢰도 체크
-            const isReliable = worldLandmarkList.every((landmark) => landmark.visibility >= 0.5);
-
-            if (isReliable) {
-                const angle = calculateAngle(rightShoulder, rightHip, rightKnee);
-
-                // 각도가 70도 이하인 경우
-                if (angle <= 70 && angle >= 50) {
-                    console.log('Angle is greater than or equal to 70 degrees.');
-                    alert(
-                        `올바른 자세입니다.
-                        ${rightShoulder.x},
-                        ${rightHip.x},
-                        ${rightKnee.x},
-                        ${rightShoulder.y},
-                        ${rightHip.y},
-                        ${rightKnee.y},
-                        `,
-                    );
-                }
+            if (angleWaist < 60) {
+                feedback += '엉덩이가 너무 뒤에 있습니다. 상체를 더 세워주세요. \n';
             }
-        });
+            if (angleHip > 90) {
+                feedback += '가동범위가 짧습니다. 더 깊이 앉아주세요. \n';
+            }
+            if (angleKnee > 80) {
+                feedback += '무릎의 간격이 너무 멀리 있습니다. 무릎 사이의 간격을 좁혀주세요. \n';
+            }
+            if (angleKnee < 50) {
+                feedback += '무릎의 간격이 너무 가까이 있습니다. 무릎 사이의 간격을 멀리 떨어트려주세요. \n';
+            }
+
+            if (feedback === '') {
+                feedback = '올바른 자세입니다.';
+            }
+        } else {
+            feedback = '자세를 정확히 감지할 수 없습니다. 다시 시도해주세요.';
+        }
+    } else {
+        feedback = '포즈를 감지할 수 없습니다. 다시 시도해주세요.';
     }
+
+    // 안내 -> tts 이식
+    alert(feedback);
 };
 
 // 두 점 사이의 각도를 계산하는 함수
@@ -240,27 +237,6 @@ const calculateAngle = (pointA, pointB, pointC) => {
 
     const angle = Math.acos(dotProduct / (magnitudeAB * magnitudeBC));
     return (angle * 180) / Math.PI; // 라디안을 각도로 변환
-};
-
-// 웹캠 예측 함수
-const predictWebcam = async () => {
-    // 실시간 포즈 감지 결과를 캔버스에 그림
-    poseLandmarker.detectForVideo(video.value, performance.now(), (result) => {
-        // 캔버스 초기화
-        canvasCtx.clearRect(0, 0, canvas.value.width, canvas.value.height);
-
-        // 각 포즈의 랜드마크와 연결선을 그림
-        result.landmarks.forEach((landmark) => {
-            const drawingUtils = new DrawingUtils(canvasCtx);
-            drawingUtils.drawLandmarks(landmark, {
-                radius: (data) => (data.from ? DrawingUtils.lerp(data.from.z, -0.15, 0.1, 5, 1) : 1),
-            });
-            drawingUtils.drawConnectors(landmark, PoseLandmarker.POSE_CONNECTIONS);
-        });
-    });
-
-    // 예측을 계속 실행하기 위해 requestAnimationFrame으로 다음 프레임 호출
-    requestAnimationFrame(predictWebcam);
 };
 
 // 컴포넌트가 언마운트될 때 웹캠 종료
