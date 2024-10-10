@@ -1,7 +1,9 @@
 <template>
     <header class="header">
         <div class="logo">
-            <img class="logo" src="../assets/logo.png" alt="정도인" />
+            <router-link to="/">
+                <img class="logo" src="../assets/logo.png" alt="정도인" />
+            </router-link>
         </div>
         <div class="navbar">
             <div class="left-nav">

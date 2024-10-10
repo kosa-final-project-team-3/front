@@ -10,6 +10,11 @@ import ContactModal from '../pages/ContactModal.vue';
 import UserAgreementModal from '../pages/UserAgreementModal.vue';
 import OfflineLessonList from '../pages/OfflineLessonList.vue';
 
+import mypageRoutes from './mypageRoutes';
+import trainerpageRoutes from './trainerpageRoutes';
+import HomePage from '../pages/HomePage.vue';
+import lessonpageRoutes from './lessonpageRoutes';
+import modalRoutes from './modalRoutes';
 const routes = [
     {
         path: '/',
@@ -20,48 +25,18 @@ const routes = [
                 name: 'HomePage',
                 component: HomePage,
             },
-            {
-                path: '/offlinelessonlist',
-                name: 'OfflineLessonList',
-                component: OfflineLessonList,
-            },
-            {
-                path: '/onlinefeedbackform',
-                name: 'OnlineFeedbackForm',
-                component: OnlineFeedbackForm,
-            },
+            ...lessonpageRoutes,
         ],
-    },
-    {
-        path: '/trainerpage',
-        name: 'TrainerPage',
-        component: TrainerPage,
-    },
-    {
-        path: '/room/:roomId',
-        name: 'Room',
-        component: Room,
-        props: true,
     },
     {
         path: '/feedback/ai',
         name: 'AIFeedback',
         component: AIFeedback,
     },
-    {
-        path: '/useragreement',
-        name: 'UserAgreementModal',
-        component: UserAgreementModal,
-    },
-    {
-        path: '/contact',
-        name: 'ContactModal',
-        component: ContactModal,
-    },
 ];
 
 const router = createRouter({
     history: createWebHistory(),
-    routes: [...routes, ...loginRoutes],
+    routes: [...routes, ...loginRoutes, ...mypageRoutes, ...trainerpageRoutes, ...modalRoutes],
 });
 export default router;
