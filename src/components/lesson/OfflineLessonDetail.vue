@@ -1,7 +1,7 @@
 <template>
     <div class="lesson-detail-container">
         <div class="modal-content">
-            <button class="close-button" @click="closeModal">X</button>
+            <button class="close-button" @click="$emit('close')">X</button>
 
             <div class="lesson-header">
                 <img :src="lesson.image" alt="레슨 이미지" class="lesson-image" />
@@ -47,15 +47,11 @@
 
 <script setup>
 import { defineProps } from 'vue';
-import RadarChart from '../RadarChart.vue';
+import RadarChart from './RadarChart.vue';
 
 const props = defineProps({
     lesson: Object,
 });
-
-function closeModal() {
-    emit('close');
-}
 </script>
 
 <style scoped>
@@ -85,5 +81,57 @@ function closeModal() {
 
 .lesson-details {
     margin-left: 20px;
+}
+
+.trainer-evaluation {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+.evaluation-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#radarChart {
+    width: 300px;
+    height: 300px;
+}
+
+.review-list {
+    padding-left: 20px;
+}
+
+.review-list ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.review-list li {
+    margin-bottom: 10px;
+}
+
+.close-button {
+    background-color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.inquiry-button {
+    padding: 10px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+
+.inquiry-button:hover {
+    background-color: #4f4f4f;
 }
 </style>

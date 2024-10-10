@@ -1,10 +1,8 @@
 <template>
     <div class="lesson-page">
-        <!-- 상단 검색과 필터 섹션 -->
         <div class="top-header">
             <h1>오프라인 레슨</h1>
             <div class="lesson-type-buttons">
-                <!-- 개인 레슨 버튼 -->
                 <button
                     @click="selectLessonType('개인 레슨')"
                     :class="{ active: selectedType === '개인 레슨' }"
@@ -13,7 +11,6 @@
                     개인 레슨
                 </button>
 
-                <!-- 그룹 레슨 버튼 -->
                 <button
                     @click="selectLessonType('그룹 레슨')"
                     :class="{ active: selectedType === '그룹 레슨' }"
@@ -26,17 +23,23 @@
 
         <div class="lesson-category">
             <button
+                @click="selectCategory('')"
+                :class="{ active: selectedCategory === '' }"
+                class="lesson-category-button"
+            >
+                전체
+            </button>
+            <button
                 v-for="category in categories"
                 :key="category"
                 @click="selectCategory(category)"
-                class="lesson-category-btn"
+                class="lesson-category-button"
                 :class="{ active: selectedCategory === category }"
             >
                 {{ category }}
             </button>
         </div>
 
-        <!-- 검색 및 필터링 섹션 -->
         <div class="search-filter-section">
             <input type="text" v-model="searchQuery" placeholder="레슨 검색..." class="search-input" />
             <div class="filter-options">
@@ -50,7 +53,6 @@
             </div>
         </div>
 
-        <!-- 레슨 카드 리스트 -->
         <div class="lesson-card-list">
             <div
                 v-for="(lesson, index) in filteredLessons"
@@ -68,26 +70,19 @@
                     <p v-if="lesson.maxParticipants" class="lesson-max-participants">
                         최대 인원: {{ lesson.maxParticipants }}명
                     </p>
-                    <button class="join-button">레슨 참여</button>
+                    <button class="join-btn">레슨 참여</button>
                 </div>
             </div>
         </div>
 
-        <!-- 모달: 레슨 세부 정보 -->
         <offline-lesson-detail
             v-if="selectedLesson"
             :lesson="selectedLesson"
-            @close="closeModal"
+            @close="closeLessonDetail"
             @openInquiry="openInquiryForm"
         />
 
-        <!-- 모달: 문의하기 폼 -->
-        <inquiry-form
-            v-if="showInquiryForm"
-            :lesson="selectedLesson"
-            @close="closeInquiryForm"
-            @submitInquiry="submitInquiry"
-        />
+        <inquiry-form v-if="showInquiryForm" :lesson="selectedLesson" @close="closeInquiryForm" />
     </div>
 </template>
 
@@ -173,9 +168,6 @@ const searchQuery = ref(''); // 검색어
 const selectedLevel = ref(''); // 선택된 난이도
 const selectedCategory = ref(''); // 선택된 카테고리
 const showInquiryForm = ref(false); // 문의하기 폼 상태
-const applicantName = ref(''); // 문의인 이름
-const applicantContact = ref(''); // 연락처
-const inquiryMessage = ref(''); // 문의 내용
 
 // 필터링된 레슨 리스트
 const filteredLessons = computed(() => {
@@ -192,36 +184,25 @@ function selectCategory(category) {
     selectedCategory.value = category;
 }
 
-// 레슨 종류 선택
 function selectLessonType(type) {
     selectedType.value = type;
 }
 
-// 레슨 세부 사항 보기
 function openLessonDetail(lesson) {
     selectedLesson.value = lesson;
 }
 
-// 모달 닫기
-function closeModal() {
+function closeLessonDetail() {
     selectedLesson.value = null;
 }
 
-// 문의 폼 열기
 function openInquiryForm() {
     showInquiryForm.value = true;
 }
 
-// 문의 폼 닫기
 function closeInquiryForm() {
     showInquiryForm.value = false;
 }
-
-// 문의 등록 처리
-const submitInquiry = () => {
-    alert(`${applicantName.value}님, 문의가 접수되었습니다. (레슨: ${selectedLesson.value.title})`);
-    closeInquiryForm();
-};
 </script>
 
 <style scoped>
@@ -258,52 +239,6 @@ const submitInquiry = () => {
     text-decoration: underline;
 }
 
-.trainer-evaluation {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 20px;
-}
-
-.evaluation-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
-#radarChart {
-    width: 300px;
-    height: 300px;
-}
-
-.review-list {
-    padding-left: 20px;
-}
-
-.review-list ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.review-list li {
-    margin-bottom: 10px;
-}
-
-.inquiry-button {
-    background-color: #4a90e2;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
-}
-
-.inquiry-button:hover {
-    background-color: #357ab7;
-}
-
-/* 검색 및 필터 섹션 */
 .search-filter-section {
     display: flex;
     justify-content: space-between;
@@ -324,7 +259,6 @@ const submitInquiry = () => {
     border-radius: 5px;
 }
 
-/* 레슨 카드 리스트 */
 .lesson-card-list {
     display: flex;
     flex-direction: column;
@@ -362,89 +296,12 @@ const submitInquiry = () => {
     margin-bottom: 10px;
 }
 
-.trainer-name,
-.lesson-category,
-.lesson-level {
-    margin: 5px 0;
-}
-
-.join-button {
+.join-btn {
     background-color: #ff6f61;
     color: white;
     padding: 10px 15px;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
     cursor: pointer;
-}
-
-.join-button:hover {
-    background-color: #e63946;
-}
-
-/* 모달 */
-.lesson-modal,
-.inquiry-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-content {
-    background-color: white;
-    padding: 30px;
-    border-radius: 10px;
-    width: 500px;
-}
-
-.lesson-header {
-    display: flex;
-    margin-bottom: 20px;
-}
-
-.lesson-details {
-    margin-left: 20px;
-}
-
-.inquiry-form input,
-.inquiry-form textarea {
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
-.submit-button {
-    background-color: #4a90e2;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
-}
-
-.submit-button:hover {
-    background-color: #357ab7;
-}
-
-.close-button {
-    background-color: #bbb;
-    padding: 12px 20px;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-.close-button:hover {
-    background-color: #999;
 }
 </style>
