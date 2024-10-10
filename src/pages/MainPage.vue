@@ -7,6 +7,7 @@
         <button type="button" @click="accessPrivateResource()">access private resource</button><br />
         <button type="button" @click="$router.replace('/feedback/ai')">AI 피드백</button><br />
         <button type="button" @click="$router.replace('/trainerpage')">트레이너 페이지</button><br />
+        <button type="button" @click="$router.replace('/mypage')">마이페이지</button><br />
     </div>
 </template>
 

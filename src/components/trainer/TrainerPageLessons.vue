@@ -20,9 +20,9 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import PersonalLessons from '../trainerpage/PersonalLessons.vue';
-import GroupLessons from '../trainerpage/GroupLessons.vue';
-import OnlinePT from '../trainerpage/OnlinePT.vue';
+import PersonalLessons from '../trainer/PersonalLessons.vue';
+import GroupLessons from '../trainer/GroupLessons.vue';
+import OnlinePT from '../trainer/OnlinePT.vue';
 
 const tabs = [
     { id: 'personal', name: '개인 레슨', component: PersonalLessons },

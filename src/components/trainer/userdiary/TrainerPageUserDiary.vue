@@ -87,7 +87,7 @@
 import { ref, computed } from 'vue';
 import { Calendar } from 'v-calendar';
 import 'v-calendar/dist/style.css';
-import RegisterLessonPopup from './RegisterLessonPopup.vue';
+import RegisterLessonPopup from './RegisterLessonDiaryPopup.vue';
 import WriteDiaryPopup from './WriteDiaryPopup.vue';
 
 const selectedDate = ref(new Date());
@@ -226,7 +226,6 @@ const formatDate = (date) => {
 const isAnyPopupVisible = computed(() => {
     return isRegisterLessonPopupVisible.value || isWriteDiaryPopupVisible.value;
 });
-
 </script>
 
 <style scoped>
@@ -306,13 +305,13 @@ const isAnyPopupVisible = computed(() => {
 }
 
 .popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
 }
 
 :deep(.vc-container) {
@@ -361,7 +360,7 @@ const isAnyPopupVisible = computed(() => {
 }
 :deep(.register-lesson-popup),
 :deep(.write-diary-popup) {
-  z-index: 1001;
+    z-index: 1001;
 }
 .day-content {
     position: relative;
@@ -390,6 +389,4 @@ const isAnyPopupVisible = computed(() => {
 .add-lesson:hover {
     background-color: #45a049;
 }
-
-
 </style>
