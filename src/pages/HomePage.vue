@@ -1,5 +1,5 @@
 <template>
-    <div class="home">
+    <div class="home-container">
         <div class="banner">
             <img class="banner-ad" src="../assets/banner-ad.jpg" alt="배너 광고" />
         </div>

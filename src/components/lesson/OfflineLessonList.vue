@@ -24,6 +24,18 @@
             </div>
         </div>
 
+        <div class="lesson-category">
+            <button
+                v-for="category in categories"
+                :key="category"
+                @click="selectCategory(category)"
+                class="lesson-category-btn"
+                :class="{ active: selectedCategory === category }"
+            >
+                {{ category }}
+            </button>
+        </div>
+
         <!-- 검색 및 필터링 섹션 -->
         <div class="search-filter-section">
             <input type="text" v-model="searchQuery" placeholder="레슨 검색..." class="search-input" />
@@ -34,14 +46,6 @@
                     <option value="초급">초급</option>
                     <option value="중급">중급</option>
                     <option value="고급">고급</option>
-                </select>
-
-                <label>운동 종류</label>
-                <select v-model="selectedCategory">
-                    <option value="">모든 카테고리</option>
-                    <option value="PT">PT</option>
-                    <option value="요가">요가</option>
-                    <option value="필라테스">필라테스</option>
                 </select>
             </div>
         </div>
@@ -162,7 +166,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import RadarChart from '../components/RadarChart.vue';
+import RadarChart from '../RadarChart.vue';
 
 // 레슨 목록
 const lessons = ref([
@@ -233,6 +237,8 @@ const lessons = ref([
     },
 ]);
 
+const categories = ref(['PT', '요가', '필라테스']);
+
 // 레슨 종류 선택
 const selectedType = ref('개인 레슨'); // 기본 값
 const selectedLesson = ref(null); // 선택된 레슨
@@ -254,6 +260,10 @@ const filteredLessons = computed(() => {
         );
     });
 });
+
+function selectCategory(category) {
+    selectedCategory.value = category;
+}
 
 // 레슨 종류 선택
 function selectLessonType(type) {
