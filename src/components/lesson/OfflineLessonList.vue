@@ -74,101 +74,28 @@
         </div>
 
         <!-- 모달: 레슨 세부 정보 -->
-        <div v-if="selectedLesson" class="lesson-modal">
-            <div class="modal-content">
-                <!-- 닫기 버튼 -->
-                <button class="close-button" @click="closeModal">X</button>
-
-                <!-- 이미지 및 기본 정보 -->
-                <div class="lesson-header">
-                    <img :src="selectedLesson.image" alt="레슨 이미지" class="lesson-image" />
-                    <div class="lesson-details">
-                        <p><strong>종목:</strong> {{ selectedLesson.category }}</p>
-                        <p><strong>레슨명:</strong> {{ selectedLesson.title }}</p>
-                        <p><strong>강사:</strong> {{ selectedLesson.trainer }}</p>
-                        <p><strong>가격:</strong> {{ selectedLesson.price }}원</p>
-                        <p><strong>강사 이력:</strong> {{ selectedLesson.trainerHistory }}</p>
-                    </div>
-                </div>
-
-                <!-- 레슨 상세 내용 -->
-                <div class="lesson-description">
-                    <p><strong>레슨 상세 내역:</strong></p>
-                    <p>{{ selectedLesson.description }}</p>
-                </div>
-
-                <!-- 수업 장소 지도 -->
-                <div class="lesson-location">
-                    <p><strong>수업 장소:</strong> {{ selectedLesson.location }}</p>
-                    <!-- 지도 Placeholder -->
-                    <div class="map-placeholder">[지도]</div>
-                </div>
-
-                <!-- 트레이너 평가 -->
-                <div class="trainer-evaluation">
-                    <p><strong>트레이너 평가:</strong></p>
-                    <div class="evaluation-container">
-                        <!-- 오각형 평가 차트 -->
-                        <RadarChart :ratings="selectedLesson.ratings" />
-
-                        <!-- 강사 한줄평 -->
-                        <div class="review-list">
-                            <h4>강사 한줄평</h4>
-                            <ul>
-                                <li v-for="(review, index) in selectedLesson.reviews" :key="index">
-                                    {{ review }}
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 문의하기 버튼 -->
-                <button class="inquiry-button" @click="openInquiryForm">문의하기</button>
-            </div>
-        </div>
+        <offline-lesson-detail
+            v-if="selectedLesson"
+            :lesson="selectedLesson"
+            @close="closeModal"
+            @openInquiry="openInquiryForm"
+        />
 
         <!-- 모달: 문의하기 폼 -->
-        <div v-if="showInquiryForm" class="inquiry-modal">
-            <div class="modal-content">
-                <h2>문의하기</h2>
-                <!-- 레슨 정보 -->
-                <div class="lesson-info">
-                    <p><strong>카테고리:</strong> {{ selectedLesson.category }}</p>
-                    <p><strong>강좌명:</strong> {{ selectedLesson.title }}</p>
-                    <p><strong>강사명:</strong> {{ selectedLesson.trainer }}</p>
-                </div>
-
-                <!-- 구분선 -->
-                <hr />
-
-                <!-- 문의 입력 폼 -->
-                <div class="inquiry-form">
-                    <label>신청인 이름</label>
-                    <input type="text" v-model="applicantName" placeholder="신청인 이름" />
-
-                    <label>신청인 연락처</label>
-                    <input type="text" v-model="applicantContact" placeholder="신청인 연락처" />
-
-                    <label>문의 내용</label>
-                    <textarea v-model="inquiryMessage">레슨 신청합니다.</textarea>
-                </div>
-
-                <!-- 등록하기 버튼 -->
-                <button class="submit-button" @click="submitInquiry">등록하기</button>
-
-                <!-- 닫기 버튼 -->
-                <button class="close-button" @click="closeInquiryForm">닫기</button>
-            </div>
-        </div>
+        <inquiry-form
+            v-if="showInquiryForm"
+            :lesson="selectedLesson"
+            @close="closeInquiryForm"
+            @submitInquiry="submitInquiry"
+        />
     </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
-import RadarChart from '../RadarChart.vue';
+import OfflineLessonDetail from './OfflineLessonDetail.vue';
+import InquiryForm from './InquiryForm.vue';
 
-// 레슨 목록
 const lessons = ref([
     {
         title: '전신 운동 PT',
