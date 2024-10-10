@@ -1,19 +1,13 @@
 <template>
-    <div class="base-container">
-        <header-compo />
-        <main class="main">
-            <router-view class="router-container" />
-
-            <div v-if="!isAuthenticated">
-                <button type="button" @click="$router.push('/login')">로그인 페이지로 이동</button><br />
-            </div>
-            <div v-if="isAuthenticated"><button type="button" @click="handleLogout()">로그아웃</button><br /></div>
-            <button type="button" @click="accessPrivateResource()">access private resource</button><br />
-            <button type="button" @click="$router.replace('/feedback/ai')">AI 피드백</button><br />
-            <button type="button" @click="$router.replace('/trainerpage')">트레이너 페이지</button><br />
-        </main>
-
-        <footer-compo />
+    <div>
+        <div v-if="!isAuthenticated">
+            <button type="button" @click="$router.push('/login')">로그인 페이지로 이동</button><br />
+        </div>
+        <div v-if="isAuthenticated"><button type="button" @click="handleLogout()">로그아웃</button><br /></div>
+        <button type="button" @click="accessPrivateResource()">access private resource</button><br />
+        <button type="button" @click="$router.replace('/feedback/ai')">AI 피드백</button><br />
+        <button type="button" @click="$router.replace('/trainerpage')">트레이너 페이지</button><br />
+        <button type="button" @click="$router.replace('/mypage')">마이페이지</button><br />
     </div>
 </template>
 
