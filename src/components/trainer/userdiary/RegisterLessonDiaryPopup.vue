@@ -20,13 +20,15 @@
                     <label>회원 선택:</label>
                     <div class="member-list">
                         <div v-for="member in filteredMembers" :key="member.id" class="member-item">
-                            <input
-                                type="checkbox"
-                                :id="'member-' + member.id"
-                                :value="member"
-                                v-model="lessonData.selectedMembers"
-                            />
-                            <label :for="'member-' + member.id">{{ member.name }}</label>
+                            <label :for="'member-' + member.id" class="member-label">
+                                <input
+                                    type="checkbox"
+                                    :id="'member-' + member.id"
+                                    :value="member"
+                                    v-model="lessonData.selectedMembers"
+                                />
+                                <span>{{ member.name }}</span>
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -163,6 +165,21 @@ select {
 
 .member-item {
     margin-bottom: 5px;
+}
+
+.member-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.member-label input[type='checkbox'] {
+    margin-right: 10px;
+    width: auto;
+}
+
+.member-label span {
+    flex-grow: 1;
 }
 
 .button-group {

@@ -3,7 +3,7 @@ import MainPage from '../pages/MainPage.vue';
 import loginRoutes from './loginRoutes';
 import AIFeedback from '../components/lesson/AIFeedback.vue';
 import mypageRoutes from './mypageRoutes';
-
+import trainerpageRoutes from './trainerpageRoutes';
 const routes = [
     {
         path: '/',
@@ -18,6 +18,6 @@ const routes = [
 
 const router = createRouter({
     history: createWebHistory(),
-    routes: [...routes, ...loginRoutes, ...mypageRoutes],
+    routes: [...routes, ...loginRoutes, ...mypageRoutes, ...trainerpageRoutes],
 });
 export default router;
