@@ -19,12 +19,11 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useAuthStore } from '../stores/authStore';
-import jwtAxios from '../util/jwtUtil';
-import HeaderCompo from '../components/HeaderCompo.vue';
-import FooterCompo from '../components/FooterCompo.vue';
-
-const host = import.meta.env.VITE_APP_HOST;
+import { useAuthStore } from '../../stores/authStore';
+import jwtAxios, { API_SERVER_HOST } from '../../util/jwtUtil';
+import HeaderCompo from './HeaderCompo.vue';
+import FooterCompo from './FooterCompo.vue';
+const host = API_SERVER_HOST;
 const authStore = useAuthStore();
 const isAuthenticated = computed(() => authStore.isAuthenticated);
 

@@ -76,7 +76,7 @@ const saveDiary = () => {
     emit('save', {
         ...props.selectedDiary,
         content: diaryContent.value,
-        status: props.selectedDiary.status // 현재 상태를 유지
+        status: props.selectedDiary.status, // 현재 상태를 유지
     });
 };
 
