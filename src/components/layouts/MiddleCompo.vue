@@ -20,9 +20,9 @@
 <script setup>
 import { computed } from 'vue';
 import { useAuthStore } from '../../stores/authStore';
-import jwtAxios, { API_SERVER_HOST } from '../../util/jwtUtil';
 import HeaderCompo from './HeaderCompo.vue';
 import FooterCompo from './FooterCompo.vue';
+import jwtAxios, { API_SERVER_HOST } from '../../util/jwtUtil';
 const host = API_SERVER_HOST;
 const authStore = useAuthStore();
 const isAuthenticated = computed(() => authStore.isAuthenticated);

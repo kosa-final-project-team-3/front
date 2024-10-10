@@ -1,11 +1,10 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import jwtAxios, { API_SERVER_HOST } from '../util/jwtUtil';
 import { getCookie } from '../util/cookieUtil';
-
-const host = API_SERVER_HOST;
+import jwtAxios, { API_SERVER_HOST } from '../util/jwtUtil';
 
 export const useAuthStore = defineStore('auth', () => {
+    const host = API_SERVER_HOST;
     const isAuthenticated = ref(false);
 
     const checkAuthStatus = () => {
