@@ -299,13 +299,13 @@ const submitInquiry = () => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
     margin-bottom: 20px;
 }
 
 .lesson-type-buttons {
     display: flex;
-    gap: 20px;
+    gap: 100px;
+    margin-left: 240px;
 }
 
 .lesson-type-button {
