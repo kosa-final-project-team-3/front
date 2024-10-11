@@ -116,6 +116,34 @@ const bannerImages = ref([
     display: flex;
     justify-content: center;
 }
+:deep(.swiper-button-next),
+:deep(.swiper-button-prev) {
+    color: #00bf63;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+:deep(.swiper-button-next) {
+    right: 7%;
+}
+:deep(.swiper-button-prev) {
+    left: 7%;
+}
+:deep(.swiper-pagination-bullet) {
+    width: 10px;
+    height: 10px;
+    background: rgba(0, 191, 99, 0.5); /* #00bf63 with 50% opacity */
+    opacity: 1;
+}
+
+:deep(.swiper-pagination-bullet-active) {
+    background: #00bf63; /* Active dot color */
+}
 .banner-image {
     width: 70%;
     height: 100%;
