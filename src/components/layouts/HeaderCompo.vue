@@ -73,7 +73,7 @@ authStore.checkAuthStatus();
     text-align: center;
 }
 .navbar-inner {
-    width: 55%;
+    width: 60%;
     left: 5%;
     gap: 0px;
     display: flex;
@@ -83,7 +83,7 @@ authStore.checkAuthStatus();
     color: black;
     padding-top: 10px;
     text-decoration: none;
-    font-family: 'Gowun Dodum', sans-serif;
+    font-family: 'Do Hyeon', sans-serif;
     font-size: 1.2em;
     font-weight: bold;
     position: relative;
@@ -103,16 +103,16 @@ authStore.checkAuthStatus();
     justify-content: center;
 }
 .navbar-login {
-    width: 45%;
+    width: 40%;
     /* right: 5%; */
     display: flex;
     align-items: right;
 }
 .navbar-login a {
-    color: black;
+    color: #545454;
     padding-top: 10px;
     text-decoration: none;
-    font-family: 'Gowun Dodum', sans-serif;
+    font-family: 'Do Hyeon', sans-serif;
     font-size: 1.1em;
     font-weight: bold;
     position: relative;
@@ -129,6 +129,6 @@ authStore.checkAuthStatus();
     left: 15%;
     margin-top: 10px;
     border-bottom: 3px solid #00bf63;
-    justify-content: space-between;
+    justify-content: right;
 }
 </style>
