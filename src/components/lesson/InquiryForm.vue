@@ -37,7 +37,7 @@ const emit = defineEmits(['close']);
 
 const applicantName = ref('');
 const applicantContact = ref('');
-const inquiryMessage = ref('');
+const inquiryMessage = ref('레슨 신청합니다.');
 
 const inquirySubmit = () => {
     if (!applicantName.value || !applicantContact.value) {

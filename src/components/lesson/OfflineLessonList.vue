@@ -33,29 +33,27 @@
                 v-for="category in categories"
                 :key="category"
                 @click="selectCategory(category)"
-                class="lesson-category-button"
                 :class="{ active: selectedCategory === category }"
+                class="lesson-category-button"
             >
                 {{ category }}
             </button>
         </div>
 
         <div class="search-filter-section">
-            <input type="text" v-model="searchQuery" placeholder="레슨 검색..." class="search-input" />
+            <input type="text" v-model="searchQuery" class="search-input" />
             <div class="filter-options">
-                <label>난이도</label>
-                <select v-model="selectedLevel">
-                    <option value="">모든 난이도</option>
-                    <option value="초급">초급</option>
-                    <option value="중급">중급</option>
-                    <option value="고급">고급</option>
+                <select v-model="selectedSort">
+                    <option value="popularity">인기순</option>
+                    <option value="rating">만족도순</option>
+                    <option value="price">가격순</option>
                 </select>
             </div>
         </div>
 
         <div class="lesson-card-list">
             <div
-                v-for="(lesson, index) in filteredLessons"
+                v-for="(lesson, index) in sortedLessons"
                 :key="index"
                 class="lesson-card"
                 @click="openLessonDetail(lesson)"
@@ -63,14 +61,15 @@
                 <img :src="lesson.image" alt="레슨 이미지" class="lesson-image" />
                 <div class="lesson-info">
                     <h3 class="lesson-title">{{ lesson.title }}</h3>
-                    <p class="trainer-name">트레이너: {{ lesson.trainer }}</p>
+                    <p class="trainer-name">강사: {{ lesson.trainer }}</p>
                     <p class="lesson-category">{{ lesson.category }}</p>
-                    <p class="lesson-level">난이도: {{ lesson.level }}</p>
-                    <!-- 그룹 레슨의 경우 최대 인원 표시 -->
-                    <p v-if="lesson.maxParticipants" class="lesson-max-participants">
-                        최대 인원: {{ lesson.maxParticipants }}명
-                    </p>
-                    <button class="join-btn">레슨 참여</button>
+                    <p class="lesson-level">가격: {{ lesson.price }}원</p>
+                    <!-- 그룹 레슨일 경우 -->
+                    <div v-if="selectedType === '그룹 레슨'">
+                        <p>모집 기간: {{ lesson.recruitmentPeriod }}</p>
+                        <p>최대 인원: {{ lesson.maxParticipants }}명</p>
+                        <p>레슨 일정: {{ lesson.schedule }}</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -87,7 +86,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import OfflineLessonDetail from './OfflineLessonDetail.vue';
 import InquiryForm from './InquiryForm.vue';
 
@@ -96,11 +95,11 @@ const lessons = ref([
         title: '전신 운동 PT',
         trainer: '강철희',
         level: '초급',
-        category: 'PT',
+        category: '헬스',
         description: '초보자에게 적합한 전신 강화 트레이닝.',
         price: 60000,
-        trainerHistory: '국가대표 출신 강사',
-        location: '서울 강남구',
+        trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
+        location: '서울 종로구 혜화로 20',
         image: 'https://www.example.com/lesson-pt.jpg',
         maxParticipants: null, // 개인 레슨
         reviews: [
@@ -124,7 +123,7 @@ const lessons = ref([
         category: '요가',
         description: '유연성 향상과 근력 강화에 도움을 주는 중급자 요가.',
         price: 50000,
-        trainerHistory: '요가 전문 자격증 보유',
+        trainerProfile: ['요가 전문 자격증 보유'],
         location: '서울 마포구',
         image: 'https://www.example.com/lesson-yoga.jpg',
         maxParticipants: 12, // 그룹 레슨
@@ -144,7 +143,7 @@ const lessons = ref([
         category: '필라테스',
         description: '코어 강화에 특화된 고급 필라테스 수업입니다.',
         price: 70000,
-        trainerHistory: '필라테스 마스터 트레이너',
+        trainerProfile: ['필라테스 마스터 트레이너'],
         location: '서울 강북구',
         image: 'https://www.example.com/lesson-pilates.jpg',
         maxParticipants: 8, // 그룹 레슨
@@ -159,25 +158,56 @@ const lessons = ref([
     },
 ]);
 
-const categories = ref(['PT', '요가', '필라테스']);
+const categories = ref(['헬스', '요가', '필라테스', '수영', '댄스', '볼링', '골프', '기타']);
 
-// 레슨 종류 선택
-const selectedType = ref('개인 레슨'); // 기본 값
+const selectedType = ref('개인 레슨');
 const selectedLesson = ref(null); // 선택된 레슨
-const searchQuery = ref(''); // 검색어
-const selectedLevel = ref(''); // 선택된 난이도
-const selectedCategory = ref(''); // 선택된 카테고리
+const selectedCategory = ref('');
+const searchQuery = ref(''); // 검색
+const selectedSort = ref('popularity'); // 정렬
 const showInquiryForm = ref(false); // 문의하기 폼 상태
 
-// 필터링된 레슨 리스트
-const filteredLessons = computed(() => {
+const filteredByType = computed(() => {
     return lessons.value.filter((lesson) => {
-        return (
-            (lesson.title.includes(searchQuery.value) || lesson.trainer.includes(searchQuery.value)) &&
-            (!selectedLevel.value || lesson.level === selectedLevel.value) &&
-            (!selectedCategory.value || lesson.category === selectedCategory.value)
-        );
+        if (selectedType.value === '개인 레슨') {
+            return lesson.maxParticipants === null;
+        } else if (selectedType.value === '그룹 레슨') {
+            return lesson.maxParticipants !== null;
+        }
+        return true;
     });
+});
+
+const filteredLessons = computed(() => {
+    return filteredByType.value.filter((lesson) => {
+        const matchesSearch =
+            lesson.title.includes(searchQuery.value) ||
+            lesson.trainer.includes(searchQuery.value) ||
+            lesson.location.includes(searchQuery.value);
+
+        const matchesCategory = !selectedCategory.value || lesson.category === selectedCategory.value;
+
+        return matchesSearch && matchesCategory;
+    });
+});
+
+const sortedLessons = computed(() => {
+    const sorted = [...filteredLessons.value];
+    if (selectedSort.value === 'popularity') {
+        // 인기순: 리뷰 개수
+        sorted.sort((a, b) => b.reviews.length - a.reviews.length);
+    } else if (selectedSort.value === 'rating') {
+        // 만족도순: 총합 평점
+        sorted.sort((a, b) => {
+            const aRatingSum = Object.values(a.ratings).reduce((acc, rating) => acc + rating, 0);
+            const bRatingSum = Object.values(b.ratings).reduce((acc, rating) => acc + rating, 0);
+            return bRatingSum - aRatingSum;
+        });
+    } else if (selectedSort.value === 'price') {
+        // 가격순
+        sorted.sort((a, b) => a.price - b.price);
+    }
+    return sorted;
 });
 
 function selectCategory(category) {
@@ -186,6 +216,9 @@ function selectCategory(category) {
 
 function selectLessonType(type) {
     selectedType.value = type;
+    if (type === '그룹 레슨' || type === '개인 레슨') {
+        selectedCategory.value = '';
+    }
 }
 
 function openLessonDetail(lesson) {
@@ -237,6 +270,15 @@ function closeInquiryForm() {
 
 .lesson-type-buttons .active {
     text-decoration: underline;
+}
+
+.lesson-category-button {
+    padding: 10px;
+    background-color: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-align: center;
 }
 
 .search-filter-section {

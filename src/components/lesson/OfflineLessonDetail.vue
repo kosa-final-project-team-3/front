@@ -10,7 +10,10 @@
                     <p><strong>레슨명:</strong> {{ lesson.title }}</p>
                     <p><strong>강사:</strong> {{ lesson.trainer }}</p>
                     <p><strong>가격:</strong> {{ lesson.price }}원</p>
-                    <p><strong>강사 이력:</strong> {{ lesson.trainerHistory }}</p>
+                    <p><strong>강사 이력:</strong></p>
+                    <ul>
+                        <li v-for="profile in lesson.trainerProfile" :key="profile">{{ profile }}</li>
+                    </ul>
                 </div>
             </div>
 
@@ -21,13 +24,13 @@
 
             <div class="lesson-location">
                 <p><strong>수업 장소:</strong> {{ lesson.location }}</p>
-                <div class="map-placeholder">[지도]</div>
+                <map-view :location="lesson.location" />
             </div>
 
             <div class="trainer-evaluation">
                 <p><strong>트레이너 평가:</strong></p>
                 <div class="evaluation-container">
-                    <radar-chart :ratings="lesson.ratings" />
+                    <radar-chart v-if="lesson.ratings" :ratings="lesson.ratings" />
 
                     <div class="review-list">
                         <h4>강사 한줄평</h4>
@@ -48,6 +51,7 @@
 <script setup>
 import { defineProps } from 'vue';
 import RadarChart from './RadarChart.vue';
+import MapView from './MapView.vue';
 
 const props = defineProps({
     lesson: Object,
@@ -72,6 +76,12 @@ const props = defineProps({
     padding: 30px;
     border-radius: 10px;
     width: 500px;
+    height: 90%;
+    overflow-y: auto;
+}
+
+.modal-content::-webkit-scrollbar {
+    display: none;
 }
 
 .lesson-header {
@@ -83,13 +93,6 @@ const props = defineProps({
     margin-left: 20px;
 }
 
-.trainer-evaluation {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 20px;
-}
-
 .evaluation-container {
     display: flex;
     flex-direction: row;
@@ -97,8 +100,8 @@ const props = defineProps({
 }
 
 #radarChart {
-    width: 300px;
-    height: 300px;
+    width: 200px;
+    height: 200px;
 }
 
 .review-list {
