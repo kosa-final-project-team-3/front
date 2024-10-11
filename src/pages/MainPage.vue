@@ -22,9 +22,11 @@ const authStore = useAuthStore();
 const username = computed(() => authStore.username);
 const role = computed(() => authStore.role);
 const isAuthenticated = computed(() => authStore.isAuthenticated);
+const userId = computed(() => authStore.id);
 
 onMounted(() => {
     authStore.checkAuthStatus();
+    console.log('user id is: ', userId.value);
 });
 
 const handleLogout = () => {

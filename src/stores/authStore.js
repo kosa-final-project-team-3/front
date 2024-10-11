@@ -8,6 +8,7 @@ export const useAuthStore = defineStore('auth', () => {
     const isAuthenticated = ref(localStorage.getItem('isAuthenticated') === 'true');
     const role = ref(localStorage.getItem('role') || '');
     const username = ref(localStorage.getItem('username') || '');
+    const id = ref(localStorage.getItem('id') || '');
 
     const checkAuthStatus = () => {
         axios
@@ -15,7 +16,8 @@ export const useAuthStore = defineStore('auth', () => {
             .then((res) => {
                 if (res.status === 200) {
                     const data = res.data;
-                    updateAuthState(true, data.role, data.username);
+                    console.log(data);
+                    updateAuthState(true, data.role, data.username, data.id);
                 }
             })
             .catch((e) => {
@@ -24,13 +26,15 @@ export const useAuthStore = defineStore('auth', () => {
             });
     };
 
-    const updateAuthState = (auth, userRole, name) => {
+    const updateAuthState = (auth, userRole, name, userId) => {
         isAuthenticated.value = auth;
         role.value = userRole;
         username.value = name;
+        id.value = userId;
         localStorage.setItem('isAuthenticated', auth);
         localStorage.setItem('role', userRole);
         localStorage.setItem('username', name);
+        localStorage.setItem('id', id);
     };
 
     const logout = () => {
@@ -50,6 +54,7 @@ export const useAuthStore = defineStore('auth', () => {
         isAuthenticated,
         role,
         username,
+        id,
         checkAuthStatus,
         logout,
     };
