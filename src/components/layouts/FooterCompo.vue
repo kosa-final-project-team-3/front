@@ -5,7 +5,6 @@
             <a href="#" @click.prevent="showUserAgreementModal"
                 >이용약관<br /><span class="support-subtext">개인정보처리약관</span>
             </a>
-
             <a href="#" @click.prevent="showContactModal"
                 >고객지원<br /><span class="support-subtext">문의하기</span>
             </a>
@@ -15,7 +14,7 @@
 
 <script setup>
 const showUserAgreementModal = () => {
-    window.open('/useragreement', 'UserAgreementModal', 'width=600,height=700');
+    window.open('/terms', 'UserAgreementModal', 'width=600,height=700');
 };
 
 const showContactModal = () => {

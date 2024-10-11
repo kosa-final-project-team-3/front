@@ -84,7 +84,7 @@ form textarea:focus {
 .submit-btn {
     margin-top: 20px;
     padding: 10px;
-    background-color: black;
+    background-color: #00bf63;
     color: white;
     border: none;
     border-radius: 4px;

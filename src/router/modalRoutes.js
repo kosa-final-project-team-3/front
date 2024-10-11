@@ -1,15 +1,17 @@
-import ContactModal from '../components/modal/ContactModal.vue';
-import UserAgreementModal from '../components/modal/UserAgreementModal.vue';
+import ContactModal from '../components/mainpage/ContactModal.vue';
+import UserAgreementModal from '../components/mainpage/UserAgreementModal.vue';
 
 export default [
     {
         path: '/contact',
         name: 'ContactModal',
         component: ContactModal,
+        meta: { useLayout: false },
     },
     {
-        path: '/useragreement',
+        path: '/terms',
         name: 'UserAgreementModal',
         component: UserAgreementModal,
+        meta: { useLayout: false },
     },
 ];

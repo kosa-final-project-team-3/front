@@ -14,23 +14,49 @@
                     <router-link to="/qna">질문 게시판</router-link>
                 </div>
                 <div class="navbar-login">
-                    <router-link v-if="authStore.isTrainer" to="/trainer">트레이너페이지</router-link>
-                    <router-link v-if="authStore.isAuthenticated" to="/mypage">마이페이지</router-link>
-                    <!-- <router-link to="/trainer">트레이너페이지</router-link> -->
-                    <!-- <router-link to="/mypage">마이페이지</router-link> -->
-                    <router-link v-if="!authStore.isAuthenticated" to="/login">로그인</router-link>
-                    <router-link v-if="authStore.isAuthenticated" to="/logout">로그아웃</router-link>
+                    <div class="dynamic-link">
+                        <router-link v-if="authStore.isTrainer" to="/trainer">트레이너페이지</router-link>
+                        <router-link v-if="isAuthenticated" to="/mypage">마이페이지</router-link>
+                        <!-- <router-link to="/trainer">트레이너페이지</router-link> -->
+                        <!-- <router-link to="/mypage">마이페이지</router-link> -->
+                    </div>
+                    <div class="auth-links">
+                        <router-link v-if="!isAuthenticated" to="/login">로그인</router-link>
+                        <router-link v-if="isAuthenticated" to="/logout" @click="handleLogout">로그아웃</router-link>
+                    </div>
                 </div>
             </div>
         </div>
     </header>
 </template>
 <script setup>
+import { computed } from 'vue';
 import { useAuthStore } from '../../stores/authStore';
+import jwtAxios, { API_SERVER_HOST } from '../../util/jwtUtil';
 
+const host = API_SERVER_HOST;
 const authStore = useAuthStore();
+const isAuthenticated = computed(() => authStore.isAuthenticated);
 
 authStore.checkAuthStatus();
+
+const accessPrivateResource = () => [
+    jwtAxios
+        .get(`http://${host}/api/member/private`)
+        .then((res) => {
+            if (res.status === 200) {
+                console.log(res.data);
+            }
+        })
+        .catch((e) => {
+            console.log(e);
+        }),
+];
+
+const handleLogout = () => {
+    authStore.logout();
+    router.push('/');
+};
 </script>
 <style scoped>
 .header {
@@ -78,6 +104,7 @@ authStore.checkAuthStatus();
     gap: 0px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 .navbar-inner a {
     color: black;
@@ -105,7 +132,7 @@ authStore.checkAuthStatus();
 .navbar-login {
     width: 40%;
     display: flex;
-    align-items: right;
+    margin-left: auto;
 }
 .navbar-login a {
     color: #545454;

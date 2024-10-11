@@ -5,13 +5,14 @@ import mypageRoutes from './mypageRoutes';
 import trainerpageRoutes from './trainerpageRoutes';
 import HomePage from '../pages/HomePage.vue';
 import lessonpageRoutes from './lessonpageRoutes';
-import modalRoutes from './modalRoutes';
 import MiddleCompo from '../components/layouts/MiddleCompo.vue';
+import modalRoutes from './modalRoutes';
 
 const routes = [
     {
         path: '/',
         component: MiddleCompo,
+        meta: { useLayout: true },
         children: [
             {
                 path: '',
