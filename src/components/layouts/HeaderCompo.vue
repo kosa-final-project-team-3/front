@@ -46,7 +46,7 @@ authStore.checkAuthStatus();
     width: 100vw;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .logo-container {
@@ -81,7 +81,7 @@ authStore.checkAuthStatus();
 }
 .navbar-inner a {
     color: black;
-    padding-top: 10px;
+    padding-top: 15px;
     text-decoration: none;
     font-family: 'Do Hyeon', sans-serif;
     font-size: 1.2em;
@@ -110,7 +110,7 @@ authStore.checkAuthStatus();
 }
 .navbar-login a {
     color: #545454;
-    padding-top: 10px;
+    padding-top: 15px;
     text-decoration: none;
     font-family: 'Do Hyeon', sans-serif;
     font-size: 1.1em;
