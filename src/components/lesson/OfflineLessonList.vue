@@ -61,9 +61,9 @@
                 <img :src="lesson.image" alt="레슨 이미지" class="lesson-image" />
                 <div class="lesson-info">
                     <h3 class="lesson-title">{{ lesson.title }}</h3>
-                    <p class="trainer-name">강사: {{ lesson.trainer }}</p>
-                    <p class="lesson-category">{{ lesson.category }}</p>
-                    <p class="lesson-level">가격: {{ lesson.price }}원</p>
+                    <p>강사: {{ lesson.trainer }}</p>
+                    <p>{{ lesson.category }}</p>
+                    <p>가격: {{ lesson.price }}원</p>
                     <!-- 그룹 레슨일 경우 -->
                     <div v-if="selectedType === '그룹 레슨'">
                         <p>모집 기간: {{ lesson.recruitmentPeriod }}</p>
@@ -86,7 +86,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed } from 'vue';
 import OfflineLessonDetail from './OfflineLessonDetail.vue';
 import InquiryForm from './InquiryForm.vue';
 
