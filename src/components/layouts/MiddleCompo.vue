@@ -50,8 +50,6 @@ const handleLogout = () => {
 <style scoped>
 .base-container {
     margin: -8px;
-    display: flex;
-    flex-direction: column;
     height: 100vh;
 }
 
