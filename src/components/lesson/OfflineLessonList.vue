@@ -77,6 +77,7 @@
         <offline-lesson-detail
             v-if="selectedLesson"
             :lesson="selectedLesson"
+            :selectedType="selectedType"
             @close="closeLessonDetail"
             @openInquiry="openInquiryForm"
         />

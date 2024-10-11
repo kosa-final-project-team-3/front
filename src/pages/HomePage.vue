@@ -5,7 +5,9 @@
         </div>
         <div class="lesson-container">
             <div class="lesson-type">
-                <img src="../assets/personal-icon.png" alt="개인 레슨 아이콘" class="lesson-icon" />개인 레슨
+                <router-link to="/offlinelessonlist" class="router-decoration">
+                    <img src="../assets/personal-icon.png" alt="개인 레슨 아이콘" class="lesson-icon" />개인 레슨
+                </router-link>
             </div>
             <div class="lesson-type">
                 <img src="../assets/group-icon.png" alt="그룹 레슨 아이콘" class="lesson-icon" />그룹 레슨

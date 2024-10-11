@@ -22,6 +22,12 @@
                 <p>{{ lesson.description }}</p>
             </div>
 
+            <div v-if="selectedType === '그룹 레슨'">
+                <p><strong>모집 기간</strong>: {{ lesson.recruitmentPeriod }}</p>
+                <p><strong>최대 인원</strong>: {{ lesson.maxParticipants }}명</p>
+                <p><strong>레슨 일정</strong>: {{ lesson.schedule }}</p>
+            </div>
+
             <div class="lesson-location">
                 <p><strong>수업 장소:</strong> {{ lesson.location }}</p>
                 <map-view :location="lesson.location" />
@@ -55,6 +61,7 @@ import MapView from './MapView.vue';
 
 const props = defineProps({
     lesson: Object,
+    selectedType: String,
 });
 </script>
 
