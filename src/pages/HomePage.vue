@@ -1,7 +1,19 @@
 <template>
     <div class="home-container">
         <div class="banner">
-            <img class="banner-ad" src="../assets/banner-ad.jpg" alt="배너 광고" />
+            <swiper
+                :modules="modules"
+                :slides-per-view="1"
+                :space-between="30"
+                :loop="true"
+                :pagination="{ clickable: true }"
+                :navigation="true"
+                class="mySwiper"
+            >
+                <swiper-slide v-for="(image, index) in bannerImages" :key="index">
+                    <img :src="image.src" :alt="image.alt" class="banner-image" />
+                </swiper-slide>
+            </swiper>
         </div>
         <div class="lesson-container">
             <div class="lesson-type">
@@ -29,7 +41,23 @@
         </div>
     </div>
 </template>
-<script setup></script>
+<script setup>
+import { ref } from 'vue';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Pagination, Navigation } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+
+const modules = [Pagination, Navigation];
+
+const bannerImages = ref([
+    { src: 'https://kosa-final-project-team-3.github.io/cdn/banner_1.png', alt: 'Banner 1' },
+    { src: 'https://kosa-final-project-team-3.github.io/cdn/banner_2.png', alt: 'Banner 2' },
+    { src: 'https://kosa-final-project-team-3.github.io/cdn/banner_3.png', alt: 'Banner 3' },
+    { src: 'https://kosa-final-project-team-3.github.io/cdn/banner_4.png', alt: 'Banner 4' },
+]);
+</script>
 <style scoped>
 .banner-ad {
     width: 80vw;
@@ -83,5 +111,15 @@
     height: 400px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.banner {
+    display: flex;
+    justify-content: center;
+}
+.banner-image {
+    width: 70%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 30px;
 }
 </style>

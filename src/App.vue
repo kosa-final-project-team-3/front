@@ -21,7 +21,6 @@ import MiddleCompo from './components/layouts/MiddleCompo.vue';
 const route = useRoute();
 
 const useLayout = computed(() => {
-    console.log(route.meta.useLayout);
     return route.meta.useLayout !== false;
 });
 </script>
