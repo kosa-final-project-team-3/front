@@ -7,6 +7,8 @@ const host = API_SERVER_HOST;
 
 export const useAuthStore = defineStore('auth', () => {
     const isAuthenticated = ref(false);
+    const username = ref(null);
+    const memberId = ref(null);
 
     const checkAuthStatus = () => {
         const id = getCookie('id');
@@ -14,8 +16,11 @@ export const useAuthStore = defineStore('auth', () => {
 
         if (id && provider) {
             isAuthenticated.value = true;
+            username.value = provider + '_' + id;
         } else {
             isAuthenticated.value = false;
+            username.value = null;
+            memberId.value = null;
         }
     };
 
@@ -25,6 +30,8 @@ export const useAuthStore = defineStore('auth', () => {
             if (res.status === 200) {
                 console.log(res.data);
                 isAuthenticated.value = false;
+                username.value = null;
+                memberId.value = null;
             }
         } catch (e) {
             console.error(`logout failed. \ncaused: ${e}`);
@@ -33,6 +40,8 @@ export const useAuthStore = defineStore('auth', () => {
 
     return {
         isAuthenticated,
+        username,
+        memberId,
         checkAuthStatus,
         logout,
     };

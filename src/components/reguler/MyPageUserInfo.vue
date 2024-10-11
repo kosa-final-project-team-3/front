@@ -1,20 +1,20 @@
 <template>
-    <div class="my-page-user-info">
+    <div class="my-page-user-info" v-if="isAuthenticated">
         <h2>나의 정보</h2>
         <form @submit.prevent="saveUserInfo">
             <div class="form-group">
-                <label for="name">이름:</label>
-                <input id="name" v-model="userInfo.name" type="text" required />
+                <label for="username">이름:</label>
+                <input id="username" v-model="userInfo.username" type="text" required />
             </div>
             <div class="form-group">
-                <label for="birthdate">생년월일:</label>
-                <input id="birthdate" v-model="userInfo.birthdate" type="date" required />
+                <label for="birth">생년월일:</label>
+                <input id="birth" v-model="userInfo.birth" type="date" required />
             </div>
             <div class="form-group">
                 <label for="gender">성별:</label>
                 <select id="gender" v-model="userInfo.gender" required>
-                    <option value="male">남성</option>
-                    <option value="female">여성</option>
+                    <option value="m">남자</option>
+                    <option value="f">여자</option>
                 </select>
             </div>
             <div class="form-group">
@@ -26,14 +26,13 @@
                 <input id="address" v-model="userInfo.address" type="text" required />
             </div>
             <div class="form-group">
-                <label for="height">신장 (cm):</label>
-                <input id="height" v-model="userInfo.height" type="number" required />
+                <label for="tall">신장 (cm):</label>
+                <input id="tall" v-model="userInfo.tall" type="number" required />
             </div>
             <div class="form-group">
-                <label for="weight">체중 (kg):</label>
-                <input id="weight" v-model="userInfo.weight" type="number" required />
+                <label for="bodyWeight">체중 (kg):</label>
+                <input id="bodyWeight" v-model="userInfo.bodyWeight" type="number" required />
             </div>
-
 
             <button v-if="!isExpert" type="button" @click="showExpertPopup" class="btn-become-expert">
                 전문가로 전환하기
@@ -49,37 +48,76 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, computed, onMounted } from 'vue';
 import ExpertPopup from './ExpertPopup.vue';
+import { useAuthStore } from '../../stores/authStore';
+import jwtAxios, { API_SERVER_HOST } from '../../util/jwtUtil';
+
+const host = API_SERVER_HOST;
+const authStore = useAuthStore();
+const isAuthenticated = computed(() => authStore.isAuthenticated);
 
 const userInfo = reactive({
-    name: '',
-    birthdate: '',
+    username: '',
+    birth: '',
     gender: '',
     phone: '',
     address: '',
-    height: '',
-    weight: '',
+    tall: '',
+    bodyWeight: '',
 });
 
 const originalUserInfo = ref(null);
 const isExpert = ref(false);
-const expertInfo = ref([]);
-const saveUserInfo = () => {
-    // TODO: Implement API call to save user info
-    console.log('Saving user info:', userInfo);
-    // Update originalUserInfo after successful save
-    originalUserInfo.value = { ...userInfo };
+const isExpertPopupVisible = ref(false);
+
+onMounted(async () => {
+    await authStore.checkAuthStatus();
+    if (isAuthenticated.value) {
+        await fetchUserInfo();
+    }
+});
+
+const fetchUserInfo = async () => {
+    try {
+        const username = authStore.username;
+        console.log(username);
+        const res = await jwtAxios.get(`http://${host}/api/member/info`, {
+            params: { username },
+        });
+        console.log(res);
+        Object.assign(userInfo, res.data);
+        originalUserInfo.value = { ...userInfo };
+        // authStore에 memberId 저장
+        authStore.memberId = res.data.memberId;
+    } catch (error) {
+        console.error('Failed to fetch user info:', error);
+    }
+};
+
+const saveUserInfo = async () => {
+    try {
+        const updatedUserInfo = {
+            ...userInfo,
+            memberId: authStore.memberId, // authStore에서 memberId 가져오기
+        };
+        console.log(updatedUserInfo);
+
+        const response = await jwtAxios.put(`http://${host}/api/member/update`, updatedUserInfo);
+        Object.assign(userInfo, response.data);
+        originalUserInfo.value = { ...userInfo };
+        alert('사용자 정보가 성공적으로 저장되었습니다.');
+    } catch (error) {
+        console.error('Failed to save user info:', error);
+        alert('사용자 정보 저장에 실패했습니다.');
+    }
 };
 
 const cancelEdit = () => {
-    // Reset form to original values
     if (originalUserInfo.value) {
         Object.assign(userInfo, originalUserInfo.value);
     }
 };
-
-const isExpertPopupVisible = ref(false);
 
 const showExpertPopup = () => {
     isExpertPopupVisible.value = true;
@@ -90,12 +128,10 @@ const closeExpertPopup = () => {
 };
 
 const submitExpertApplication = ({ certificationCategories, attachedFiles }) => {
-    // TODO: Implement API call to submit expert application
     console.log('Submitting expert application:', certificationCategories);
     console.log('Attached files:', attachedFiles);
 
     // 임시로 전문가 정보 저장 (실제로는 API 응답 후 처리해야 함)
-    expertInfo.value = certificationCategories;
     isExpert.value = true;
     closeExpertPopup();
 };
