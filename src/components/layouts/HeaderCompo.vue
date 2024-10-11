@@ -104,7 +104,6 @@ authStore.checkAuthStatus();
 }
 .navbar-login {
     width: 40%;
-    /* right: 5%; */
     display: flex;
     align-items: right;
 }

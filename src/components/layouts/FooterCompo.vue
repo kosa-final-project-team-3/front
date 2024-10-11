@@ -25,21 +25,29 @@ const showContactModal = () => {
 
 <style scoped>
 .footer {
-    background-color: #f0f0f0;
+    background-color: #00bf63;
     padding: 5px;
     display: flex;
     justify-content: space-between;
     text-align: center;
+    align-items: center;
+}
+.copyright {
+    font-family: 'Do Hyeon', sans-serif;
+    color: white;
+    margin: 15px;
+    align-items: center;
 }
 
 .support-links {
     display: flex;
-    margin: 20px;
+    margin: 15px;
     gap: 30px;
 }
 
 .support-links a {
-    color: black;
+    color: white;
+    font-family: 'Do Hyeon', sans-serif;
     text-decoration: none;
 }
 
