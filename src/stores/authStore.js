@@ -5,9 +5,9 @@ import axios from 'axios';
 
 export const useAuthStore = defineStore('auth', () => {
     const host = API_SERVER_HOST;
-    const isAuthenticated = ref(false);
-    const role = ref('');
-    const username = ref('');
+    const isAuthenticated = ref(localStorage.getItem('isAuthenticated') === 'true');
+    const role = ref(localStorage.getItem('role') || '');
+    const username = ref(localStorage.getItem('username') || '');
 
     const checkAuthStatus = () => {
         axios
@@ -15,27 +15,35 @@ export const useAuthStore = defineStore('auth', () => {
             .then((res) => {
                 if (res.status === 200) {
                     const data = res.data;
-                    role.value = data.role;
-                    username.value = data.username;
-                    isAuthenticated.value = true;
+                    updateAuthState(true, data.role, data.username);
                 }
             })
             .catch((e) => {
                 console.error(`authorization failed. \ncaused: ${JSON.stringify(e)}`);
-                isAuthenticated.value = false;
+                updateAuthState(false, '', '');
             });
     };
 
-    const logout = async () => {
-        try {
-            const res = await jwtAxios.get(`http://${host}/api/member/logout`);
-            if (res.status === 200) {
-                console.log(res.data);
-                isAuthenticated.value = false;
-            }
-        } catch (e) {
-            console.error(`logout failed. \ncaused: ${e}`);
-        }
+    const updateAuthState = (auth, userRole, name) => {
+        isAuthenticated.value = auth;
+        role.value = userRole;
+        username.value = name;
+        localStorage.setItem('isAuthenticated', auth);
+        localStorage.setItem('role', userRole);
+        localStorage.setItem('username', name);
+    };
+
+    const logout = () => {
+        jwtAxios
+            .get(`http://${host}/api/member/logout`)
+            .then((res) => {
+                if (res.status === 200) {
+                    updateAuthState(false, '', '');
+                }
+            })
+            .catch((e) => {
+                console.error(e);
+            });
     };
 
     return {
