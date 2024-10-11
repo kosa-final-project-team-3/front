@@ -59,15 +59,10 @@ const bannerImages = ref([
 ]);
 </script>
 <style scoped>
-.banner-ad {
-    width: 80vw;
-    height: 40vh;
-    border-radius: 10px;
-}
-
 .lesson-container {
     display: flex;
     margin: 20px;
+    justify-content: center;
 }
 
 .lesson-type {
@@ -97,6 +92,7 @@ const bannerImages = ref([
 
 .popular-lesson {
     width: 80vw;
+    margin: 0 auto;
 }
 
 .lesson-list {
@@ -113,6 +109,10 @@ const bannerImages = ref([
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 .banner {
+    display: flex;
+    justify-content: center;
+}
+.swiper-slide {
     display: flex;
     justify-content: center;
 }
