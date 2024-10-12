@@ -4,26 +4,20 @@ import loginRoutes from './loginRoutes';
 import AIFeedback from '../components/lesson/AIFeedback.vue';
 import mypageRoutes from './mypageRoutes';
 import trainerpageRoutes from './trainerpageRoutes';
+import MemberDashboard from '../components/member/MemberDashboard.vue';
 const routes = [
     {
         path: '/',
         component: MainPage,
     },
     {
-        path: '/trainerpage',
-        name: 'TrainerPage',
-        component: TrainerPage,
-    },
-    {
-        path: '/room/:roomId',
-        name: 'Room',
-        component: Room,
-        props: true,
-    },
-    {
         path: '/feedback/ai',
         name: 'AIFeedback',
         component: AIFeedback,
+    },
+    {
+        path: '/member/dashboard',
+        component: MemberDashboard,
     },
 ];
 
