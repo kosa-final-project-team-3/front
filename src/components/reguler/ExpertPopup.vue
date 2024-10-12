@@ -50,12 +50,18 @@
 
 <script setup>
 import { ref, reactive, computed } from 'vue';
+import axios from 'axios';
+import { useAuthStore } from '../../stores/authStore';
+import jwtAxios, { API_SERVER_HOST } from '../../util/jwtUtil';
 
 const props = defineProps({
     isVisible: Boolean,
 });
 
 const emit = defineEmits(['close', 'submit']);
+
+const host = API_SERVER_HOST;
+const authStore = useAuthStore();
 
 const certificationCategories = reactive([
     { name: '교육사항', namePlaceholder: '교육 기관명', type: 'period', certifications: [] },
@@ -98,10 +104,40 @@ const hasAnyCertification = computed(() => {
     return certificationCategories.some((category) => category.certifications.length > 0);
 });
 
-const submitApplication = () => {
+const submitApplication = async () => {
     if (hasAnyCertification.value) {
-        emit('submit', { certificationCategories, attachedFiles: attachedFiles.value });
+        const profiles = certificationCategories.flatMap((category) =>
+            category.certifications.map((cert) => ({
+                trainerId: authStore.id,
+                categoryCode: getCategoryCode(category.name),
+                categoryName: category.name,
+                title: cert.name,
+                startDate: cert.startDate || cert.date,
+                endDate: cert.endDate || cert.date,
+                detail: '', // 필요한 경우 상세 정보 필드를 추가하세요
+            })),
+        );
+
+        try {
+            await jwtAxios.post(`http://${host}/api/trainer/save`, profiles);
+            alert('트레이너 프로필이 성공적으로 저장되었습니다.');
+            emit('close');
+        } catch (error) {
+            console.error('Failed to save trainer profiles:', error);
+            alert('트레이너 프로필 저장 중 오류가 발생했습니다.');
+        }
     }
+};
+
+const getCategoryCode = (categoryName) => {
+    // 카테고리 이름에 따른 코드 매핑
+    const codeMap = {
+        교육사항: 'EDU',
+        수상이력: 'AWARD',
+        자격증: 'CERT',
+        경력: 'EXP',
+    };
+    return codeMap[categoryName] || '';
 };
 
 const close = () => {

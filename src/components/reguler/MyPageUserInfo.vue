@@ -2,36 +2,9 @@
     <div class="my-page-user-info" v-if="isAuthenticated">
         <h2>나의 정보</h2>
         <form @submit.prevent="saveUserInfo">
-            <div class="form-group">
-                <label for="username">이름:</label>
-                <input id="username" v-model="userInfo.username" type="text" required />
-            </div>
-            <div class="form-group">
-                <label for="birth">생년월일:</label>
-                <input id="birth" v-model="userInfo.birth" type="date" required />
-            </div>
-            <div class="form-group">
-                <label for="gender">성별:</label>
-                <select id="gender" v-model="userInfo.gender" required>
-                    <option value="m">남자</option>
-                    <option value="f">여자</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="phone">핸드폰 번호:</label>
-                <input id="phone" v-model="userInfo.phone" type="tel" required />
-            </div>
-            <div class="form-group">
-                <label for="address">주소:</label>
-                <input id="address" v-model="userInfo.address" type="text" required />
-            </div>
-            <div class="form-group">
-                <label for="tall">신장 (cm):</label>
-                <input id="tall" v-model="userInfo.tall" type="number" required />
-            </div>
-            <div class="form-group">
-                <label for="bodyWeight">체중 (kg):</label>
-                <input id="bodyWeight" v-model="userInfo.bodyWeight" type="number" required />
+            <div class="form-group" v-for="(value, key) in userInfo" :key="key">
+                <label :for="key">{{ getLabel(key) }}:</label>
+                <input :id="key" v-model="userInfo[key]" :type="getInputType(key)" :disabled="!isEditing" required />
             </div>
 
             <button v-if="!isExpert" type="button" @click="showExpertPopup" class="btn-become-expert">
@@ -39,8 +12,9 @@
             </button>
 
             <div class="form-actions">
-                <button type="button" @click="cancelEdit" class="btn-cancel">취소</button>
-                <button type="submit" class="btn-save">저장하기</button>
+                <button v-if="isEditing" type="button" @click="cancelEdit" class="btn-cancel">취소</button>
+                <button v-if="!isEditing" type="button" @click="startEditing" class="btn-edit">수정하기</button>
+                <button v-else type="submit" class="btn-save">저장하기</button>
             </div>
         </form>
     </div>
@@ -56,6 +30,7 @@ import jwtAxios, { API_SERVER_HOST } from '../../util/jwtUtil';
 const host = API_SERVER_HOST;
 const authStore = useAuthStore();
 const isAuthenticated = computed(() => authStore.isAuthenticated);
+const memberId = computed(() => authStore.id);
 
 const userInfo = reactive({
     username: '',
@@ -70,6 +45,7 @@ const userInfo = reactive({
 const originalUserInfo = ref(null);
 const isExpert = ref(false);
 const isExpertPopupVisible = ref(false);
+const isEditing = ref(false);
 
 onMounted(async () => {
     await authStore.checkAuthStatus();
@@ -81,15 +57,11 @@ onMounted(async () => {
 const fetchUserInfo = async () => {
     try {
         const username = authStore.username;
-        console.log(username);
         const res = await jwtAxios.get(`http://${host}/api/member/info`, {
             params: { username },
         });
-        console.log(res);
         Object.assign(userInfo, res.data);
         originalUserInfo.value = { ...userInfo };
-        // authStore에 memberId 저장
-        authStore.memberId = res.data.memberId;
     } catch (error) {
         console.error('Failed to fetch user info:', error);
     }
@@ -99,24 +71,29 @@ const saveUserInfo = async () => {
     try {
         const updatedUserInfo = {
             ...userInfo,
-            memberId: authStore.memberId, // authStore에서 memberId 가져오기
+            memberId: memberId.value,
         };
-        console.log(updatedUserInfo);
 
         const response = await jwtAxios.put(`http://${host}/api/member/update`, updatedUserInfo);
         Object.assign(userInfo, response.data);
         originalUserInfo.value = { ...userInfo };
         alert('사용자 정보가 성공적으로 저장되었습니다.');
+        isEditing.value = false;
     } catch (error) {
         console.error('Failed to save user info:', error);
         alert('사용자 정보 저장에 실패했습니다.');
     }
 };
 
+const startEditing = () => {
+    isEditing.value = true;
+};
+
 const cancelEdit = () => {
     if (originalUserInfo.value) {
         Object.assign(userInfo, originalUserInfo.value);
     }
+    isEditing.value = false;
 };
 
 const showExpertPopup = () => {
@@ -130,10 +107,32 @@ const closeExpertPopup = () => {
 const submitExpertApplication = ({ certificationCategories, attachedFiles }) => {
     console.log('Submitting expert application:', certificationCategories);
     console.log('Attached files:', attachedFiles);
-
-    // 임시로 전문가 정보 저장 (실제로는 API 응답 후 처리해야 함)
     isExpert.value = true;
     closeExpertPopup();
+};
+
+const getLabel = (key) => {
+    const labels = {
+        username: '이름',
+        birth: '생년월일',
+        gender: '성별',
+        phone: '핸드폰 번호',
+        address: '주소',
+        tall: '신장 (cm)',
+        bodyWeight: '체중 (kg)',
+    };
+    return labels[key] || key;
+};
+
+const getInputType = (key) => {
+    const types = {
+        birth: 'date',
+        gender: 'select',
+        phone: 'tel',
+        tall: 'number',
+        bodyWeight: 'number',
+    };
+    return types[key] || 'text';
 };
 </script>
 
@@ -214,5 +213,13 @@ select {
 
 .expert-category li {
     margin-bottom: 0.25rem;
+}
+
+.btn-edit {
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
 }
 </style>

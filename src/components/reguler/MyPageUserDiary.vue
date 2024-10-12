@@ -119,6 +119,7 @@ const showDiaryView = ref(false);
 const isEditing = ref(false);
 const authStore = useAuthStore();
 const isAuthenticated = computed(() => authStore.isAuthenticated);
+const memberId = computed(() => authStore.id);
 const host = API_SERVER_HOST;
 const currentDiary = ref({
     id: null,
@@ -152,6 +153,7 @@ const onDayClick = (day) => {
 
 const viewDiary = (diary) => {
     currentDiary.value = { ...diary };
+    console.log('j', currentDiary.value);
     showDiaryView.value = true;
     showDiaryForm.value = false;
     isEditing.value = false;
@@ -217,7 +219,7 @@ const saveDiary = async () => {
 
     try {
         const diaryData = {
-            memberId: authStore.memberId,
+            memberId: memberId.value,
             workoutDate: currentDiary.value.exerciseDate,
             workoutStartTime: `${currentDiary.value.exerciseDate}T${currentDiary.value.startTime}`,
             workoutEndTime: `${currentDiary.value.exerciseDate}T${currentDiary.value.endTime}`,
@@ -227,6 +229,7 @@ const saveDiary = async () => {
             protein: currentDiary.value.protein,
             fat: currentDiary.value.fat,
         };
+        console.log(diaryData);
 
         let response;
         if (currentDiary.value.id) {
@@ -252,14 +255,23 @@ const saveDiary = async () => {
     resetCurrentDiary();
 };
 const fetchDiaries = async () => {
-    const memberId = authStore.memberId;
-    console.log(memberId);
     try {
         const response = await jwtAxios.get(`http://${host}/api/exercise-logs`, {
-            params: { memberId },
+            params: { memberId: memberId.value },
         });
-        diaries.value = response.data;
-        console.log(diaries);
+        console.log('Fetched diaries:', response.data); // 로그 추가
+        diaries.value = response.data.map((diary) => ({
+            id: diary.logId,
+            exerciseDate: diary.workoutDate,
+            startTime: new Date(diary.workoutStartTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            endTime: new Date(diary.workoutEndTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            content: diary.content,
+            weight: diary.bodyWeight,
+            carbohydrates: diary.carb,
+            protein: diary.protein,
+            fat: diary.fat,
+        }));
+        console.log('Processed diaries:', diaries.value); // 로그 추가
     } catch (error) {
         console.error('Failed to fetch exercise logs:', error);
     }
@@ -282,7 +294,7 @@ const cancelDiaryForm = () => {
 
 onMounted(async () => {
     await authStore.checkAuthStatus();
-    if (isAuthenticated.value) {
+    if (isAuthenticated.value && memberId.value) {
         await fetchDiaries();
     }
 });
