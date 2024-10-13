@@ -15,7 +15,7 @@ export default [
         path: '/trainerpage',
         component: TrainerPage,
         children: [
-            { path: 'trainerpageuserinfo', name: 'TrainerPageUserInfo', component: TrainerPageUserInfo },
+            { path: 'info', name: 'TrainerPageUserInfo', component: TrainerPageUserInfo },
             { path: 'lessons', name: 'TrainerPageLessons', component: TrainerPageLessons },
             { path: 'userdiary', name: 'TrainerPageUserDiary', component: TrainerPageUserDiary },
         ],
