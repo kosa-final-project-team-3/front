@@ -15,22 +15,28 @@
                 </swiper-slide>
             </swiper>
         </div>
+
         <div class="lesson-container">
-            <div class="lesson-type">
-                <img src="../assets/personal-icon.png" alt="개인 레슨 아이콘" class="lesson-icon" />개인 레슨
-            </div>
-            <div class="lesson-type">
-                <img src="../assets/group-icon.png" alt="그룹 레슨 아이콘" class="lesson-icon" />그룹 레슨
-            </div>
-            <div class="lesson-type">
-                <router-link to="/onlinefeedbackform" class="router-decoration">
-                    <img src="../assets/online-icon.png" alt="온라인 레슨 아이콘" class="lesson-icon" />온라인 레슨
-                </router-link>
-            </div>
-            <div class="lesson-type">
-                <img src="../assets/ai-icon.png" alt="AI 피드백 아이콘" class="lesson-icon" />AI 피드백
-            </div>
+            <router-link
+                v-for="(lesson, index) in lessonTypes"
+                :key="index"
+                :to="lesson.route"
+                custom
+                v-slot="{ navigate }"
+            >
+                <div
+                    class="lesson-type"
+                    :class="{ active: lesson.isActive }"
+                    @mouseenter="setActive(index, true)"
+                    @mouseleave="setActive(index, false)"
+                    @click="navigate"
+                >
+                    <img :src="lesson.icon" :alt="lesson.alt" class="lesson-icon" />
+                    {{ lesson.text }}
+                </div>
+            </router-link>
         </div>
+
         <div class="popular-lesson">
             <h2>지금 가장 인기 있는 레슨</h2>
             <div class="lesson-list">
@@ -57,12 +63,48 @@ const bannerImages = ref([
     { src: 'https://kosa-final-project-team-3.github.io/cdn/banner_3.png', alt: 'Banner 3' },
     { src: 'https://kosa-final-project-team-3.github.io/cdn/banner_4.png', alt: 'Banner 4' },
 ]);
+
+const lessonTypes = ref([
+    {
+        icon: 'https://kosa-final-project-team-3.github.io/cdn/icon_personal.png',
+        alt: '개인 레슨 아이콘',
+        text: '개인 레슨',
+        isActive: false,
+        route: '/lesson/personal',
+    },
+    {
+        icon: 'https://kosa-final-project-team-3.github.io/cdn/icon_group.png',
+        alt: '그룹 레슨 아이콘',
+        text: '그룹 레슨',
+        isActive: false,
+        route: '/lesson/group',
+    },
+    {
+        icon: 'https://kosa-final-project-team-3.github.io/cdn/icon_online.png',
+        alt: '온라인 레슨 아이콘',
+        text: '온라인 레슨',
+        isActive: false,
+        route: '/lesson/online',
+    },
+    {
+        icon: 'https://kosa-final-project-team-3.github.io/cdn/icon_ai.png',
+        alt: 'AI 피드백 아이콘',
+        text: 'AI 피드백',
+        isActive: false,
+        route: '/lesson/ai',
+    },
+]);
+
+const setActive = (index, isActive) => {
+    lessonTypes.value[index].isActive = isActive;
+};
 </script>
 <style scoped>
 .lesson-container {
     display: flex;
-    margin: 20px;
+    margin: 50px;
     justify-content: center;
+    height: 120px;
 }
 
 .lesson-type {
@@ -70,16 +112,31 @@ const bannerImages = ref([
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 100px;
+    width: 100%;
     height: 100px;
     border-radius: 10px;
     margin: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.lesson-type.active {
+    background-color: #00bf63;
+    color: white;
+}
+.lesson-type.active img {
+    filter: brightness(0) invert(1);
 }
 
 .lesson-type a {
     text-decoration: none;
     color: black;
+}
+.lesson-type img {
+    width: 50px;
+    height: 50px;
 }
 
 .lesson-icon {
@@ -88,11 +145,7 @@ const bannerImages = ref([
     margin-right: auto;
     width: 50px;
     height: 50px;
-}
-
-.popular-lesson {
-    width: 80vw;
-    margin: 0 auto;
+    margin-bottom: 10px;
 }
 
 .lesson-list {
@@ -108,6 +161,12 @@ const bannerImages = ref([
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
+.popular-lesson {
+    width: 80vw;
+    margin: 0 auto;
+}
+
 .banner {
     display: flex;
     justify-content: center;
