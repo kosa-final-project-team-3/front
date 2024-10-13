@@ -3,6 +3,7 @@ import loginRoutes from './loginRoutes';
 import AIFeedback from '../components/lesson/AIFeedback.vue';
 import mypageRoutes from './mypageRoutes';
 import trainerpageRoutes from './trainerpageRoutes';
+import MemberDashboard from '../components/member/MemberDashboard.vue';
 import HomePage from '../pages/HomePage.vue';
 import lessonpageRoutes from './lessonpageRoutes';
 import MiddleCompo from '../components/layouts/MiddleCompo.vue';
@@ -26,6 +27,10 @@ const routes = [
         path: '/feedback/ai',
         name: 'AIFeedback',
         component: AIFeedback,
+    },
+    {
+        path: '/member/dashboard',
+        component: MemberDashboard,
     },
 ];
 
