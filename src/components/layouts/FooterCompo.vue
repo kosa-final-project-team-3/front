@@ -32,7 +32,6 @@ const showContactModal = () => {
     align-items: center;
 }
 .copyright {
-    font-family: 'Do Hyeon', sans-serif;
     color: white;
     margin: 15px;
     align-items: center;
@@ -46,7 +45,6 @@ const showContactModal = () => {
 
 .support-links a {
     color: white;
-    font-family: 'Do Hyeon', sans-serif;
     text-decoration: none;
 }
 

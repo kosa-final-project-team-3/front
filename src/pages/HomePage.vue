@@ -1,5 +1,9 @@
 <template>
     <div class="home-container">
+        <div v-if="showLogin" class="login-popup">
+            <KakaoLoginCompo @close="closeLogin" />
+        </div>
+
         <div class="banner">
             <swiper
                 :modules="modules"
@@ -51,11 +55,15 @@
 import { ref } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Pagination, Navigation } from 'swiper/modules';
+import KakaoLoginCompo from '../components/login/KakaoLoginCompo.vue';
+import { useAuthStore } from '../stores/authStore';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
 const modules = [Pagination, Navigation];
+const authStore = useAuthStore();
+const showLogin = ref(false);
 
 const bannerImages = ref([
     { src: 'https://kosa-final-project-team-3.github.io/cdn/banner_1.png', alt: 'Banner 1' },
@@ -70,14 +78,14 @@ const lessonTypes = ref([
         alt: '개인 레슨 아이콘',
         text: '개인 레슨',
         isActive: false,
-        route: '/lesson/personal',
+        route: '/lesson/offline', // personal
     },
     {
         icon: 'https://kosa-final-project-team-3.github.io/cdn/icon_group.png',
         alt: '그룹 레슨 아이콘',
         text: '그룹 레슨',
         isActive: false,
-        route: '/lesson/group',
+        route: '/lesson/offline', // group
     },
     {
         icon: 'https://kosa-final-project-team-3.github.io/cdn/icon_online.png',
@@ -98,13 +106,38 @@ const lessonTypes = ref([
 const setActive = (index, isActive) => {
     lessonTypes.value[index].isActive = isActive;
 };
+
+const openLogin = () => {
+    showLogin.value = true;
+};
+
+const closeLogin = () => {
+    showLogin.value = false;
+};
+
+authStore.openLogin = openLogin;
 </script>
 <style scoped>
+.login-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
 .lesson-container {
     display: flex;
-    margin: 50px;
+    margin: 50px 50px 100px 50px;
     justify-content: center;
     height: 120px;
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.2em;
 }
 
 .lesson-type {
@@ -163,6 +196,8 @@ const setActive = (index, isActive) => {
 }
 
 .popular-lesson {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.4em;
     width: 80vw;
     margin: 0 auto;
 }

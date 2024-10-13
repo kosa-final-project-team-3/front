@@ -1,6 +1,5 @@
 import { createWebHistory, createRouter } from 'vue-router';
 import loginRoutes from './loginRoutes';
-import AIFeedback from '../components/lesson/AIFeedback.vue';
 import mypageRoutes from './mypageRoutes';
 import trainerpageRoutes from './trainerpageRoutes';
 import MemberDashboard from '../components/member/MemberDashboard.vue';
@@ -22,11 +21,6 @@ const routes = [
             },
             ...lessonpageRoutes,
         ],
-    },
-    {
-        path: '/feedback/ai',
-        name: 'AIFeedback',
-        component: AIFeedback,
     },
     {
         path: '/member/dashboard',
