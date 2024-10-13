@@ -7,6 +7,7 @@ import HomePage from '../pages/HomePage.vue';
 import lessonpageRoutes from './lessonpageRoutes';
 import MiddleCompo from '../components/layouts/MiddleCompo.vue';
 import modalRoutes from './modalRoutes';
+import AIFeedback from '../components/lesson/AIFeedback.vue';
 
 const routes = [
     {
@@ -18,6 +19,11 @@ const routes = [
                 path: '',
                 name: 'HomePage',
                 component: HomePage,
+            },
+            {
+                path: 'feedback/ai',
+                name: 'AIFeedback',
+                component: AIFeedback,
             },
             ...lessonpageRoutes,
         ],
