@@ -21,7 +21,7 @@
                         <!-- <router-link to="/mypage">마이페이지</router-link> -->
                     </div>
                     <div class="auth-links">
-                        <router-link v-if="!isAuthenticated" to="/login">로그인</router-link>
+                        <a v-if="!isAuthenticated" @click.prevent="openLogin">로그인</a>
                         <router-link v-if="isAuthenticated" to="/logout" @click="handleLogout">로그아웃</router-link>
                     </div>
                 </div>
@@ -56,6 +56,10 @@ const accessPrivateResource = () => [
 const handleLogout = () => {
     authStore.logout();
     router.push('/');
+};
+
+const openLogin = () => {
+    authStore.openLogin();
 };
 </script>
 <style scoped>
@@ -111,8 +115,7 @@ const handleLogout = () => {
     padding-top: 15px;
     text-decoration: none;
     font-family: 'Do Hyeon', sans-serif;
-    font-size: 1.2em;
-    font-weight: bold;
+    font-size: 1.4em;
     position: relative;
     flex-grow: 1;
     text-align: center;
@@ -139,8 +142,7 @@ const handleLogout = () => {
     padding-top: 15px;
     text-decoration: none;
     font-family: 'Do Hyeon', sans-serif;
-    font-size: 1.1em;
-    font-weight: bold;
+    font-size: 1.3em;
     position: relative;
     flex-grow: 1;
     text-align: center;
