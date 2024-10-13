@@ -11,7 +11,7 @@
                 <div class="navbar-inner">
                     <router-link to="/lesson/offline">오프라인 레슨</router-link>
                     <router-link to="/lesson/online">온라인 레슨</router-link>
-                    <router-link to="/qna">질문 게시판</router-link>
+                    <router-link to="/feedback/ai">AI 피드백</router-link>
                 </div>
                 <div class="navbar-login">
                     <div class="dynamic-link">

@@ -99,7 +99,7 @@ const lessonTypes = ref([
         alt: 'AI 피드백 아이콘',
         text: 'AI 피드백',
         isActive: false,
-        route: '/lesson/ai',
+        route: '/feedback/ai',
     },
 ]);
 
