@@ -22,8 +22,8 @@ const host = API_SERVER_HOST;
 const kakaoLoginForm = useTemplateRef('kakaoLoginForm');
 
 const handleKakaoLogin = () => {
-    kakaoLoginForm.action = `http://${host}/oauth2/authorization/kakao`;
-    kakaoLoginForm.submit();
+    kakaoLoginForm.value.action = `http://${host}/oauth2/authorization/kakao`;
+    kakaoLoginForm.value.submit();
 };
 </script>
 
