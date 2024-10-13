@@ -6,28 +6,26 @@
         </div>
         <div v-if="activeTab === 'myInfo'" class="my-info">
             <h2>나의 정보</h2>
-            <p v-if="currentCategory">현재 나의 운동 카테고리: {{ currentCategory }}</p>
-            <form @submit.prevent="saveTrainerCategory">
-                <div class="form-group">
-                    <label for="exerciseCategory">운동 카테고리:</label>
-                    <select id="exerciseCategory" v-model="selectedCategory" required>
-                        <option value="">카테고리 선택</option>
-                        <option
-                            v-for="category in exerciseCategories"
-                            :key="category.exerciseCategoryCode"
-                            :value="category.exerciseCategoryCode"
-                        >
-                            {{ category.exerciseCategoryName }}
-                        </option>
-                    </select>
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn-save">수정하기</button>
-                </div>
-            </form>
+            <p>현재 나의 운동 카테고리: {{ currentCategory }}</p>
 
             <div class="trainer-profiles">
                 <h3>전문가 이력 정보</h3>
+                <button v-if="!isAddingProfile" @click="startAddingProfile" class="btn-add">이력 추가하기</button>
+                <div v-if="isAddingProfile" class="add-profile-form">
+                    <select v-model="newProfile.categoryName">
+                        <option v-for="category in profileCategories" :key="category" :value="category">
+                            {{ category }}
+                        </option>
+                    </select>
+                    <input v-model="newProfile.title" placeholder="제목" />
+                    <input v-model="newProfile.startDate" type="date" placeholder="시작일" />
+                    <input v-model="newProfile.endDate" type="date" placeholder="종료일" />
+                    <textarea v-model="newProfile.detail" placeholder="상세 정보"></textarea>
+                    <div class="form-actions">
+                        <button @click="cancelAddingProfile" class="btn-cancel">취소</button>
+                        <button @click="saveNewProfile" class="btn-save">저장하기</button>
+                    </div>
+                </div>
                 <div v-for="category in profileCategories" :key="category" class="profile-category">
                     <h4>{{ category }}</h4>
                     <ul>
@@ -71,7 +69,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, reactive } from 'vue';
 import { useAuthStore } from '../../stores/authStore';
 import jwtAxios, { API_SERVER_HOST } from '../../util/jwtUtil';
 
@@ -81,8 +79,6 @@ const isTrainer = computed(() => authStore.role === 'TRAINER');
 const memberId = computed(() => authStore.id);
 
 const activeTab = ref('myInfo');
-const exerciseCategories = ref([]);
-const selectedCategory = ref('');
 const days = ['월', '화', '수', '목', '금', '토', '일'];
 const isEditMode = ref(false);
 const selectedCells = ref({});
@@ -90,24 +86,29 @@ const isAuthenticated = computed(() => authStore.isAuthenticated);
 const trainerProfiles = ref([]);
 const profileCategories = ['교육사항', '수상이력', '자격증', '경력'];
 const currentCategory = ref('');
+const isAddingProfile = ref(false);
+const newProfile = reactive({
+    categoryName: '',
+    title: '',
+    startDate: '',
+    endDate: '',
+    detail: '',
+});
 
 onMounted(async () => {
     await authStore.checkAuthStatus();
     if (isAuthenticated.value && memberId.value && isTrainer.value) {
-        await fetchExerciseCategories();
         await fetchTrainerProfiles();
         await fetchCurrentCategory();
         await fetchTimeTable();
     }
 });
 
-const fetchExerciseCategories = async () => {
-    try {
-        const response = await jwtAxios.get(`http://${host}/api/trainer/exercise-categories`);
-        exerciseCategories.value = response.data;
-    } catch (error) {
-        console.error('Failed to fetch exercise categories:', error);
-    }
+const categoryMap = {
+    교육사항: 'EDU',
+    수상이력: 'AWARD',
+    자격증: 'CERT',
+    경력: 'EXP',
 };
 
 const fetchTrainerProfiles = async () => {
@@ -127,19 +128,6 @@ const fetchCurrentCategory = async () => {
         currentCategory.value = response.data.exerciseCategoryName;
     } catch (error) {
         console.error('Failed to fetch current category:', error);
-    }
-};
-
-const saveTrainerCategory = async () => {
-    try {
-        await jwtAxios.put(`http://${host}/api/trainer/${memberId.value}/update-category`, null, {
-            params: { exerciseCategoryCode: selectedCategory.value },
-        });
-        alert('운동 카테고리가 성공적으로 저장되었습니다.');
-        await fetchCurrentCategory(); // 카테고리 저장 후 현재 카테고리 다시 가져오기
-    } catch (error) {
-        console.error('Failed to save trainer category:', error);
-        alert('운동 카테고리 저장에 실패했습니다.');
     }
 };
 
@@ -236,6 +224,49 @@ const fetchTimeTable = async () => {
         });
     } catch (error) {
         console.error('Failed to fetch time table:', error);
+    }
+};
+
+const startAddingProfile = () => {
+    isAddingProfile.value = true;
+};
+
+const cancelAddingProfile = () => {
+    isAddingProfile.value = false;
+    resetNewProfile();
+};
+
+const resetNewProfile = () => {
+    Object.assign(newProfile, {
+        categoryName: '',
+        title: '',
+        startDate: '',
+        endDate: '',
+        detail: '',
+    });
+};
+
+const saveNewProfile = async () => {
+    try {
+        const profileData = [
+            {
+                trainerId: memberId.value,
+                categoryCode: categoryMap[newProfile.categoryName],
+                title: newProfile.title,
+                startDate: newProfile.startDate,
+                endDate: newProfile.endDate,
+                detail: newProfile.detail,
+            },
+        ];
+
+        await jwtAxios.post(`http://${host}/api/trainer/save`, profileData);
+        await fetchTrainerProfiles();
+        isAddingProfile.value = false;
+        resetNewProfile();
+        alert('새로운 이력이 성공적으로 추가되었습니다.');
+    } catch (error) {
+        console.error('Failed to save new profile:', error);
+        alert('이력 추가에 실패했습니다.');
     }
 };
 </script>
@@ -361,5 +392,55 @@ const fetchTimeTable = async () => {
 
 .profile-category li {
     margin-bottom: 0.5rem;
+}
+
+.btn-add {
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.add-profile-form {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+.add-profile-form select,
+.add-profile-form input,
+.add-profile-form textarea {
+    width: 100%;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+}
+
+.add-profile-form textarea {
+    height: 100px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-cancel,
+.btn-save {
+    margin-left: 0.5rem;
+    padding: 0.5rem 1rem;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-cancel {
+    background-color: #f44336;
+}
+
+.btn-save {
+    background-color: #4caf50;
 }
 </style>

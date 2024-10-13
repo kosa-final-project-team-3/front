@@ -5,6 +5,20 @@
             <p>✔️ 하나 이상의 인증을 등록해야 전문가로 전환됩니다.</p>
             <p>✔️ 인증 소요시간 2일~3일 입니다.</p>
 
+            <div class="form-group">
+                <label for="exerciseCategory">운동 카테고리:</label>
+                <select id="exerciseCategory" v-model="selectedCategory" required>
+                    <option value="">카테고리 선택</option>
+                    <option
+                        v-for="category in exerciseCategories"
+                        :key="category.exerciseCategoryCode"
+                        :value="category.exerciseCategoryCode"
+                    >
+                        {{ category.exerciseCategoryName }}
+                    </option>
+                </select>
+            </div>
+
             <div v-for="(category, index) in certificationCategories" :key="index" class="certification-category">
                 <h4>{{ category.name }}</h4>
                 <div v-for="(cert, certIndex) in category.certifications" :key="certIndex" class="certification-item">
@@ -16,6 +30,7 @@
                     <template v-else>
                         <input v-model="cert.date" type="date" />
                     </template>
+                    <textarea v-model="cert.detail" placeholder="상세 정보"></textarea>
                     <button @click="removeCertification(category, certIndex)" class="remove-btn">-</button>
                 </div>
                 <button @click="addCertification(category)" class="add-btn">+</button>
@@ -41,7 +56,13 @@
             </div>
 
             <div class="popup-actions">
-                <button @click="submitApplication" class="btn-submit" :disabled="!hasAnyCertification">신청하기</button>
+                <button
+                    @click="submitApplication"
+                    class="btn-submit"
+                    :disabled="!hasAnyCertification || !selectedCategory"
+                >
+                    신청하기
+                </button>
                 <button @click="close" class="btn-cancel">취소</button>
             </div>
         </div>
@@ -49,8 +70,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue';
-import axios from 'axios';
+import { ref, reactive, computed, onMounted } from 'vue';
 import { useAuthStore } from '../../stores/authStore';
 import jwtAxios, { API_SERVER_HOST } from '../../util/jwtUtil';
 
@@ -63,6 +83,9 @@ const emit = defineEmits(['close', 'submit']);
 const host = API_SERVER_HOST;
 const authStore = useAuthStore();
 
+const exerciseCategories = ref([]);
+const selectedCategory = ref('');
+
 const certificationCategories = reactive([
     { name: '교육사항', namePlaceholder: '교육 기관명', type: 'period', certifications: [] },
     { name: '수상이력', namePlaceholder: '수상명', type: 'date', certifications: [] },
@@ -72,9 +95,9 @@ const certificationCategories = reactive([
 
 const addCertification = (category) => {
     if (category.type === 'period') {
-        category.certifications.push({ name: '', startDate: '', endDate: '' });
+        category.certifications.push({ name: '', startDate: '', endDate: '', detail: '' });
     } else {
-        category.certifications.push({ name: '', date: '' });
+        category.certifications.push({ name: '', date: '', detail: '' });
     }
 };
 
@@ -104,8 +127,21 @@ const hasAnyCertification = computed(() => {
     return certificationCategories.some((category) => category.certifications.length > 0);
 });
 
+onMounted(async () => {
+    await fetchExerciseCategories();
+});
+
+const fetchExerciseCategories = async () => {
+    try {
+        const response = await jwtAxios.get(`http://${host}/api/trainer/exercise-categories`);
+        exerciseCategories.value = response.data;
+    } catch (error) {
+        console.error('Failed to fetch exercise categories:', error);
+    }
+};
+
 const submitApplication = async () => {
-    if (hasAnyCertification.value) {
+    if (hasAnyCertification.value && selectedCategory.value) {
         const profiles = certificationCategories.flatMap((category) =>
             category.certifications.map((cert) => ({
                 trainerId: authStore.id,
@@ -114,17 +150,21 @@ const submitApplication = async () => {
                 title: cert.name,
                 startDate: cert.startDate || cert.date,
                 endDate: cert.endDate || cert.date,
-                detail: '', // 필요한 경우 상세 정보 필드를 추가하세요
+                detail: cert.detail,
             })),
         );
 
+        console.log(profiles);
         try {
             await jwtAxios.post(`http://${host}/api/trainer/save`, profiles);
-            alert('트레이너 프로필이 성공적으로 저장되었습니다.');
+            await jwtAxios.put(`http://${host}/api/trainer/${authStore.id}/update-category`, null, {
+                params: { exerciseCategoryCode: selectedCategory.value },
+            });
+            alert('전문가 전환 신청이 완료되었습니다.');
             emit('close');
         } catch (error) {
             console.error('Failed to save trainer profiles:', error);
-            alert('트레이너 프로필 저장 중 오류가 발생했습니다.');
+            alert('전문가 전환 신청 중 오류가 발생했습니다.');
         }
     }
 };
@@ -174,12 +214,18 @@ const close = () => {
 
 .certification-item {
     display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+.certification-item input,
+.certification-item textarea {
     margin-bottom: 0.5rem;
 }
 
-.certification-item input {
-    flex: 1;
-    margin-right: 0.5rem;
+.certification-item textarea {
+    height: 60px;
+    resize: vertical;
 }
 
 .add-btn,
@@ -218,6 +264,7 @@ const close = () => {
     color: white;
     border: none;
 }
+
 .document-submission {
     display: flex;
     flex-direction: column;
@@ -251,5 +298,20 @@ const close = () => {
     border: none;
     cursor: pointer;
     margin-right: 0.5rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.form-group select {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
 }
 </style>

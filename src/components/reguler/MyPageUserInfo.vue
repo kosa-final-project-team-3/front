@@ -2,12 +2,29 @@
     <div class="my-page-user-info" v-if="isAuthenticated">
         <h2>나의 정보</h2>
         <form @submit.prevent="saveUserInfo">
-            <div class="form-group" v-for="(value, key) in userInfo" :key="key">
+            <div class="form-group" v-for="(value, key) in displayUserInfo" :key="key">
                 <label :for="key">{{ getLabel(key) }}:</label>
-                <input :id="key" v-model="userInfo[key]" :type="getInputType(key)" :disabled="!isEditing" required />
+                <template v-if="key === 'gender' && !isEditing">
+                    <input :id="key" :value="getGenderDisplay(value)" disabled />
+                </template>
+                <template v-else-if="key === 'gender' && isEditing">
+                    <select :id="key" v-model="userInfo[key]" required>
+                        <option value="m">남자</option>
+                        <option value="f">여자</option>
+                    </select>
+                </template>
+                <template v-else>
+                    <input
+                        :id="key"
+                        v-model="userInfo[key]"
+                        :type="getInputType(key)"
+                        :disabled="!isEditing"
+                        required
+                    />
+                </template>
             </div>
 
-            <button v-if="!isExpert" type="button" @click="showExpertPopup" class="btn-become-expert">
+            <button v-if="role !== 'TRAINER'" type="button" @click="showExpertPopup" class="btn-become-expert">
                 전문가로 전환하기
             </button>
 
@@ -31,6 +48,7 @@ const host = API_SERVER_HOST;
 const authStore = useAuthStore();
 const isAuthenticated = computed(() => authStore.isAuthenticated);
 const memberId = computed(() => authStore.id);
+const role = computed(() => authStore.role);
 
 const userInfo = reactive({
     username: '',
@@ -43,7 +61,6 @@ const userInfo = reactive({
 });
 
 const originalUserInfo = ref(null);
-const isExpert = ref(false);
 const isExpertPopupVisible = ref(false);
 const isEditing = ref(false);
 
@@ -107,8 +124,11 @@ const closeExpertPopup = () => {
 const submitExpertApplication = ({ certificationCategories, attachedFiles }) => {
     console.log('Submitting expert application:', certificationCategories);
     console.log('Attached files:', attachedFiles);
-    isExpert.value = true;
-    closeExpertPopup();
+    isExpertPopupVisible.value = false;
+};
+
+const getGenderDisplay = (gender) => {
+    return gender === 'm' ? '남자' : gender === 'f' ? '여자' : '';
 };
 
 const getLabel = (key) => {
@@ -127,13 +147,17 @@ const getLabel = (key) => {
 const getInputType = (key) => {
     const types = {
         birth: 'date',
-        gender: 'select',
         phone: 'tel',
         tall: 'number',
         bodyWeight: 'number',
     };
     return types[key] || 'text';
 };
+
+const displayUserInfo = computed(() => {
+    const { username, birth, gender, phone, address, tall, bodyWeight } = userInfo;
+    return { username, birth, gender, phone, address, tall, bodyWeight };
+});
 </script>
 
 <style scoped>
