@@ -7,7 +7,7 @@
                 <img :src="lesson.image" alt="레슨 이미지" class="lesson-image" />
                 <div class="lesson-details">
                     <p><strong>종목:</strong> {{ lesson.category }}</p>
-                    <p><strong>레슨명:</strong> {{ lesson.title }}</p>
+                    <p v-if="selectedType !== '온라인 피드백'"><strong>레슨명:</strong> {{ lesson.title }}</p>
                     <p><strong>강사:</strong> {{ lesson.trainer }}</p>
                     <p><strong>가격:</strong> {{ lesson.price }}원</p>
                     <p><strong>강사 이력:</strong></p>
@@ -28,7 +28,7 @@
                 <p><strong>레슨 일정</strong>: {{ lesson.schedule }}</p>
             </div>
 
-            <div class="lesson-location">
+            <div class="lesson-location" v-if="selectedType === '개인 레슨' || selectedType === '그룹 레슨'">
                 <p><strong>수업 장소:</strong> {{ lesson.location }}</p>
                 <map-view :location="lesson.location" />
             </div>

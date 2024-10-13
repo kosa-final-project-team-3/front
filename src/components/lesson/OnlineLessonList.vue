@@ -1,22 +1,22 @@
 <template>
     <div class="lesson-page">
         <div class="top-header">
-            <h1>오프라인 레슨</h1>
+            <h1>온라인 레슨</h1>
             <div class="lesson-type-buttons">
                 <button
-                    @click="selectLessonType('개인 레슨')"
-                    :class="{ active: selectedType === '개인 레슨' }"
+                    @click="selectLessonType('온라인 레슨')"
+                    :class="{ active: selectedType === '온라인 레슨' }"
                     class="lesson-type-button"
                 >
-                    개인 레슨
+                    온라인 레슨
                 </button>
 
                 <button
-                    @click="selectLessonType('그룹 레슨')"
-                    :class="{ active: selectedType === '그룹 레슨' }"
+                    @click="selectLessonType('온라인 피드백')"
+                    :class="{ active: selectedType === '온라인 피드백' }"
                     class="lesson-type-button"
                 >
-                    그룹 레슨
+                    온라인 피드백
                 </button>
             </div>
         </div>
@@ -60,16 +60,10 @@
             >
                 <img :src="lesson.image" alt="레슨 이미지" class="lesson-image" />
                 <div class="lesson-info">
-                    <h3 class="lesson-title">{{ lesson.title }}</h3>
+                    <h3 v-if="selectedType === '온라인 레슨'" class="lesson-title">{{ lesson.title }}</h3>
                     <p>강사: {{ lesson.trainer }}</p>
                     <p>{{ lesson.category }}</p>
                     <p>가격: {{ lesson.price }}원</p>
-                    <!-- 그룹 레슨일 경우 -->
-                    <div v-if="selectedType === '그룹 레슨'">
-                        <p>모집 기간: {{ lesson.recruitmentPeriod }}</p>
-                        <p>최대 인원: {{ lesson.maxParticipants }}명</p>
-                        <p>레슨 일정: {{ lesson.schedule }}</p>
-                    </div>
                 </div>
             </div>
         </div>
@@ -82,7 +76,17 @@
             @openInquiry="openInquiryForm"
         />
 
-        <inquiry-form v-if="showInquiryForm" :lesson="selectedLesson" @close="closeInquiryForm" />
+        <inquiry-form
+            v-if="showInquiryForm && selectedType === '온라인 레슨'"
+            :lesson="selectedLesson"
+            @close="closeInquiryForm"
+        />
+
+        <feedback-request
+            v-if="showInquiryForm && selectedType === '온라인 피드백'"
+            :lesson="selectedLesson"
+            @close="closeInquiryForm"
+        />
     </div>
 </template>
 
@@ -90,19 +94,18 @@
 import { ref, computed } from 'vue';
 import LessonDetail from './LessonDetail.vue';
 import InquiryForm from './InquiryForm.vue';
+import FeedbackRequest from './FeedbackRequest.vue';
 
 const lessons = ref([
     {
+        type: '온라인 레슨',
         title: '전신 운동 PT',
         trainer: '강철희',
-        level: '초급',
         category: '헬스',
         description: '초보자에게 적합한 전신 강화 트레이닝.',
         price: 60000,
         trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
-        location: '서울 종로구 혜화로 20',
         image: 'https://www.example.com/lesson-pt.jpg',
-        maxParticipants: null, // 개인 레슨
         reviews: [
             '친절하고 설명이 명확합니다.',
             '운동 동작을 세심하게 지도해줘서 좋았어요.',
@@ -118,16 +121,14 @@ const lessons = ref([
         },
     },
     {
+        type: '온라인 레슨',
         title: '고강도 요가',
         trainer: '서진이',
-        level: '중급',
         category: '요가',
         description: '유연성 향상과 근력 강화에 도움을 주는 중급자 요가.',
         price: 50000,
         trainerProfile: ['요가 전문 자격증 보유'],
-        location: '서울 마포구',
         image: 'https://www.example.com/lesson-yoga.jpg',
-        maxParticipants: 12, // 그룹 레슨
         reviews: ['유연성이 많이 향상되었어요!', '운동 중간중간 자세 교정이 꼼꼼해서 좋습니다.'],
         ratings: {
             전문성: 5,
@@ -138,16 +139,13 @@ const lessons = ref([
         },
     },
     {
-        title: '필라테스 집중 코어',
+        type: '온라인 피드백',
         trainer: '이은정',
-        level: '고급',
         category: '필라테스',
-        description: '코어 강화에 특화된 고급 필라테스 수업입니다.',
+        description: '코어 강화에 특화된 필라테스 피드백입니다.',
         price: 70000,
         trainerProfile: ['필라테스 마스터 트레이너'],
-        location: '서울 강북구',
         image: 'https://www.example.com/lesson-pilates.jpg',
-        maxParticipants: 8, // 그룹 레슨
         reviews: ['수업이 아주 체계적이고 좋아요.', '상세한 피드백을 받을 수 있어요.'],
         ratings: {
             전문성: 5,
@@ -161,34 +159,22 @@ const lessons = ref([
 
 const categories = ref(['헬스', '요가', '필라테스', '수영', '댄스', '볼링', '골프', '기타']);
 
-const selectedType = ref('개인 레슨');
+const selectedType = ref('온라인 레슨');
 const selectedLesson = ref(null); // 선택된 레슨
 const selectedCategory = ref('');
 const searchQuery = ref(''); // 검색
 const selectedSort = ref('popularity'); // 정렬
 const showInquiryForm = ref(false); // 문의하기 폼 상태
 
-const filteredByType = computed(() => {
-    return lessons.value.filter((lesson) => {
-        if (selectedType.value === '개인 레슨') {
-            return lesson.maxParticipants === null;
-        } else if (selectedType.value === '그룹 레슨') {
-            return lesson.maxParticipants !== null;
-        }
-        return true;
-    });
-});
-
 const filteredLessons = computed(() => {
-    return filteredByType.value.filter((lesson) => {
+    return lessons.value.filter((lesson) => {
+        const matchesType = lesson.type === selectedType.value;
         const matchesSearch =
-            lesson.title.includes(searchQuery.value) ||
-            lesson.trainer.includes(searchQuery.value) ||
-            lesson.location.includes(searchQuery.value);
-
+            (lesson.title && lesson.title.includes(searchQuery.value)) ||
+            (lesson.trainer && lesson.trainer.includes(searchQuery.value));
         const matchesCategory = !selectedCategory.value || lesson.category === selectedCategory.value;
 
-        return matchesSearch && matchesCategory;
+        return matchesType && matchesSearch && matchesCategory;
     });
 });
 
