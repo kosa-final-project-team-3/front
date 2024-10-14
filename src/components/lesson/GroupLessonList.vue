@@ -1,21 +1,6 @@
 <template>
     <div class="lesson-container">
-        <div class="search-sort-container">
-            <div class="search-container">
-                <form>
-                    <input type="text" v-model="searchKeyword" placeholder="검색어를 입력하세요" />
-                </form>
-            </div>
-
-            <div class="sort-container">
-                <select v-model="selectedSort">
-                    <option value="popular">인기순</option>
-                    <option value="rating">만족도순</option>
-                    <option value="price">가격순</option>
-                </select>
-            </div>
-        </div>
-
+        <search-compo />
         <div class="lesson-category">
             <button
                 @click="selectCategory('')"
@@ -72,6 +57,8 @@
 import { ref, computed } from 'vue';
 import LessonDetail from './LessonDetail.vue';
 import InquiryForm from './InquiryForm.vue';
+import SearchCompo from '../search/SearchCompo.vue';
+
 const lessons = ref([
     {
         title: '그룹 전신 운동 PT',
