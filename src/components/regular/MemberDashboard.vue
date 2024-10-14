@@ -42,7 +42,7 @@ const chartData = computed(() => {
             {
                 label: '체중 (kg)',
                 data: weightData.value.map((item) => item.weight),
-                borderColor: '#4bc0c0',
+                borderColor: '#00bf63',
                 tension: 0.1,
                 fill: false,
             },
@@ -79,10 +79,14 @@ onMounted(() => {});
 .weight-dashboard {
     max-width: 800px;
     margin: 0 auto;
-    padding: 20px;
+}
+
+.weight-dashboard h2 {
+    font-family: 'Do Hyeon', sans-serif;
+    text-align: center;
 }
 
 .chart-container {
-    margin-top: 20px;
+    margin-top: 50px;
 }
 </style>
