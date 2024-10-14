@@ -15,7 +15,7 @@
                 </div>
                 <div class="navbar-login">
                     <div class="dynamic-link">
-                        <router-link v-if="role == 'TRAINER'" to="/trainer">트레이너페이지</router-link>
+                        <router-link v-if="isTrainer" to="/trainer/info">트레이너페이지</router-link>
                         <router-link v-if="isAuthenticated" to="/mypage">마이페이지</router-link>
                     </div>
                     <div class="auth-links">
@@ -35,7 +35,7 @@ import jwtAxios, { API_SERVER_HOST } from '../../util/jwtUtil';
 const host = API_SERVER_HOST;
 const authStore = useAuthStore();
 const isAuthenticated = computed(() => authStore.isAuthenticated);
-const role = computed(() => authStore.role);
+const isTrainer = computed(() => authStore.role === 'TRAINER');
 authStore.checkAuthStatus();
 
 const handleLogout = () => {
@@ -68,6 +68,7 @@ const openLogin = () => {
     display: flex;
     height: 100%;
     flex-direction: column;
+    margin-top: 20px;
 }
 .logo-container-inner > a {
     display: flex;

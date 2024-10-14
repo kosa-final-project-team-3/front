@@ -30,6 +30,7 @@ const showContactModal = () => {
     justify-content: space-between;
     text-align: center;
     align-items: center;
+    flex-shrink: 0;
 }
 .copyright {
     color: white;

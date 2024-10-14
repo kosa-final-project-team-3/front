@@ -2,7 +2,9 @@
     <div class="app">
         <div v-if="useLayout">
             <header-compo />
-            <router-view />
+            <main class="main-content">
+                <router-view />
+            </main>
             <footer-compo />
         </div>
         <div v-else>
@@ -26,7 +28,13 @@ const useLayout = computed(() => {
 
 <style scoped>
 .app {
+    min-height: 100vh;
     margin: -8px;
     height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    overflow-y: auto;
 }
 </style>

@@ -7,11 +7,11 @@
                 <router-link :to="{ name: 'TrainerPageLessons' }" class="sidebar-item">나의 레슨 관리</router-link>
                 <router-link :to="{ name: 'TrainerPageUserDiary' }" class="sidebar-item">회원 일지 관리</router-link>
             </aside>
-
-            <main class="main-content">
-                <router-view></router-view>
-            </main>
         </div>
+
+        <main class="main-content">
+            <router-view></router-view>
+        </main>
     </div>
 </template>
 

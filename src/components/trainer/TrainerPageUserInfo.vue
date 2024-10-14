@@ -5,14 +5,17 @@
             <button @click="activeTab = 'timeTable'" :class="{ active: activeTab === 'timeTable' }">타임테이블</button>
         </div>
         <div v-if="activeTab === 'myInfo'" class="my-info">
-            <h2>나의 정보</h2>
             <p>현재 나의 운동 카테고리: {{ currentCategory }}</p>
+            <hr class="full-line" />
 
             <div class="trainer-profiles">
-                <h3>전문가 이력 정보</h3>
-                <button v-if="!isAddingProfile" @click="startAddingProfile" class="btn-add">이력 추가하기</button>
+                <div class="profile-header">
+                    <p>전문가 이력 정보</p>
+                    <button v-if="!isAddingProfile" @click="startAddingProfile" class="btn-add">이력 추가하기</button>
+                </div>
                 <div v-if="isAddingProfile" class="add-profile-form">
                     <select v-model="newProfile.categoryName">
+                        <option value="" disabled selected>카테고리를 선택해주세요.</option>
                         <option v-for="category in profileCategories" :key="category" :value="category">
                             {{ category }}
                         </option>
@@ -27,7 +30,7 @@
                     </div>
                 </div>
                 <div v-for="category in profileCategories" :key="category" class="profile-category">
-                    <h4>{{ category }}</h4>
+                    <p>{{ category }}</p>
                     <ul>
                         <li v-for="profile in getProfilesByCategory(category)" :key="profile.trainerProfileId">
                             {{ profile.title }}
@@ -97,6 +100,7 @@ const newProfile = reactive({
 
 onMounted(async () => {
     await authStore.checkAuthStatus();
+    console.log(memberId.value);
     if (isAuthenticated.value && memberId.value && isTrainer.value) {
         await fetchTrainerProfiles();
         await fetchCurrentCategory();
@@ -126,6 +130,7 @@ const fetchCurrentCategory = async () => {
     try {
         const response = await jwtAxios.get(`http://${host}/api/trainer/${memberId.value}`);
         currentCategory.value = response.data.exerciseCategoryName;
+        console.log(currentCategory.value);
     } catch (error) {
         console.error('Failed to fetch current category:', error);
     }
@@ -278,7 +283,7 @@ const saveNewProfile = async () => {
 
 .tabs {
     display: flex;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
 }
 
 .tabs button {
@@ -286,18 +291,51 @@ const saveNewProfile = async () => {
     border: none;
     background-color: #f0f0f0;
     cursor: pointer;
+    font-size: 18px;
+    font-family: 'Do Hyeon', sans-serif;
 }
 
 .tabs button.active {
-    background-color: #007bff;
+    background-color: #00bf63;
     color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.my-info p {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.5rem;
+    margin-bottom: 50px;
+}
+
+.full-line {
+    width: 70vw;
+    margin: 20px 0; /* 위 아래 여백 조정 */
+    border: none;
+    height: 1px;
+    background-color: #000; /* 선의 색상 */
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.profile-header p {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.5rem;
+    margin: 0; /* 기본 마진 제거 */
 }
 
 .profile-category {
-    margin-bottom: 2rem;
+    font-family: 'Do Hyeon', sans-serif;
+    margin-bottom: 1rem;
 }
 
-.profile-category h3 {
+.profile-category p {
+    font-size: 1.3rem;
     margin-bottom: 1rem;
 }
 
@@ -310,7 +348,7 @@ const saveNewProfile = async () => {
     margin-bottom: 1rem;
     padding: 1rem;
     background-color: #f8f9fa;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 .time-table {
@@ -377,37 +415,21 @@ const saveNewProfile = async () => {
     margin-top: 2rem;
 }
 
-.profile-category {
-    margin-bottom: 1rem;
-}
-
-.profile-category h4 {
-    margin-bottom: 0.5rem;
-}
-
-.profile-category ul {
-    list-style-type: none;
-    padding-left: 1rem;
-}
-
-.profile-category li {
-    margin-bottom: 0.5rem;
-}
-
 .btn-add {
-    margin-bottom: 1rem;
+    margin: 1rem 5rem 1rem 0;
     padding: 0.5rem 1rem;
-    background-color: #4caf50;
+    background-color: #00bf63;
     color: white;
     border: none;
     cursor: pointer;
+    border-radius: 10px;
 }
 
 .add-profile-form {
     margin-bottom: 1rem;
     padding: 1rem;
     background-color: #f8f9fa;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 .add-profile-form select,
@@ -416,10 +438,13 @@ const saveNewProfile = async () => {
     width: 100%;
     margin-bottom: 0.5rem;
     padding: 0.5rem;
+    box-sizing: border-box;
+    font-size: 0.8rem;
 }
 
 .add-profile-form textarea {
     height: 100px;
+    resize: vertical;
 }
 
 .form-actions {
@@ -434,6 +459,7 @@ const saveNewProfile = async () => {
     color: white;
     border: none;
     cursor: pointer;
+    border-radius: 10px;
 }
 
 .btn-cancel {
@@ -441,6 +467,6 @@ const saveNewProfile = async () => {
 }
 
 .btn-save {
-    background-color: #4caf50;
+    background-color: #00bf63;
 }
 </style>
