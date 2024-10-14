@@ -2,9 +2,9 @@
     <div class="container">
         <div class="content-wrapper">
             <aside class="sidebar">
-                <h3>온라인 레슨</h3>
-                <router-link class="sidebar-item" :to="{ name: 'OnlineLesson' }">온라인 PT</router-link>
-                <router-link class="sidebar-item" :to="{ name: 'OnlineFeedback' }">온라인 피드백</router-link>
+                <h3>오프라인 레슨</h3>
+                <router-link class="sidebar-item" :to="{ name: 'PersonalLessonList' }">개인 레슨</router-link>
+                <router-link class="sidebar-item" :to="{ name: 'GroupLessonList' }">그룹 레슨</router-link>
             </aside>
         </div>
 

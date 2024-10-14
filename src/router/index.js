@@ -8,7 +8,7 @@ import lessonpageRoutes from './lessonpageRoutes';
 import MiddleCompo from '../components/layouts/MiddleCompo.vue';
 import modalRoutes from './modalRoutes';
 import AIFeedback from '../components/lesson/AIFeedback.vue';
-
+import MBTIPage from '../components/mainpage/MBTIPage.vue';
 const routes = [
     {
         path: '/',
@@ -24,6 +24,11 @@ const routes = [
                 path: 'feedback/ai',
                 name: 'AIFeedback',
                 component: AIFeedback,
+            },
+            {
+                path: '/mbti',
+                name: 'MBTIPage',
+                component: MBTIPage,
             },
             ...lessonpageRoutes,
         ],
