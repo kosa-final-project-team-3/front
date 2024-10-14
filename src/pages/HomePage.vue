@@ -1,8 +1,8 @@
 <template>
     <div class="home-container">
-        <div v-if="showLogin" class="login-popup">
-            <KakaoLoginCompo @close="closeLogin" />
-        </div>
+        <Modal v-if="showLoginModal" @close="showLoginModal = false">
+            <KakaoLoginCompo />
+        </Modal>
 
         <div class="banner">
             <swiper
@@ -61,10 +61,11 @@ import { useAuthStore } from '../stores/authStore';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
+import Modal from '../components/common/Modal.vue';
 
 const modules = [Pagination, Navigation];
 const authStore = useAuthStore();
-const showLogin = ref(false);
+const showLoginModal = ref(false);
 
 const bannerImages = ref([
     { src: 'https://kosa-final-project-team-3.github.io/cdn/banner_1.png', alt: 'Banner 1' },
@@ -109,11 +110,7 @@ const setActive = (index, isActive) => {
 };
 
 const openLogin = () => {
-    showLogin.value = true;
-};
-
-const closeLogin = () => {
-    showLogin.value = false;
+    showLoginModal.value = true;
 };
 
 authStore.openLogin = openLogin;

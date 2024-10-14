@@ -65,7 +65,6 @@ const openLogin = () => {
 <style scoped>
 .header {
     width: 100%;
-    padding: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -136,6 +135,7 @@ const openLogin = () => {
     width: 40%;
     display: flex;
     margin-left: auto;
+    justify-content: space-evenly;
 }
 .navbar-login a {
     color: #545454;
