@@ -42,8 +42,10 @@
             </div>
         </div>
         <div v-if="activeTab === 'timeTable'" class="time-table">
-            <h2>타임테이블</h2>
-            <button @click="toggleEditMode">{{ isEditMode ? '저장' : '수정' }}</button>
+            <div class="time-table-header">
+                <p>타임테이블</p>
+                <button @click="toggleEditMode">{{ isEditMode ? '저장' : '수정' }}</button>
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -299,7 +301,6 @@ const saveNewProfile = async () => {
     background-color: #00bf63;
     color: white;
     font-size: 20px;
-    font-weight: bold;
 }
 
 .my-info p {
@@ -310,7 +311,6 @@ const saveNewProfile = async () => {
 
 .full-line {
     width: 70vw;
-    margin: 20px 0; /* 위 아래 여백 조정 */
     border: none;
     height: 1px;
     background-color: #000; /* 선의 색상 */
@@ -355,9 +355,23 @@ const saveNewProfile = async () => {
     overflow-x: auto;
 }
 
+.time-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.time-table p {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.5rem;
+    margin: 0 0 0 1rem;
+}
+
 .time-table table {
-    width: 100%;
+    width: 70vw;
     border-collapse: collapse;
+    margin-bottom: 5rem;
 }
 
 .time-table th,
@@ -368,16 +382,21 @@ const saveNewProfile = async () => {
 }
 
 .time-table td.selected {
-    background-color: #007bff;
+    background-color: #00bf63;
 }
 
 .time-table button {
-    margin-bottom: 10px;
-    padding: 5px 10px;
-    background-color: #28a745;
+    margin: 1rem 1rem 1rem 0;
+    padding: 0.5rem 1rem;
+    background-color: #00bf63;
     color: white;
     border: none;
     cursor: pointer;
+    border-radius: 10px;
+}
+
+.time-table button:hover {
+    background-color: #00994d;
 }
 
 .form-group {
@@ -399,18 +418,6 @@ const saveNewProfile = async () => {
     margin-top: 1rem;
 }
 
-.btn-save {
-    padding: 0.5rem 1rem;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-.btn-save:hover {
-    background-color: #45a049;
-}
-
 .trainer-profiles {
     margin-top: 2rem;
 }
@@ -423,6 +430,10 @@ const saveNewProfile = async () => {
     border: none;
     cursor: pointer;
     border-radius: 10px;
+}
+
+.btn-add:hover {
+    background-color: #00994d;
 }
 
 .add-profile-form {
@@ -466,7 +477,15 @@ const saveNewProfile = async () => {
     background-color: #f44336;
 }
 
+.btn-cancel:hover {
+    background-color: #d32f2f;
+}
+
 .btn-save {
     background-color: #00bf63;
+}
+
+.btn-save:hover {
+    background-color: #00994d;
 }
 </style>

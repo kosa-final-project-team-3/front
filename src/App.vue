@@ -31,6 +31,8 @@ const useLayout = computed(() => {
     min-height: 100vh;
     margin: -8px;
     height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .main-content {
