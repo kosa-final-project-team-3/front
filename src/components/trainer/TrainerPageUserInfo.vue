@@ -1,65 +1,42 @@
 <template>
-    <div class="trainer-page-user-info">
+    <div v-if="isTrainer" class="trainer-page-user-info">
         <div class="tabs">
             <button @click="activeTab = 'myInfo'" :class="{ active: activeTab === 'myInfo' }">나의 정보</button>
             <button @click="activeTab = 'timeTable'" :class="{ active: activeTab === 'timeTable' }">타임테이블</button>
         </div>
         <div v-if="activeTab === 'myInfo'" class="my-info">
             <h2>나의 정보</h2>
-            <form @submit.prevent="saveUserInfo">
-                <div class="form-group">
-                    <label for="name">이름:</label>
-                    <input id="name" v-model="userInfo.name" type="text" required />
-                </div>
-                <div class="form-group">
-                    <label for="birthdate">생년월일:</label>
-                    <input id="birthdate" v-model="userInfo.birthdate" type="date" required />
-                </div>
-                <div class="form-group">
-                    <label for="gender">성별:</label>
-                    <select id="gender" v-model="userInfo.gender" required>
-                        <option value="male">남성</option>
-                        <option value="female">여성</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="phone">핸드폰 번호:</label>
-                    <input id="phone" v-model="userInfo.phone" type="tel" required />
-                </div>
-                <div class="form-group">
-                    <label for="address">주소:</label>
-                    <input id="address" v-model="userInfo.address" type="text" required />
-                </div>
-                <div class="form-group">
-                    <label for="height">신장 (cm):</label>
-                    <input id="height" v-model="userInfo.height" type="number" required />
-                </div>
-                <div class="form-group">
-                    <label for="weight">체중 (kg):</label>
-                    <input id="weight" v-model="userInfo.weight" type="number" required />
-                </div>
+            <p>현재 나의 운동 카테고리: {{ currentCategory }}</p>
 
-                <div class="expert-info">
-                    <h3>전문가 이력 정보</h3>
-                    <div v-for="(category, index) in expertInfo" :key="index" class="expert-category">
-                        <h4>{{ getCategoryName(category.name) }}</h4>
-                        <ul>
-                            <li v-for="(item, itemIndex) in category.certifications" :key="itemIndex">
-                                {{ item.name }}
-                                <span v-if="category.type === 'period'">
-                                    ({{ item.startDate }} ~ {{ item.endDate }})
-                                </span>
-                                <span v-else> ({{ item.date }}) </span>
-                            </li>
-                        </ul>
+            <div class="trainer-profiles">
+                <h3>전문가 이력 정보</h3>
+                <button v-if="!isAddingProfile" @click="startAddingProfile" class="btn-add">이력 추가하기</button>
+                <div v-if="isAddingProfile" class="add-profile-form">
+                    <select v-model="newProfile.categoryName">
+                        <option v-for="category in profileCategories" :key="category" :value="category">
+                            {{ category }}
+                        </option>
+                    </select>
+                    <input v-model="newProfile.title" placeholder="제목" />
+                    <input v-model="newProfile.startDate" type="date" placeholder="시작일" />
+                    <input v-model="newProfile.endDate" type="date" placeholder="종료일" />
+                    <textarea v-model="newProfile.detail" placeholder="상세 정보"></textarea>
+                    <div class="form-actions">
+                        <button @click="cancelAddingProfile" class="btn-cancel">취소</button>
+                        <button @click="saveNewProfile" class="btn-save">저장하기</button>
                     </div>
                 </div>
-
-                <div class="form-actions">
-                    <button type="button" @click="cancelEdit" class="btn-cancel">취소</button>
-                    <button type="submit" class="btn-save">저장하기</button>
+                <div v-for="category in profileCategories" :key="category" class="profile-category">
+                    <h4>{{ category }}</h4>
+                    <ul>
+                        <li v-for="profile in getProfilesByCategory(category)" :key="profile.trainerProfileId">
+                            {{ profile.title }}
+                            ({{ formatDate(profile.startDate) }} ~ {{ formatDate(profile.endDate) }})
+                            <p>{{ profile.detail }}</p>
+                        </li>
+                    </ul>
                 </div>
-            </form>
+            </div>
         </div>
         <div v-if="activeTab === 'timeTable'" class="time-table">
             <h2>타임테이블</h2>
@@ -86,176 +63,215 @@
             </table>
         </div>
     </div>
+    <div v-else>
+        <h2>접근 권한이 없습니다.</h2>
+    </div>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, computed, onMounted, reactive } from 'vue';
+import { useAuthStore } from '../../stores/authStore';
+import jwtAxios, { API_SERVER_HOST } from '../../util/jwtUtil';
 
-const userInfo = reactive({
-    name: '홍길동',
-    birthdate: '1990-01-01',
-    gender: 'male',
-    phone: '010-1234-5678',
-    address: '서울시 강남구',
-    height: '175',
-    weight: '70',
-});
-
-const originalUserInfo = ref({ ...userInfo });
-
-// 더미 데이터로 전문가 정보 설정
-const expertInfo = ref([
-    {
-        name: '교육사항',
-        type: 'period',
-        certifications: [
-            { name: '체육학과', startDate: '2010-03-01', endDate: '2014-02-28' },
-            { name: '스포츠 마케팅 석사', startDate: '2014-03-01', endDate: '2016-02-29' },
-        ],
-    },
-    {
-        name: '자격증',
-        type: 'date',
-        certifications: [
-            { name: '생활스포츠지도사 2급', date: '2015-12-15' },
-            { name: '건강운동관리사', date: '2017-06-30' },
-        ],
-    },
-    {
-        name: '경력',
-        type: 'period',
-        certifications: [
-            { name: 'ABC 피트니스 센터 트레이너', startDate: '2016-03-01', endDate: '2019-02-28' },
-            { name: 'XYZ 헬스클럽 수석 트레이너', startDate: '2019-03-01', endDate: '현재' },
-        ],
-    },
-]);
-
-const saveUserInfo = () => {
-    // TODO: Implement API call to save user info
-    console.log('Saving user info:', userInfo);
-    // Update originalUserInfo after successful save
-    originalUserInfo.value = { ...userInfo };
-};
-
-const cancelEdit = () => {
-    // Reset form to original values
-    Object.assign(userInfo, originalUserInfo.value);
-};
-
-const getCategoryName = (name) => {
-    const categoryNames = {
-        교육사항: '교육 이력',
-        수상이력: '수상 경력',
-        자격증: '보유 자격증',
-        경력: '근무 경력',
-    };
-    return categoryNames[name] || name;
-};
+const host = API_SERVER_HOST;
+const authStore = useAuthStore();
+const isTrainer = computed(() => authStore.role === 'TRAINER');
+const memberId = computed(() => authStore.id);
 
 const activeTab = ref('myInfo');
 const days = ['월', '화', '수', '목', '금', '토', '일'];
 const isEditMode = ref(false);
-const selectedCells = reactive({});
+const selectedCells = ref({});
+const isAuthenticated = computed(() => authStore.isAuthenticated);
+const trainerProfiles = ref([]);
+const profileCategories = ['교육사항', '수상이력', '자격증', '경력'];
+const currentCategory = ref('');
+const isAddingProfile = ref(false);
+const newProfile = reactive({
+    categoryName: '',
+    title: '',
+    startDate: '',
+    endDate: '',
+    detail: '',
+});
 
-const toggleEditMode = () => {
-    isEditMode.value = !isEditMode.value;
+onMounted(async () => {
+    await authStore.checkAuthStatus();
+    if (isAuthenticated.value && memberId.value && isTrainer.value) {
+        await fetchTrainerProfiles();
+        await fetchCurrentCategory();
+        await fetchTimeTable();
+    }
+});
+
+const categoryMap = {
+    교육사항: 'EDU',
+    수상이력: 'AWARD',
+    자격증: 'CERT',
+    경력: 'EXP',
+};
+
+const fetchTrainerProfiles = async () => {
+    try {
+        const response = await jwtAxios.get(`http://${host}/api/trainer/profile`, {
+            params: { memberId: memberId.value },
+        });
+        trainerProfiles.value = response.data;
+    } catch (error) {
+        console.error('Failed to fetch trainer profiles:', error);
+    }
+};
+
+const fetchCurrentCategory = async () => {
+    try {
+        const response = await jwtAxios.get(`http://${host}/api/trainer/${memberId.value}`);
+        currentCategory.value = response.data.exerciseCategoryName;
+    } catch (error) {
+        console.error('Failed to fetch current category:', error);
+    }
+};
+
+const getProfilesByCategory = (category) => {
+    return trainerProfiles.value.filter((profile) => profile.categoryName === category);
+};
+
+const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(
+        2,
+        '0',
+    )}`;
+};
+
+const toggleEditMode = async () => {
+    if (isEditMode.value) {
+        // 저장 모드에서 수정 모드로 전환
+        await saveTimeTable();
+        isEditMode.value = false;
+    } else {
+        // 수정 모드로 전환
+        isEditMode.value = true;
+    }
 };
 
 const toggleCell = (hour, day) => {
     if (!isEditMode.value) return;
 
     const key = `${hour}-${day}`;
-    if (selectedCells[key]) {
-        delete selectedCells[key];
-    } else {
-        selectedCells[key] = true;
+    selectedCells.value[key] = !selectedCells.value[key];
+    if (!selectedCells.value[key]) {
+        delete selectedCells.value[key];
     }
 };
 
 const isSelected = (hour, day) => {
-    return selectedCells[`${hour}-${day}`];
+    return selectedCells.value[`${hour}-${day}`];
+};
+
+const saveTimeTable = async () => {
+    try {
+        const timeTableUpdates = Object.entries(selectedCells.value).map(([key, isSelected]) => {
+            const [hour, day] = key.split('-');
+            return {
+                trainerId: memberId.value,
+                day: day,
+                startHour: parseInt(hour),
+                isSelected: isSelected,
+            };
+        });
+
+        // 모든 시간대를 포함하도록 수정
+        for (let hour = 0; hour < 24; hour++) {
+            for (const day of days) {
+                const key = `${hour}-${day}`;
+                if (!selectedCells.value.hasOwnProperty(key)) {
+                    timeTableUpdates.push({
+                        trainerId: memberId.value,
+                        day: day,
+                        startHour: hour,
+                        isSelected: false,
+                    });
+                }
+            }
+        }
+
+        if (timeTableUpdates.length === 0) {
+            alert('변경된 시간이 없습니다.');
+            return;
+        }
+
+        await jwtAxios.put(`http://${host}/api/trainer/timetable/${memberId.value}`, timeTableUpdates);
+
+        alert('타임테이블이 성공적으로 업데이트되었습니다.');
+        await fetchTimeTable();
+        isEditMode.value = false; // 저장 후 수정 모드 종료
+    } catch (error) {
+        console.error('Failed to update time table:', error);
+        alert('타임테이블 업데이트에 실패했습니다.');
+    }
+};
+
+const fetchTimeTable = async () => {
+    try {
+        const response = await jwtAxios.get(`http://${host}/api/trainer/timetable/${memberId.value}`);
+        const timeTables = response.data;
+        selectedCells.value = {};
+        timeTables.forEach((timeTable) => {
+            const hour = new Date(timeTable.startTime).getHours();
+            const day = timeTable.day;
+            selectedCells.value[`${hour}-${day}`] = true;
+        });
+    } catch (error) {
+        console.error('Failed to fetch time table:', error);
+    }
+};
+
+const startAddingProfile = () => {
+    isAddingProfile.value = true;
+};
+
+const cancelAddingProfile = () => {
+    isAddingProfile.value = false;
+    resetNewProfile();
+};
+
+const resetNewProfile = () => {
+    Object.assign(newProfile, {
+        categoryName: '',
+        title: '',
+        startDate: '',
+        endDate: '',
+        detail: '',
+    });
+};
+
+const saveNewProfile = async () => {
+    try {
+        const profileData = [
+            {
+                trainerId: memberId.value,
+                categoryCode: categoryMap[newProfile.categoryName],
+                title: newProfile.title,
+                startDate: newProfile.startDate,
+                endDate: newProfile.endDate,
+                detail: newProfile.detail,
+            },
+        ];
+
+        await jwtAxios.post(`http://${host}/api/trainer/save`, profileData);
+        await fetchTrainerProfiles();
+        isAddingProfile.value = false;
+        resetNewProfile();
+        alert('새로운 이력이 성공적으로 추가되었습니다.');
+    } catch (error) {
+        console.error('Failed to save new profile:', error);
+        alert('이력 추가에 실패했습니다.');
+    }
 };
 </script>
 
 <style scoped>
-.my-page-user-info {
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.form-group {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-label {
-    flex: 0 0 120px; /* 라벨의 너비를 고정 */
-    margin-right: 1rem;
-}
-
-input,
-select {
-    flex: 1; /* 입력 필드가 남은 공간을 차지하도록 */
-    padding: 0.5rem;
-}
-
-.btn-become-expert {
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
-    background-color: #cfffe5;
-    border: none;
-    cursor: pointer;
-}
-
-.form-actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 1rem;
-}
-
-.btn-cancel,
-.btn-save {
-    padding: 0.5rem 1rem;
-    margin-left: 0.5rem;
-    cursor: pointer;
-}
-
-.btn-save {
-    background-color: #4caf50;
-    color: white;
-    border: none;
-}
-
-.btn-cancel {
-    background-color: #f44336;
-    color: white;
-    border: none;
-}
-
-.expert-info {
-    margin-top: 2rem;
-    border-top: 1px solid #e0e0e0;
-    padding-top: 1rem;
-}
-
-.expert-category {
-    margin-bottom: 1rem;
-}
-
-.expert-category h4 {
-    margin-bottom: 0.5rem;
-}
-
-.expert-category ul {
-    list-style-type: none;
-    padding-left: 1rem;
-}
-
-.expert-category li {
-    margin-bottom: 0.25rem;
-}
 .trainer-page-user-info {
     padding: 20px;
 }
@@ -273,16 +289,36 @@ select {
 }
 
 .tabs button.active {
-    background-color: red;
+    background-color: #007bff;
     color: white;
 }
 
+.profile-category {
+    margin-bottom: 2rem;
+}
+
+.profile-category h3 {
+    margin-bottom: 1rem;
+}
+
+.profile-category ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.profile-category li {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
 .time-table {
-    overflow-x: auto; /* 가로 스크롤 추가 */
+    overflow-x: auto;
 }
 
 .time-table table {
-    width: auto; /* 테이블 너비를 자동으로 설정 */
+    width: 100%;
     border-collapse: collapse;
 }
 
@@ -291,34 +327,120 @@ select {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: center;
-    min-width: 80px; /* 각 셀의 최소 너비 설정 */
 }
 
-.time-table thead th {
-    background-color: #f2f2f2;
-    position: sticky;
-    top: 0;
-    z-index: 1;
-}
-
-.time-table tbody th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-    position: sticky;
-    left: 0;
-    z-index: 1;
+.time-table td.selected {
+    background-color: #007bff;
 }
 
 .time-table button {
     margin-bottom: 10px;
     padding: 5px 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.form-group select {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+
+.form-actions {
+    margin-top: 1rem;
+}
+
+.btn-save {
+    padding: 0.5rem 1rem;
     background-color: #4caf50;
     color: white;
     border: none;
     cursor: pointer;
 }
 
-.time-table td.selected {
-    background-color: red;
+.btn-save:hover {
+    background-color: #45a049;
+}
+
+.trainer-profiles {
+    margin-top: 2rem;
+}
+
+.profile-category {
+    margin-bottom: 1rem;
+}
+
+.profile-category h4 {
+    margin-bottom: 0.5rem;
+}
+
+.profile-category ul {
+    list-style-type: none;
+    padding-left: 1rem;
+}
+
+.profile-category li {
+    margin-bottom: 0.5rem;
+}
+
+.btn-add {
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.add-profile-form {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+.add-profile-form select,
+.add-profile-form input,
+.add-profile-form textarea {
+    width: 100%;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+}
+
+.add-profile-form textarea {
+    height: 100px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-cancel,
+.btn-save {
+    margin-left: 0.5rem;
+    padding: 0.5rem 1rem;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-cancel {
+    background-color: #f44336;
+}
+
+.btn-save {
+    background-color: #4caf50;
 }
 </style>

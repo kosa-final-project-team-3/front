@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="login-popup-content">
         <img class="logo" src="https://kosa-final-project-team-3.github.io/cdn/logo.png" alt="정도인 로고" />
         <p>
             정도인이란, '올바른 길로 이끌어 인도한다'는 뜻으로,<br />'바를 정 正, 인도할 도 導, 끌 인 引' 한자를
@@ -25,6 +25,7 @@ const handleKakaoLogin = () => {
     kakaoLoginForm.value.action = `http://${host}/oauth2/authorization/kakao`;
     kakaoLoginForm.value.submit();
 };
+defineEmits(['close']);
 </script>
 
 <style scoped>
@@ -36,6 +37,10 @@ const handleKakaoLogin = () => {
 
 .logo {
     width: 111px;
+    margin-bottom: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .kakaoLoginForm {
@@ -54,9 +59,11 @@ const handleKakaoLogin = () => {
     border-color: #fae100 !important;
     color: #3c1e1e !important;
     width: 20vw;
+    max-width: 300px;
     height: 50px;
     border-radius: 8px;
 }
+
 .btn > span.btn_ico_kakao:before {
     content: '';
     display: inline-block;
@@ -66,5 +73,18 @@ const handleKakaoLogin = () => {
     background: url('/src/assets/ico_kakao.png') no-repeat;
     background-size: contain;
     vertical-align: middle;
+}
+
+.login-popup-content {
+    padding: 40px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.login-popup-content p {
+    margin-bottom: 20px;
 }
 </style>

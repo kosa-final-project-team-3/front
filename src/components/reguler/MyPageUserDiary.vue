@@ -1,5 +1,5 @@
 <template>
-    <div class="my-page-user-diary">
+    <div class="my-page-user-diary" v-if="isAuthenticated">
         <h2>나의 운동 일지</h2>
         <div class="calendar-container">
             <v-calendar :attributes="attributes" @dayclick="onDayClick" />
@@ -8,12 +8,9 @@
             <h3>{{ selectedDate }} 일지</h3>
             <ul>
                 <li v-for="diary in selectedDiaries" :key="diary.id" @click="viewDiary(diary)">
-                    운동 시작 : {{ diary.startTime }} - 운동 끝 : {{ diary.endTime }} , 
-                    내용: {{ diary.content }}
-                    체중: {{ diary.weight }}
-                    탄수화물: {{ diary.carbs }}
-                    단백질: {{ diary.protein }}
-                    지방: {{ diary.fat }}
+                    운동 시작 : {{ diary.startTime }} - 운동 끝 : {{ diary.endTime }} , 내용: {{ diary.content }} 체중:
+                    {{ diary.weight }} 탄수화물: {{ diary.carbohydrates }} 단백질: {{ diary.protein }} 지방:
+                    {{ diary.fat }}
                 </li>
             </ul>
             <button @click="openDiaryForm" class="btn-add-diary">일지 작성</button>
@@ -21,39 +18,73 @@
 
         <div v-if="showDiaryForm || showDiaryView" class="diary-form-overlay">
             <div class="diary-form">
-                <h3>{{ isEditing ? '운동 일지 수정' : (showDiaryView ? '운동 일지 상세' : '운동 일지 작성') }}</h3>
+                <h3>{{ isEditing ? '운동 일지 수정' : showDiaryView ? '운동 일지 상세' : '운동 일지 작성' }}</h3>
                 <form @submit.prevent="saveDiary">
                     <div class="form-group">
                         <label for="exerciseDate">운동 날짜:</label>
-                        <input id="exerciseDate" v-model="currentDiary.exerciseDate" type="date" :disabled="!isEditing" required>
+                        <input
+                            id="exerciseDate"
+                            v-model="currentDiary.exerciseDate"
+                            type="date"
+                            :disabled="!isEditing"
+                            required
+                        />
                     </div>
                     <div class="form-group">
                         <label for="startTime">시작 시각:</label>
-                        <input id="startTime" v-model="currentDiary.startTime" type="time" :disabled="!isEditing" required>
+                        <input
+                            id="startTime"
+                            v-model="currentDiary.startTime"
+                            type="time"
+                            :disabled="!isEditing"
+                            required
+                        />
                     </div>
                     <div class="form-group">
                         <label for="endTime">종료 시각:</label>
-                        <input id="endTime" v-model="currentDiary.endTime" type="time" :disabled="!isEditing" required>
+                        <input
+                            id="endTime"
+                            v-model="currentDiary.endTime"
+                            type="time"
+                            :disabled="!isEditing"
+                            required
+                        />
                     </div>
                     <div class="form-group">
                         <label for="content">내용:</label>
-                        <textarea id="content" v-model="currentDiary.content" :disabled="!isEditing" required></textarea>
+                        <textarea
+                            id="content"
+                            v-model="currentDiary.content"
+                            :disabled="!isEditing"
+                            required
+                        ></textarea>
                     </div>
                     <div class="form-group">
                         <label for="weight">체중 (kg):</label>
-                        <input id="weight" v-model="currentDiary.weight" type="number" step="0.1" :disabled="!isEditing">
+                        <input
+                            id="weight"
+                            v-model="currentDiary.weight"
+                            type="number"
+                            step="0.1"
+                            :disabled="!isEditing"
+                        />
                     </div>
                     <div class="form-group">
-                        <label for="carbs">탄수화물 (g):</label>
-                        <input id="carbs" v-model="currentDiary.carbs" type="number" :disabled="!isEditing">
+                        <label for="carbohydrates">탄수화물 (g):</label>
+                        <input
+                            id="carbohydrates"
+                            v-model="currentDiary.carbohydrates"
+                            type="number"
+                            :disabled="!isEditing"
+                        />
                     </div>
                     <div class="form-group">
                         <label for="protein">단백질 (g):</label>
-                        <input id="protein" v-model="currentDiary.protein" type="number" :disabled="!isEditing">
+                        <input id="protein" v-model="currentDiary.protein" type="number" :disabled="!isEditing" />
                     </div>
                     <div class="form-group">
                         <label for="fat">지방 (g):</label>
-                        <input id="fat" v-model="currentDiary.fat" type="number" :disabled="!isEditing">
+                        <input id="fat" v-model="currentDiary.fat" type="number" :disabled="!isEditing" />
                     </div>
                     <div class="form-actions">
                         <template v-if="isEditing">
@@ -76,14 +107,20 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { Calendar } from 'v-calendar';
+import jwtAxios, { API_SERVER_HOST } from '../../util/jwtUtil';
+import { useAuthStore } from '../../stores/authStore';
 
 const selectedDate = ref(new Date().toISOString().split('T')[0]);
 const diaries = ref([]);
 const showDiaryForm = ref(false);
 const showDiaryView = ref(false);
 const isEditing = ref(false);
+const authStore = useAuthStore();
+const isAuthenticated = computed(() => authStore.isAuthenticated);
+const memberId = computed(() => authStore.id);
+const host = API_SERVER_HOST;
 const currentDiary = ref({
     id: null,
     exerciseDate: '',
@@ -91,7 +128,7 @@ const currentDiary = ref({
     endTime: '',
     content: '',
     weight: '',
-    carbs: '',
+    carbohydrates: '',
     protein: '',
     fat: '',
 });
@@ -116,6 +153,7 @@ const onDayClick = (day) => {
 
 const viewDiary = (diary) => {
     currentDiary.value = { ...diary };
+    console.log('j', currentDiary.value);
     showDiaryView.value = true;
     showDiaryForm.value = false;
     isEditing.value = false;
@@ -129,7 +167,7 @@ const startEditing = () => {
 const cancelEdit = () => {
     if (currentDiary.value.id) {
         // 기존 일지 수정 취소
-        const originalDiary = diaries.value.find(d => d.id === currentDiary.value.id);
+        const originalDiary = diaries.value.find((d) => d.id === currentDiary.value.id);
         currentDiary.value = { ...originalDiary };
         isEditing.value = false;
         showDiaryForm.value = false;
@@ -162,36 +200,53 @@ const resetCurrentDiary = () => {
         endTime: '',
         content: '',
         weight: '',
-        carbs: '',
+        carbohydrates: '',
         protein: '',
         fat: '',
     };
 };
 
-const saveDiary = () => {
-    if (!currentDiary.value.exerciseDate || !currentDiary.value.startTime || !currentDiary.value.endTime || !currentDiary.value.content) {
+const saveDiary = async () => {
+    if (
+        !currentDiary.value.exerciseDate ||
+        !currentDiary.value.startTime ||
+        !currentDiary.value.endTime ||
+        !currentDiary.value.content
+    ) {
         alert('운동 날짜, 시작 시각, 종료 시각, 내용을 작성해주세요.');
         return;
     }
 
-    if (currentDiary.value.id) {
-        // 기존 일지 수정
-        // 먼저 기존 일지를 삭제
-        diaries.value = diaries.value.filter(diary => diary.id !== currentDiary.value.id);
-        
-        // 그리고 새로운 ID로 수정된 일지를 추가
-        const updatedDiary = {
-            ...currentDiary.value,
-            id: Date.now() // 새로운 ID 부여
+    try {
+        const diaryData = {
+            memberId: memberId.value,
+            workoutDate: currentDiary.value.exerciseDate,
+            workoutStartTime: currentDiary.value.startTime,
+            workoutEndTime: currentDiary.value.endTime,
+            content: currentDiary.value.content,
+            bodyWeight: currentDiary.value.weight,
+            carb: currentDiary.value.carbohydrates,
+            protein: currentDiary.value.protein,
+            fat: currentDiary.value.fat,
         };
-        diaries.value.push(updatedDiary);
-    } else {
-        // 새 일지 추가
-        const newDiary = {
-            id: Date.now(),
-            ...currentDiary.value
-        };
-        diaries.value.push(newDiary);
+        console.log(diaryData);
+
+        let response;
+        if (currentDiary.value.id) {
+            // 기존 일지 수정
+            response = await jwtAxios.put(`http://${host}/api/exercise-logs/${currentDiary.value.id}`, diaryData);
+        } else {
+            // 새 일지 추가
+            response = await jwtAxios.post(`http://${host}/api/exercise-logs`, diaryData);
+        }
+
+        if (response.data) {
+            alert('운동 일지가 성공적으로 저장되었습니다.');
+            await fetchDiaries();
+        }
+    } catch (error) {
+        console.error('Failed to save exercise log:', error);
+        alert('운동 일지 저장에 실패했습니다.');
     }
 
     showDiaryForm.value = false;
@@ -200,8 +255,37 @@ const saveDiary = () => {
     resetCurrentDiary();
 };
 
+const fetchDiaries = async () => {
+    try {
+        const response = await jwtAxios.get(`http://${host}/api/exercise-logs`, {
+            params: { memberId: memberId.value },
+        });
+        console.log('Fetched diaries:', response.data);
+        diaries.value = response.data.map((diary) => ({
+            id: diary.logId,
+            exerciseDate: diary.workoutDate,
+            startTime: diary.workoutStartTime,
+            endTime: diary.workoutEndTime,
+            content: diary.content,
+            weight: diary.bodyWeight,
+            carbohydrates: diary.carb,
+            protein: diary.protein,
+            fat: diary.fat,
+        }));
+        console.log('Processed diaries:', diaries.value);
+    } catch (error) {
+        console.error('Failed to fetch exercise logs:', error);
+    }
+};
+
 const cancelDiaryForm = () => {
-    if (currentDiary.value.content || currentDiary.value.weight || currentDiary.value.carbs || currentDiary.value.protein || currentDiary.value.fat) {
+    if (
+        currentDiary.value.content ||
+        currentDiary.value.weight ||
+        currentDiary.value.carbohydrates ||
+        currentDiary.value.protein ||
+        currentDiary.value.fat
+    ) {
         if (confirm('내용이 저장되지 않습니다. 나가시겠습니까?')) {
             closeDiaryView();
         }
@@ -209,6 +293,13 @@ const cancelDiaryForm = () => {
         closeDiaryView();
     }
 };
+
+onMounted(async () => {
+    await authStore.checkAuthStatus();
+    if (isAuthenticated.value && memberId.value) {
+        await fetchDiaries();
+    }
+});
 </script>
 
 <style scoped>
@@ -254,68 +345,40 @@ const cancelDiaryForm = () => {
     border-radius: 8px;
     max-width: 500px;
     width: 100%;
-    max-height: 80vh; /* 추가 */
-    overflow-y: auto; /* 추가 */
-    position: relative; /* 추가 */
-    z-index: 1001; /* 추가 */
+    max-height: 90%;
+    overflow-y: auto;
 }
 
 .form-group {
     margin-bottom: 1rem;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-}
-
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 0.5rem;
-}
-
 .form-actions {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     margin-top: 1rem;
-}
-
-.btn-save,
-.btn-cancel {
-    padding: 0.5rem 1rem;
-    margin-left: 0.5rem;
-    cursor: pointer;
 }
 
 .btn-save {
     background-color: #4caf50;
     color: white;
     border: none;
-}
-
-.btn-cancel {
-    background-color: #f44336;
-    color: white;
-    border: none;
-}
-
-.btn-edit,
-.btn-close {
-    padding: 0.5rem 1rem;
-    margin-left: 0.5rem;
     cursor: pointer;
 }
 
-.btn-edit {
-    background-color: #2196F3;
+.btn-edit,
+.btn-close,
+.btn-cancel {
+    background-color: #f44336; /* 빨간색 */
     color: white;
     border: none;
+    cursor: pointer;
 }
 
-.btn-close {
-    background-color: #607D8B;
-    color: white;
-    border: none;
+.diary-dot {
+    border-radius: 50%;
+    height: 10px;
+    width: 10px;
+    background-color: blue; /* 색상 */
 }
 </style>

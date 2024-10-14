@@ -1,47 +1,37 @@
 <template>
-    <div class="my-page-user-info">
+    <div class="my-page-user-info" v-if="isAuthenticated">
         <h2>나의 정보</h2>
         <form @submit.prevent="saveUserInfo">
-            <div class="form-group">
-                <label for="name">이름:</label>
-                <input id="name" v-model="userInfo.name" type="text" required />
-            </div>
-            <div class="form-group">
-                <label for="birthdate">생년월일:</label>
-                <input id="birthdate" v-model="userInfo.birthdate" type="date" required />
-            </div>
-            <div class="form-group">
-                <label for="gender">성별:</label>
-                <select id="gender" v-model="userInfo.gender" required>
-                    <option value="male">남성</option>
-                    <option value="female">여성</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="phone">핸드폰 번호:</label>
-                <input id="phone" v-model="userInfo.phone" type="tel" required />
-            </div>
-            <div class="form-group">
-                <label for="address">주소:</label>
-                <input id="address" v-model="userInfo.address" type="text" required />
-            </div>
-            <div class="form-group">
-                <label for="height">신장 (cm):</label>
-                <input id="height" v-model="userInfo.height" type="number" required />
-            </div>
-            <div class="form-group">
-                <label for="weight">체중 (kg):</label>
-                <input id="weight" v-model="userInfo.weight" type="number" required />
+            <div class="form-group" v-for="(value, key) in displayUserInfo" :key="key">
+                <label :for="key">{{ getLabel(key) }}:</label>
+                <template v-if="key === 'gender' && !isEditing">
+                    <input :id="key" :value="getGenderDisplay(value)" disabled />
+                </template>
+                <template v-else-if="key === 'gender' && isEditing">
+                    <select :id="key" v-model="userInfo[key]" required>
+                        <option value="m">남자</option>
+                        <option value="f">여자</option>
+                    </select>
+                </template>
+                <template v-else>
+                    <input
+                        :id="key"
+                        v-model="userInfo[key]"
+                        :type="getInputType(key)"
+                        :disabled="!isEditing"
+                        required
+                    />
+                </template>
             </div>
 
-
-            <button v-if="!isExpert" type="button" @click="showExpertPopup" class="btn-become-expert">
+            <button v-if="role !== 'TRAINER'" type="button" @click="showExpertPopup" class="btn-become-expert">
                 전문가로 전환하기
             </button>
 
             <div class="form-actions">
-                <button type="button" @click="cancelEdit" class="btn-cancel">취소</button>
-                <button type="submit" class="btn-save">저장하기</button>
+                <button v-if="isEditing" type="button" @click="cancelEdit" class="btn-cancel">취소</button>
+                <button v-if="!isEditing" type="button" @click="startEditing" class="btn-edit">수정하기</button>
+                <button v-else type="submit" class="btn-save">저장하기</button>
             </div>
         </form>
     </div>
@@ -49,37 +39,79 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, computed, onMounted } from 'vue';
 import ExpertPopup from './ExpertPopup.vue';
+import { useAuthStore } from '../../stores/authStore';
+import jwtAxios, { API_SERVER_HOST } from '../../util/jwtUtil';
+
+const host = API_SERVER_HOST;
+const authStore = useAuthStore();
+const isAuthenticated = computed(() => authStore.isAuthenticated);
+const memberId = computed(() => authStore.id);
+const role = computed(() => authStore.role);
 
 const userInfo = reactive({
-    name: '',
-    birthdate: '',
+    username: '',
+    birth: '',
     gender: '',
     phone: '',
     address: '',
-    height: '',
-    weight: '',
+    tall: '',
+    bodyWeight: '',
 });
 
 const originalUserInfo = ref(null);
-const isExpert = ref(false);
-const expertInfo = ref([]);
-const saveUserInfo = () => {
-    // TODO: Implement API call to save user info
-    console.log('Saving user info:', userInfo);
-    // Update originalUserInfo after successful save
-    originalUserInfo.value = { ...userInfo };
-};
+const isExpertPopupVisible = ref(false);
+const isEditing = ref(false);
 
-const cancelEdit = () => {
-    // Reset form to original values
-    if (originalUserInfo.value) {
-        Object.assign(userInfo, originalUserInfo.value);
+onMounted(async () => {
+    await authStore.checkAuthStatus();
+    if (isAuthenticated.value) {
+        await fetchUserInfo();
+    }
+});
+
+const fetchUserInfo = async () => {
+    try {
+        const username = authStore.username;
+        const res = await jwtAxios.get(`http://${host}/api/member/info`, {
+            params: { username },
+        });
+        Object.assign(userInfo, res.data);
+        originalUserInfo.value = { ...userInfo };
+    } catch (error) {
+        console.error('Failed to fetch user info:', error);
     }
 };
 
-const isExpertPopupVisible = ref(false);
+const saveUserInfo = async () => {
+    try {
+        const updatedUserInfo = {
+            ...userInfo,
+            memberId: memberId.value,
+        };
+
+        const response = await jwtAxios.put(`http://${host}/api/member/update`, updatedUserInfo);
+        Object.assign(userInfo, response.data);
+        originalUserInfo.value = { ...userInfo };
+        alert('사용자 정보가 성공적으로 저장되었습니다.');
+        isEditing.value = false;
+    } catch (error) {
+        console.error('Failed to save user info:', error);
+        alert('사용자 정보 저장에 실패했습니다.');
+    }
+};
+
+const startEditing = () => {
+    isEditing.value = true;
+};
+
+const cancelEdit = () => {
+    if (originalUserInfo.value) {
+        Object.assign(userInfo, originalUserInfo.value);
+    }
+    isEditing.value = false;
+};
 
 const showExpertPopup = () => {
     isExpertPopupVisible.value = true;
@@ -90,15 +122,42 @@ const closeExpertPopup = () => {
 };
 
 const submitExpertApplication = ({ certificationCategories, attachedFiles }) => {
-    // TODO: Implement API call to submit expert application
     console.log('Submitting expert application:', certificationCategories);
     console.log('Attached files:', attachedFiles);
-
-    // 임시로 전문가 정보 저장 (실제로는 API 응답 후 처리해야 함)
-    expertInfo.value = certificationCategories;
-    isExpert.value = true;
-    closeExpertPopup();
+    isExpertPopupVisible.value = false;
 };
+
+const getGenderDisplay = (gender) => {
+    return gender === 'm' ? '남자' : gender === 'f' ? '여자' : '';
+};
+
+const getLabel = (key) => {
+    const labels = {
+        username: '이름',
+        birth: '생년월일',
+        gender: '성별',
+        phone: '핸드폰 번호',
+        address: '주소',
+        tall: '신장 (cm)',
+        bodyWeight: '체중 (kg)',
+    };
+    return labels[key] || key;
+};
+
+const getInputType = (key) => {
+    const types = {
+        birth: 'date',
+        phone: 'tel',
+        tall: 'number',
+        bodyWeight: 'number',
+    };
+    return types[key] || 'text';
+};
+
+const displayUserInfo = computed(() => {
+    const { username, birth, gender, phone, address, tall, bodyWeight } = userInfo;
+    return { username, birth, gender, phone, address, tall, bodyWeight };
+});
 </script>
 
 <style scoped>
@@ -178,5 +237,13 @@ select {
 
 .expert-category li {
     margin-bottom: 0.25rem;
+}
+
+.btn-edit {
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
 }
 </style>

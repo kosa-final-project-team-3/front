@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import { getCookie } from '../util/cookieUtil';
 import jwtAxios, { API_SERVER_HOST } from '../util/jwtUtil';
 import axios from 'axios';
 

@@ -1,46 +1,57 @@
 <template>
-    <div>
-        <p>AI 피드백</p>
-    </div>
-
     <div class="container">
-        <div style="position: relative">
-            <video ref="video" width="640" height="480" autoplay playsinline></video>
-            <canvas ref="canvas" width="640" height="480" style="position: absolute; top: 0; left: 0"></canvas>
+        <div class="content-wrapper">
+            <aside class="sidebar">
+                <h3>AI 피드백</h3>
+            </aside>
 
-            <div v-if="isRunning" class="countdown-overlay">
-                <svg class="w-full h-full" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="20" fill="none" stroke="#e6e6e6" stroke-width="5" />
-                    <circle
-                        cx="50"
-                        cy="50"
-                        r="20"
-                        fill="none"
-                        stroke="#4a5568"
-                        stroke-width="5"
-                        :stroke-dasharray="circumference"
-                        :stroke-dashoffset="dashOffset"
-                        transform="rotate(-90 50 50)"
+            <div class="main-content">
+                <div class="video-container">
+                    <video ref="video" autoplay playsinline />
+                    <canvas ref="canvas" />
+
+                    <div v-if="isRunning" class="countdown-overlay">
+                        <svg class="w-full h-full" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="20" fill="none" stroke="#e6e6e6" stroke-width="5" />
+                            <circle
+                                cx="50"
+                                cy="50"
+                                r="20"
+                                fill="none"
+                                stroke="#4a5568"
+                                stroke-width="5"
+                                :stroke-dasharray="circumference"
+                                :stroke-dashoffset="dashOffset"
+                                transform="rotate(-90 50 50)"
+                            />
+                            <text
+                                x="50"
+                                y="52"
+                                text-anchor="middle"
+                                dominant-baseline="central"
+                                font-size="24"
+                                font-weight="bold"
+                                fill="#e6e6e6"
+                            >
+                                {{ count }}
+                            </text>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    타이머 : {{ duration }}초 &nbsp;
+                    <input
+                        type="range"
+                        v-model="duration"
+                        min="7"
+                        max="30"
+                        :disabled="isRunning"
+                        class="timer-slider"
                     />
-                    <text
-                        x="50"
-                        y="52"
-                        text-anchor="middle"
-                        dominant-baseline="central"
-                        font-size="24"
-                        font-weight="bold"
-                        fill="#e6e6e6"
-                    >
-                        {{ count }}
-                    </text>
-                </svg>
+                    <button @click="startCountdown" :disabled="isRunning" class="start-button">Start</button>
+                </div>
             </div>
-        </div>
-
-        <div class="controls">
-            {{ duration }}
-            <input type="range" v-model="duration" min="7" max="30" :disabled="isRunning" />
-            <button @click="startCountdown" :disabled="isRunning" class="start-button">Start Countdown</button>
         </div>
     </div>
 </template>
@@ -72,7 +83,7 @@ const startCountdown = () => {
     count.value = duration.value;
     isRunning.value = true;
     shouldProcessResults.value = false;
-    textToSpeech(count.value + "초 안에 자세를 맞춰주세요");
+    textToSpeech(count.value + '초 안에 자세를 맞춰주세요');
     setTimeout(() => {
         countdown();
         textToSpeech(count.value);
@@ -153,7 +164,7 @@ const renderLoop = async () => {
     if (videoElement.currentTime !== lastVideoTime) {
         const poseLandmarkerResult = await poseLandmarker.detectForVideo(videoElement, performance.now());
 
-        canvasCtx.clearRect(0, 0, canvas.value.width, canvas.value.height);
+        canvasCtx.clearRect(0, 0, video.value.width, video.value.height);
 
         // 랜드마크 그리기
         if (poseLandmarkerResult.landmarks) {
@@ -277,16 +288,46 @@ const textToSpeech = async (text) => {
         console.error('Error with TTS API:', error);
     }
 };
-
 </script>
 
 <style scoped>
 .container {
     display: flex;
+    height: 100vh;
+}
+
+.content-wrapper {
+    display: flex;
+    height: 100%;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+}
+
+.video-container {
+    position: relative;
+    width: 80vw;
+    max-width: 960px;
+    height: 0;
+    padding-bottom: 56.25%;
+    margin-bottom: 20px;
+}
+
+.sidebar {
+    width: 150px;
+    padding: 1rem;
+    font-family: 'Do Hyeon', sans-serif;
+}
+
+.sidebar h3 {
+    font-size: 1.5em;
+    padding: 0.5rem;
+    margin: 1rem 1rem 2rem 1rem;
 }
 
 .countdown-overlay {
@@ -301,19 +342,66 @@ const textToSpeech = async (text) => {
     background-color: rgba(0, 0, 0, 0.5);
 }
 
+video,
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
 .controls {
     display: flex;
     align-items: center;
     margin-top: 10px;
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.5em;
 }
 
 .start-button {
-    margin-left: 10px;
-    padding: 10px 20px;
-    background-color: #4a5568;
+    margin-left: 30px;
+    padding: 8px 30px;
+    background-color: #00bf63;
     color: white;
     border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 0.8em;
+}
+
+.timer-slider {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 200px;
+    height: 10px;
     border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+.timer-slider:hover {
+    opacity: 1;
+}
+
+.timer-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #00bf63;
+    cursor: pointer;
+}
+
+.timer-slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #00bf63;
     cursor: pointer;
 }
 </style>
