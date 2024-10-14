@@ -201,6 +201,10 @@ function closeInquiryForm() {
 </script>
 
 <style scoped>
+.lesson-container {
+    width: 60vw;
+}
+
 .search-sort-container {
     display: flex;
     margin: 20px;
