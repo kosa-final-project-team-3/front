@@ -1,7 +1,10 @@
 <template>
     <div class="mbti-test">
         <h2>운BTI</h2>
-
+        <p>나의 운동 스타일을 알아보는 재미있는 테스트입니다!</p>
+        <div class="progress-bar">
+            <div class="progress" :style="{ width: (currentQuestion / questions.length) * 100 + '%' }"></div>
+        </div>
         <div v-if="currentQuestion < questions.length" class="question">
             <h3>질문 {{ currentQuestion + 1 }}: {{ questions[currentQuestion].text }}</h3>
             <div class="answers">
@@ -25,6 +28,7 @@
             <h3>검사 결과</h3>
             <p>{{ resultMessage }}</p>
             <button @click="resetTest" class="reset-button">다시 하기</button>
+            <button @click="shareResult" class="share-button">결과 공유하기</button>
         </div>
     </div>
 </template>
@@ -148,7 +152,7 @@ function calculateResult() {
     ].join('');
 
     resultMessage.value = getMbtiAnalysis(result);
-    showResult.value = true; // 결과를 표시
+    showResult.value = true;
 }
 
 function getMbtiAnalysis(result) {
@@ -180,12 +184,21 @@ function resetTest() {
     resultMessage.value = '';
     showResult.value = false;
 }
+
+function shareResult() {
+    const shareText = `내 운동 MBTI는 ${resultMessage.value}입니다! #운BTI`;
+    navigator.share({
+        title: '운BTI 결과',
+        text: shareText,
+        url: window.location.href,
+    });
+}
 </script>
 
 <style scoped>
 .mbti-test {
     max-width: 600px;
-    margin: 50px auto;
+    margin: 120px auto;
     text-align: center;
     padding: 20px;
     border: 1px solid #ccc;
@@ -198,14 +211,31 @@ h2 {
     margin-bottom: 20px;
 }
 
-.question {
-    margin-bottom: 20px;
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
+
+.progress {
+    height: 100%;
+    background-color: #4caf50; /* 진행 색상 */
+    transition: width 0.3s ease; /* 부드러운 애니메이션 효과 */
+}
+
+.question h3 {
+    margin-bottom: 50px;
 }
 
 .answers {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 40px;
+    margin-bottom: 30px;
 }
 
 .answer-button {
@@ -213,7 +243,7 @@ h2 {
     background-color: #4caf50;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 20px;
     cursor: pointer;
 }
 
@@ -259,5 +289,19 @@ h2 {
 
 .reset-button:hover {
     background-color: #e53935;
+}
+
+.share-button {
+    padding: 10px 15px;
+    background-color: #ffeb3b; /* 밝은 노란색 배경 */
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 20px;
+}
+
+.share-button:hover {
+    background-color: #fdd835;
 }
 </style>
