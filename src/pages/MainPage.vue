@@ -1,47 +1,41 @@
 <template>
-    <div class="base-container">
-        <header-compo />
-        <main class="main">
-            <router-view class="router-container" />
+    <div>
+        <div v-if="!isAuthenticated"><button type="button" @click="showLoginModal = true">로그인</button><br /></div>
 
-            <div v-if="!isAuthenticated">
-                <button type="button" @click="$router.push('/login')">로그인 페이지로 이동</button><br />
+        <div v-if="isAuthenticated">
+            {{ username }}님 반갑습니다. <button type="button" @click="handleLogout()">로그아웃</button><br />
+            <button type="button" @click="$router.push('/feedback/ai')">AI 피드백</button><br />
+            <div v-if="role === 'TRAINER'">
+                <button type="button" @click="$router.push('/trainerpage')">트레이너 페이지</button><br />
             </div>
-            <div v-if="isAuthenticated"><button type="button" @click="handleLogout()">로그아웃</button><br /></div>
-            <button type="button" @click="accessPrivateResource()">access private resource</button><br />
-            <button type="button" @click="$router.replace('/feedback/ai')">AI 피드백</button><br />
-            <button type="button" @click="$router.replace('/trainerpage')">트레이너 페이지</button><br />
-            <button type="button" @click="$router.replace('/mypage')">마이페이지</button><br />
-        </main>
-        <footer-compo />
+            <div v-if="role === 'REGULAR'">
+                <button type="button" @click="$router.push('/mypage')">마이페이지</button><br />
+            </div>
+            <button type="button" @click="$router.push('/member/dashboard')">멤버 대시보드</button><br />
+        </div>
+        <Modal v-if="showLoginModal" @close="showLoginModal = false">
+            <KakaoLoginCompo />
+        </Modal>
     </div>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useAuthStore } from '../stores/authStore';
-import jwtAxios from '../util/jwtUtil';
-import HeaderCompo from '../components/HeaderCompo.vue';
-import FooterCompo from '../components/FooterCompo.vue';
+import Modal from '../components/common/Modal.vue';
+import KakaoLoginCompo from '../components/login/KakaoLoginCompo.vue';
 
-const host = import.meta.env.VITE_APP_HOST;
 const authStore = useAuthStore();
+const username = computed(() => authStore.username);
+const role = computed(() => authStore.role);
 const isAuthenticated = computed(() => authStore.isAuthenticated);
+const userId = computed(() => authStore.id);
+const showLoginModal = ref(false);
 
-authStore.checkAuthStatus();
-
-const accessPrivateResource = () => [
-    jwtAxios
-        .get(`http://${host}/api/member/private`)
-        .then((res) => {
-            if (res.status === 200) {
-                console.log(res.data);
-            }
-        })
-        .catch((e) => {
-            console.log(e);
-        }),
-];
+onMounted(() => {
+    authStore.checkAuthStatus();
+    console.log('user id is: ', userId.value);
+});
 
 const handleLogout = () => {
     authStore.logout();

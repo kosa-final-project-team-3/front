@@ -10,7 +10,6 @@
                 >
                     개인 레슨
                 </button>
-
                 <button
                     @click="selectLessonType('그룹 레슨')"
                     :class="{ active: selectedType === '그룹 레슨' }"
@@ -90,12 +89,10 @@
 import { ref, computed } from 'vue';
 import LessonDetail from './LessonDetail.vue';
 import InquiryForm from './InquiryForm.vue';
-
 const lessons = ref([
     {
         title: '전신 운동 PT',
         trainer: '강철희',
-        level: '초급',
         category: '헬스',
         description: '초보자에게 적합한 전신 강화 트레이닝.',
         price: 60000,
@@ -120,7 +117,6 @@ const lessons = ref([
     {
         title: '고강도 요가',
         trainer: '서진이',
-        level: '중급',
         category: '요가',
         description: '유연성 향상과 근력 강화에 도움을 주는 중급자 요가.',
         price: 50000,
@@ -140,7 +136,6 @@ const lessons = ref([
     {
         title: '필라테스 집중 코어',
         trainer: '이은정',
-        level: '고급',
         category: '필라테스',
         description: '코어 강화에 특화된 고급 필라테스 수업입니다.',
         price: 70000,
@@ -335,14 +330,5 @@ function closeInquiryForm() {
 .lesson-title {
     font-size: 1.4rem;
     margin-bottom: 10px;
-}
-
-.join-btn {
-    background-color: #ff6f61;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
 }
 </style>

@@ -1,26 +1,46 @@
 <template>
     <div class="home-container">
+        <div v-if="showLogin" class="login-popup">
+            <KakaoLoginCompo @close="closeLogin" />
+        </div>
+
         <div class="banner">
-            <img class="banner-ad" src="../assets/banner-ad.jpg" alt="배너 광고" />
+            <swiper
+                :modules="modules"
+                :slides-per-view="1"
+                :space-between="30"
+                :loop="true"
+                :pagination="{ clickable: true }"
+                :navigation="true"
+                class="mySwiper"
+            >
+                <swiper-slide v-for="(image, index) in bannerImages" :key="index">
+                    <img :src="image.src" :alt="image.alt" class="banner-image" />
+                </swiper-slide>
+            </swiper>
         </div>
+
         <div class="lesson-container">
-            <div class="lesson-type">
-                <router-link to="/offlinelessonlist" class="router-decoration">
-                    <img src="../assets/personal-icon.png" alt="개인 레슨 아이콘" class="lesson-icon" />개인 레슨
-                </router-link>
-            </div>
-            <div class="lesson-type">
-                <img src="../assets/group-icon.png" alt="그룹 레슨 아이콘" class="lesson-icon" />그룹 레슨
-            </div>
-            <div class="lesson-type">
-                <router-link to="/onlinefeedbackform" class="router-decoration">
-                    <img src="../assets/online-icon.png" alt="온라인 레슨 아이콘" class="lesson-icon" />온라인 레슨
-                </router-link>
-            </div>
-            <div class="lesson-type">
-                <img src="../assets/ai-icon.png" alt="AI 피드백 아이콘" class="lesson-icon" />AI 피드백
-            </div>
+            <router-link
+                v-for="(lesson, index) in lessonTypes"
+                :key="index"
+                :to="lesson.route"
+                custom
+                v-slot="{ navigate }"
+            >
+                <div
+                    class="lesson-type"
+                    :class="{ active: lesson.isActive }"
+                    @mouseenter="setActive(index, true)"
+                    @mouseleave="setActive(index, false)"
+                    @click="navigate"
+                >
+                    <img :src="lesson.icon" :alt="lesson.alt" class="lesson-icon" />
+                    {{ lesson.text }}
+                </div>
+            </router-link>
         </div>
+
         <div class="popular-lesson">
             <h2>지금 가장 인기 있는 레슨</h2>
             <div class="lesson-list">
@@ -31,17 +51,94 @@
         </div>
     </div>
 </template>
-<script setup></script>
+
+<script setup>
+import { ref } from 'vue';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Pagination, Navigation } from 'swiper/modules';
+import KakaoLoginCompo from '../components/login/KakaoLoginCompo.vue';
+import { useAuthStore } from '../stores/authStore';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+
+const modules = [Pagination, Navigation];
+const authStore = useAuthStore();
+const showLogin = ref(false);
+
+const bannerImages = ref([
+    { src: 'https://kosa-final-project-team-3.github.io/cdn/banner_1.png', alt: 'Banner 1' },
+    { src: 'https://kosa-final-project-team-3.github.io/cdn/banner_2.png', alt: 'Banner 2' },
+    { src: 'https://kosa-final-project-team-3.github.io/cdn/banner_3.png', alt: 'Banner 3' },
+    { src: 'https://kosa-final-project-team-3.github.io/cdn/banner_4.png', alt: 'Banner 4' },
+]);
+
+const lessonTypes = ref([
+    {
+        icon: 'https://kosa-final-project-team-3.github.io/cdn/icon_personal.png',
+        alt: '개인 레슨 아이콘',
+        text: '개인 레슨',
+        isActive: false,
+        route: '/lesson/offline', // personal
+    },
+    {
+        icon: 'https://kosa-final-project-team-3.github.io/cdn/icon_group.png',
+        alt: '그룹 레슨 아이콘',
+        text: '그룹 레슨',
+        isActive: false,
+        route: '/lesson/offline', // group
+    },
+    {
+        icon: 'https://kosa-final-project-team-3.github.io/cdn/icon_online.png',
+        alt: '온라인 레슨 아이콘',
+        text: '온라인 레슨',
+        isActive: false,
+        route: '/lesson/online',
+    },
+    {
+        icon: 'https://kosa-final-project-team-3.github.io/cdn/icon_ai.png',
+        alt: 'AI 피드백 아이콘',
+        text: 'AI 피드백',
+        isActive: false,
+        route: '/feedback/ai',
+    },
+]);
+
+const setActive = (index, isActive) => {
+    lessonTypes.value[index].isActive = isActive;
+};
+
+const openLogin = () => {
+    showLogin.value = true;
+};
+
+const closeLogin = () => {
+    showLogin.value = false;
+};
+
+authStore.openLogin = openLogin;
+</script>
 <style scoped>
-.banner-ad {
-    width: 80vw;
-    height: 40vh;
-    border-radius: 10px;
+.login-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
 .lesson-container {
     display: flex;
-    margin: 20px;
+    margin: 50px 50px 100px 50px;
+    justify-content: center;
+    height: 120px;
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.2em;
 }
 
 .lesson-type {
@@ -49,16 +146,31 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 100px;
+    width: 100%;
     height: 100px;
     border-radius: 10px;
     margin: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.lesson-type.active {
+    background-color: #00bf63;
+    color: white;
+}
+.lesson-type.active img {
+    filter: brightness(0) invert(1);
 }
 
 .lesson-type a {
     text-decoration: none;
     color: black;
+}
+
+.lesson-type img {
+    width: 50px;
+    height: 50px;
 }
 
 .lesson-icon {
@@ -67,10 +179,7 @@
     margin-right: auto;
     width: 50px;
     height: 50px;
-}
-
-.popular-lesson {
-    width: 80vw;
+    margin-bottom: 10px;
 }
 
 .lesson-list {
@@ -85,5 +194,55 @@
     height: 400px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.popular-lesson {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.4em;
+    width: 80vw;
+    margin: 0 auto;
+}
+
+.banner {
+    display: flex;
+    justify-content: center;
+}
+.swiper-slide {
+    display: flex;
+    justify-content: center;
+}
+:deep(.swiper-button-next),
+:deep(.swiper-button-prev) {
+    color: #00bf63;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+:deep(.swiper-button-next) {
+    right: 7%;
+}
+:deep(.swiper-button-prev) {
+    left: 7%;
+}
+:deep(.swiper-pagination-bullet) {
+    width: 10px;
+    height: 10px;
+    background: rgba(0, 191, 99, 0.5); /* #00bf63 with 50% opacity */
+    opacity: 1;
+}
+
+:deep(.swiper-pagination-bullet-active) {
+    background: #00bf63; /* Active dot color */
+}
+.banner-image {
+    width: 70%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 30px;
 }
 </style>

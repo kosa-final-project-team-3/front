@@ -1,14 +1,21 @@
 import OfflineLessonList from '../components/lesson/OfflineLessonList.vue';
-import OnlineLessonList from '../components/lesson/OnlineLessonList.vue';
+import OnlineLessonPage from '../pages/OnlineLessonPage.vue';
+import OnlineLesson from '../components/lesson/OnlineLesson.vue';
+import OnlineFeedback from '../components/lesson/OnlineFeedback.vue';
+
 export default [
     {
-        path: '/offlinelessonlist',
+        path: '/lesson/offline',
         name: 'OfflineLessonList',
         component: OfflineLessonList,
     },
     {
-        path: '/online',
-        name: 'OnlineLessonList',
-        component: OnlineLessonList,
+        path: '/lesson/online',
+        name: 'OnlineLessonPage',
+        component: OnlineLessonPage,
+        children: [
+            { path: '', name: 'OnlineLesson', component: OnlineLesson },
+            { path: 'feedback', name: 'OnlineFeedback', component: OnlineFeedback },
+        ],
     },
 ];
