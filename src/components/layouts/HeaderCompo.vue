@@ -135,6 +135,7 @@ const openLogin = () => {
     width: 40%;
     display: flex;
     margin-left: auto;
+    justify-content: space-evenly;
 }
 .navbar-login a {
     color: #545454;
