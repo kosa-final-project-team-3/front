@@ -33,10 +33,6 @@ const routes = [
             ...lessonpageRoutes,
         ],
     },
-    {
-        path: '/member/dashboard',
-        component: MemberDashboard,
-    },
 ];
 
 const router = createRouter({

@@ -51,40 +51,4 @@ import MBTICompo from '../components/MBTI/MBTICompo.vue';
 .sidebar-item:hover {
     color: #00bf63;
 }
-
-.search-sort-container {
-    display: flex;
-    justify-content: space-between;
-    margin: 20px;
-}
-
-.search-container {
-    display: flex;
-}
-.search-container form {
-    display: flex;
-    gap: 10px;
-}
-
-.search-container button {
-    background-color: #00bf63;
-    color: white;
-    border: 1px solid #00bf63;
-}
-
-.sort-container select {
-    margin-right: 20px;
-}
-
-.search-container input {
-    width: 200px;
-}
-
-select,
-input,
-button {
-    padding: 5px 10px;
-    border-radius: 5px;
-    border: 1px solid #000000;
-}
 </style>
