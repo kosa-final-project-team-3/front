@@ -86,7 +86,7 @@ const lessonTypes = ref([
         alt: '그룹 레슨 아이콘',
         text: '그룹 레슨',
         isActive: false,
-        route: '/lesson/offline', // group
+        route: '/lesson/offline/group', // group
     },
     {
         icon: 'https://kosa-final-project-team-3.github.io/cdn/icon_online.png',

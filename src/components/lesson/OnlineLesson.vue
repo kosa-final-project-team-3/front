@@ -1,25 +1,20 @@
 <template>
-    <div class="lesson-page">
-        <div class="top-header">
-            <div class="lesson-type-buttons">
-                <button
-                    @click="selectLessonType('온라인 레슨')"
-                    :class="{ active: selectedType === '온라인 레슨' }"
-                    class="lesson-type-button"
-                >
-                    온라인 레슨
-                </button>
+    <div class="lesson-container">
+        <div class="search-sort-container">
+            <div class="search-container">
+                <form>
+                    <input type="text" v-model="searchKeyword" placeholder="검색어를 입력하세요" />
+                </form>
+            </div>
 
-                <button
-                    @click="selectLessonType('온라인 피드백')"
-                    :class="{ active: selectedType === '온라인 피드백' }"
-                    class="lesson-type-button"
-                >
-                    온라인 피드백
-                </button>
+            <div class="sort-container">
+                <select v-model="selectedSort">
+                    <option value="popular">인기순</option>
+                    <option value="rating">만족도순</option>
+                    <option value="price">가격순</option>
+                </select>
             </div>
         </div>
-
         <div class="lesson-category">
             <button
                 @click="selectCategory('')"
@@ -39,17 +34,6 @@
             </button>
         </div>
 
-        <div class="search-filter-section">
-            <input type="text" v-model="searchQuery" class="search-input" />
-            <div class="filter-options">
-                <select v-model="selectedSort">
-                    <option value="popularity">인기순</option>
-                    <option value="rating">만족도순</option>
-                    <option value="price">가격순</option>
-                </select>
-            </div>
-        </div>
-
         <div class="lesson-card-list">
             <div
                 v-for="(lesson, index) in sortedLessons"
@@ -64,6 +48,7 @@
                     <p>{{ lesson.category }}</p>
                     <p>가격: {{ lesson.price }}원</p>
                 </div>
+                <button class="join-button">문의하기</button>
             </div>
         </div>
 
@@ -75,17 +60,7 @@
             @openInquiry="openInquiryForm"
         />
 
-        <inquiry-form
-            v-if="showInquiryForm && selectedType === '온라인 레슨'"
-            :lesson="selectedLesson"
-            @close="closeInquiryForm"
-        />
-
-        <feedback-request
-            v-if="showInquiryForm && selectedType === '온라인 피드백'"
-            :lesson="selectedLesson"
-            @close="closeInquiryForm"
-        />
+        <inquiry-form v-if="showInquiryForm" :lesson="selectedLesson" @close="closeInquiryForm" />
     </div>
 </template>
 
@@ -93,12 +68,11 @@
 import { ref, computed } from 'vue';
 import LessonDetail from './LessonDetail.vue';
 import InquiryForm from './InquiryForm.vue';
-import FeedbackRequest from './FeedbackRequest.vue';
 
 const lessons = ref([
     {
         type: '온라인 레슨',
-        title: '전신 운동 PT',
+        title: '온라인으로 배우는 전신 운동 PT',
         trainer: '강철희',
         category: '헬스',
         description: '초보자에게 적합한 전신 강화 트레이닝.',
@@ -138,10 +112,11 @@ const lessons = ref([
         },
     },
     {
-        type: '온라인 피드백',
+        type: '온라인 레슨',
+        title: '코어 필라테스',
         trainer: '이은정',
         category: '필라테스',
-        description: '코어 강화에 특화된 필라테스 피드백입니다.',
+        description: '코어 강화에 특화된 필라테스 수업입니다.',
         price: 70000,
         trainerProfile: ['필라테스 마스터 트레이너'],
         image: 'https://www.example.com/lesson-pilates.jpg',
@@ -161,16 +136,16 @@ const categories = ref(['헬스', '요가', '필라테스', '수영', '댄스', 
 const selectedType = ref('온라인 레슨');
 const selectedLesson = ref(null); // 선택된 레슨
 const selectedCategory = ref('');
-const searchQuery = ref(''); // 검색
-const selectedSort = ref('popularity'); // 정렬
+const searchKeyword = ref(''); // 검색
+const selectedSort = ref('popular'); // 정렬
 const showInquiryForm = ref(false); // 문의하기 폼 상태
 
 const filteredLessons = computed(() => {
     return lessons.value.filter((lesson) => {
-        const matchesType = lesson.type === selectedType.value;
+        const matchesType = selectedType.value;
         const matchesSearch =
-            (lesson.title && lesson.title.includes(searchQuery.value)) ||
-            (lesson.trainer && lesson.trainer.includes(searchQuery.value));
+            (lesson.title && lesson.title.includes(searchKeyword.value)) ||
+            (lesson.trainer && lesson.trainer.includes(searchKeyword.value));
         const matchesCategory = !selectedCategory.value || lesson.category === selectedCategory.value;
 
         return matchesType && matchesSearch && matchesCategory;
@@ -179,7 +154,7 @@ const filteredLessons = computed(() => {
 
 const sortedLessons = computed(() => {
     const sorted = [...filteredLessons.value];
-    if (selectedSort.value === 'popularity') {
+    if (selectedSort.value === 'popular') {
         // 인기순: 리뷰 개수
         sorted.sort((a, b) => b.reviews.length - a.reviews.length);
     } else if (selectedSort.value === 'rating') {
@@ -200,11 +175,6 @@ function selectCategory(category) {
     selectedCategory.value = category;
 }
 
-function selectLessonType(type) {
-    selectedType.value = type;
-    selectedCategory.value = '';
-}
-
 function openLessonDetail(lesson) {
     selectedLesson.value = lesson;
 }
@@ -223,66 +193,53 @@ function closeInquiryForm() {
 </script>
 
 <style scoped>
-.lesson-page {
+.search-sort-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
+    margin: 20px;
+    justify-content: center;
 }
 
-.top-header {
+.search-container {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
+}
+.search-container form {
+    display: flex;
+    gap: 10px;
 }
 
-.lesson-type-buttons {
-    display: flex;
-    gap: 100px;
-    margin-left: 240px;
-}
-
-.lesson-type-button {
-    padding: 10px 20px;
-    border: none;
-    background: none;
+.search-container button {
+    background-color: #00bf63;
+    color: white;
+    border: 1px solid #00bf63;
+    border-radius: 4px;
     cursor: pointer;
-    font-size: 18px;
-    text-align: center;
 }
 
-.lesson-type-buttons .active {
-    text-decoration: underline;
+.search-container input {
+    width: 200px;
+    padding: 8px;
+}
+
+.sort-container {
+    margin-left: 30px;
+}
+
+.sort-container select {
+    padding: 8px;
+}
+
+.lesson-category {
+    display: flex;
+    justify-content: center;
 }
 
 .lesson-category-button {
-    padding: 10px;
-    background-color: black;
+    padding: 15px;
+    background-color: #00bf63;
     color: white;
     border: none;
     cursor: pointer;
     text-align: center;
-}
-
-.search-filter-section {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 30px;
-}
-
-.search-input {
-    width: 300px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
-.filter-options select {
-    margin-left: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
 }
 
 .lesson-card-list {
@@ -300,6 +257,7 @@ function closeInquiryForm() {
     transition: transform 0.3s ease;
     display: flex;
     padding: 20px;
+    margin: 10px;
 }
 
 .lesson-card:hover {
@@ -322,12 +280,14 @@ function closeInquiryForm() {
     margin-bottom: 10px;
 }
 
-.join-btn {
+.join-button {
     background-color: #ff6f61;
     color: white;
-    padding: 10px 15px;
+    padding: 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    margin-left: auto;
+    margin-top: auto;
 }
 </style>
