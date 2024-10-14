@@ -70,7 +70,7 @@ defineEmits(['close']);
     width: 22px;
     height: 20px;
     margin: 0 6px 0 0;
-    background: url('/src/assets/ico_kakao.png') no-repeat;
+    background: url('https://kosa-final-project-team-3.github.io/cdn/ico_kakao.svg') no-repeat;
     background-size: contain;
     vertical-align: middle;
 }
