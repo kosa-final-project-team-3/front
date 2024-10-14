@@ -1,7 +1,6 @@
 <template>
     <div class="lesson-page">
         <div class="top-header">
-            <h1>온라인 레슨</h1>
             <div class="lesson-type-buttons">
                 <button
                     @click="selectLessonType('온라인 레슨')"
