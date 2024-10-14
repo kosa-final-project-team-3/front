@@ -2,21 +2,25 @@
     <div v-if="isVisible" class="expert-popup-overlay">
         <div class="expert-popup">
             <h3>전문가 전환 신청</h3>
-            <p>✔️ 하나 이상의 인증을 등록해야 전문가로 전환됩니다.</p>
-            <p>✔️ 인증 소요시간 2일~3일 입니다.</p>
+            <div class="expert-popup-info">
+                <p>✔️ 하나 이상의 인증을 등록해야 전문가로 전환됩니다.</p>
+                <p>✔️ 인증 소요기간은 2일~3일 입니다.</p>
+            </div>
 
             <div class="form-group">
-                <label for="exerciseCategory">운동 카테고리:</label>
-                <select id="exerciseCategory" v-model="selectedCategory" required>
-                    <option value="">카테고리 선택</option>
-                    <option
-                        v-for="category in exerciseCategories"
-                        :key="category.exerciseCategoryCode"
-                        :value="category.exerciseCategoryCode"
-                    >
-                        {{ category.exerciseCategoryName }}
-                    </option>
-                </select>
+                <div class="category-select-wrapper">
+                    <label for="exerciseCategory">운동 카테고리 : </label>
+                    <select id="exerciseCategory" v-model="selectedCategory" required>
+                        <option value="">카테고리 선택</option>
+                        <option
+                            v-for="category in exerciseCategories"
+                            :key="category.exerciseCategoryCode"
+                            :value="category.exerciseCategoryCode"
+                        >
+                            {{ category.exerciseCategoryName }}
+                        </option>
+                    </select>
+                </div>
             </div>
 
             <div v-for="(category, index) in certificationCategories" :key="index" class="certification-category">
@@ -238,6 +242,17 @@ const close = () => {
     overflow-y: auto;
 }
 
+.expert-popup-info {
+    margin-bottom: 50px;
+}
+
+.expert-popup h3 {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.5em;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
 .certification-category {
     margin-bottom: 1rem;
 }
@@ -331,17 +346,35 @@ const close = () => {
 }
 
 .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 3rem;
 }
 
-.form-group label {
+.category-select-wrapper {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+}
+
+.category-select-wrapper label {
+    margin-right: 1rem;
+    white-space: nowrap;
+}
+
+.category-select-wrapper select {
+    flex-grow: 1;
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+
+/* .form-group label {
     display: block;
     margin-bottom: 0.5rem;
+    font-weight: bold;
 }
 
 .form-group select {
     width: 100%;
     padding: 0.5rem;
     font-size: 1rem;
-}
+} */
 </style>

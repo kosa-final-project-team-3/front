@@ -163,7 +163,16 @@ const displayUserInfo = computed(() => {
 <style scoped>
 .my-page-user-info {
     max-width: 600px;
-    margin: 0 auto;
+    margin: 40px;
+}
+
+.my-page-user-info h2 {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.5em;
+}
+
+.my-page-user-info form {
+    padding: 20px;
 }
 
 .form-group {
@@ -186,9 +195,11 @@ select {
 .btn-become-expert {
     margin-top: 1rem;
     padding: 0.5rem 1rem;
-    background-color: #cfffe5;
+    background-color: #00bf63;
     border: none;
     cursor: pointer;
+    color: white;
+    border-radius: 5px;
 }
 
 .form-actions {
@@ -240,10 +251,11 @@ select {
 }
 
 .btn-edit {
-    background-color: #2196f3;
+    background-color: #00bf63;
     color: white;
     border: none;
     padding: 0.5rem 1rem;
     cursor: pointer;
+    border-radius: 5px;
 }
 </style>
