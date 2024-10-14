@@ -2,7 +2,8 @@
     <div class="app">
         <div v-if="useLayout">
             <header-compo />
-            <middle-compo />
+            <!-- <middle-compo /> -->
+            <router-view />
             <footer-compo />
         </div>
         <div v-else>
@@ -16,7 +17,7 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import HeaderCompo from './components/layouts/HeaderCompo.vue';
 import FooterCompo from './components/layouts/FooterCompo.vue';
-import MiddleCompo from './components/layouts/MiddleCompo.vue';
+// import MiddleCompo from './components/layouts/MiddleCompo.vue';
 
 const route = useRoute();
 
