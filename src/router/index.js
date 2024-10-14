@@ -43,4 +43,17 @@ const router = createRouter({
     history: createWebHistory(),
     routes: [...routes, ...loginRoutes, ...mypageRoutes, ...trainerpageRoutes, ...modalRoutes],
 });
+
+// 전역 네비게이션 가드 추가
+router.beforeEach((to, from, next) => {
+    // AI 피드백 페이지에서 다른 페이지로 이동할 때
+    if (from.name === 'AIFeedback' && to.name !== 'AIFeedback') {
+        const aiFeedbackComponent = from.matched[0].instances.default;
+        if (aiFeedbackComponent && typeof aiFeedbackComponent.disableWebcam === 'function') {
+            aiFeedbackComponent.disableWebcam();
+        }
+    }
+    next();
+});
+
 export default router;

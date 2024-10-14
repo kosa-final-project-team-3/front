@@ -1,14 +1,13 @@
 <template>
     <div class="container">
-        <div class="content-wrapper">
-            <aside class="sidebar">
-                <h3>AI 피드백</h3>
-            </aside>
-
-            <div class="main-content">
-                <div class="video-container">
-                    <video ref="video" autoplay playsinline />
-                    <canvas ref="canvas" />
+        <aside class="sidebar">
+            <h3>AI 피드백</h3>
+        </aside>
+        <main class="main-content">
+            <div class="video-container">
+                <div class="video-wrapper">
+                    <video ref="video" width="960" height="540" autoplay playsinline></video>
+                    <canvas ref="canvas" width="960" height="540" style="position: absolute; top: 0; left: 0"></canvas>
 
                     <div v-if="isRunning" class="countdown-overlay">
                         <svg class="w-full h-full" viewBox="0 0 100 100">
@@ -46,13 +45,15 @@
                         v-model="duration"
                         min="7"
                         max="30"
-                        :disabled="isRunning"
+                        :disabled="isRunning || !isWebcamEnabled"
                         class="timer-slider"
                     />
-                    <button @click="startCountdown" :disabled="isRunning" class="start-button">Start</button>
+                    <button @click="startCountdown" :disabled="isRunning || !isWebcamEnabled" class="start-button">
+                        Start
+                    </button>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 </template>
 
@@ -60,18 +61,21 @@
 import { onMounted, ref, onUnmounted, computed } from 'vue';
 import { PoseLandmarker, FilesetResolver, DrawingUtils } from '@mediapipe/tasks-vision';
 import axios from 'axios';
+import { onBeforeRouteLeave } from 'vue-router';
 
 const video = ref(null);
 const canvas = ref(null);
 let poseLandmarker = null;
 let canvasCtx = null;
 let lastVideoTime = -1;
+let stream = null;
 
 const count = ref(7);
 const isRunning = ref(false);
 const duration = ref(7);
 const circumference = 2 * Math.PI * 20;
 const shouldProcessResults = ref(false);
+const isWebcamEnabled = ref(false);
 
 // 카운트다운 애니메이션
 const dashOffset = computed(() => {
@@ -144,16 +148,36 @@ const enableWebcam = async () => {
     // const selectedDeviceId = videoDevices[1]?.deviceId;
 
     if (!selectedDeviceId) {
-        console.log('사용 가능한 비디오 장치가 없습니다.');
+        alert('사용 가능한 비디오 장치가 없습니다.');
+        isWebcamEnabled.value = false;
         return;
     }
 
-    const stream = await navigator.mediaDevices.getUserMedia({
-        video: { deviceId: selectedDeviceId },
-    });
-    video.value.srcObject = stream;
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: { deviceId: selectedDeviceId, width: 960, height: 540 },
+        });
 
-    video.value.addEventListener('loadeddata', renderLoop);
+        video.value.srcObject = stream;
+        video.value.addEventListener('loadeddata', renderLoop);
+        isWebcamEnabled.value = true;
+    } catch (error) {
+        console.error('웹캠 활성화 중 오류 발생:', error);
+        alert('웹캠을 활성화할 수 없습니다. 권한을 확인해 주세요.');
+        isWebcamEnabled.value = false;
+    }
+};
+
+// 웹캠을 비활성화하는 함수
+const disableWebcam = () => {
+    if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+        stream = null;
+    }
+    if (video.value) {
+        video.value.srcObject = null;
+    }
+    isWebcamEnabled.value = false;
 };
 
 // 실시간 포즈 감지 및 결과 처리 루프
@@ -164,7 +188,7 @@ const renderLoop = async () => {
     if (videoElement.currentTime !== lastVideoTime) {
         const poseLandmarkerResult = await poseLandmarker.detectForVideo(videoElement, performance.now());
 
-        canvasCtx.clearRect(0, 0, video.value.width, video.value.height);
+        canvasCtx.clearRect(0, 0, canvas.value.width, canvas.value.height);
 
         // 랜드마크 그리기
         if (poseLandmarkerResult.landmarks) {
@@ -229,7 +253,6 @@ const processResults = (results) => {
             if (feedback === '') {
                 feedback = '올바른 자세입니다.';
             }
-            console.log(angleWaist);
         } else {
             feedback = '자세를 정확히 감지할 수 없습니다. 다시 시도해주세요.';
         }
@@ -257,11 +280,15 @@ const calculateAngle = (pointA, pointB, pointC) => {
     return (angle * 180) / Math.PI; // 라디안을 각도로 변환
 };
 
+// 라우트를 떠나기 전에 웹캠 비활성화
+onBeforeRouteLeave((to, from, next) => {
+    disableWebcam();
+    next();
+});
+
 // 컴포넌트가 언마운트될 때 웹캠 종료
 onUnmounted(() => {
-    const stream = video.value.srcObject;
-    const tracks = stream.getTracks();
-    tracks.forEach((track) => track.stop());
+    disableWebcam();
 });
 
 const audio = new Audio();
@@ -293,41 +320,43 @@ const textToSpeech = async (text) => {
 <style scoped>
 .container {
     display: flex;
+    font-family: 'Do Hyeon', sans-serif;
     height: 100vh;
 }
 
-.content-wrapper {
-    display: flex;
-    height: 100%;
-}
-
-.main-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.video-container {
-    position: relative;
-    width: 80vw;
-    max-width: 960px;
-    height: 0;
-    padding-bottom: 56.25%;
-    margin-bottom: 20px;
-}
-
 .sidebar {
-    width: 150px;
-    padding: 1rem;
-    font-family: 'Do Hyeon', sans-serif;
+    width: 250px;
+    padding: 3rem 0rem 3rem 3rem;
 }
 
 .sidebar h3 {
     font-size: 1.5em;
     padding: 0.5rem;
     margin: 1rem 1rem 2rem 1rem;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.video-container {
+    width: 960px;
+}
+
+.video-wrapper {
+    position: relative;
+    width: 960px;
+    height: 540px;
+}
+.video-wrapper video,
+.video-wrapper canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .countdown-overlay {
@@ -342,21 +371,12 @@ const textToSpeech = async (text) => {
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-video,
-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
 .controls {
     display: flex;
     align-items: center;
-    margin-top: 10px;
-    font-family: 'Do Hyeon', sans-serif;
+    justify-content: center; /* 추가 */
+    margin-top: 30px;
+    /* font-family: 'Do Hyeon', sans-serif; */
     font-size: 1.5em;
 }
 
