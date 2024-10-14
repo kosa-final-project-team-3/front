@@ -5,7 +5,7 @@
                 <h3>마이페이지</h3>
                 <router-link :to="{ name: 'MyPageUserInfo' }" class="sub-nav-item">나의 정보</router-link>
                 <router-link :to="{ name: 'MyPageUserDiary' }" class="sub-nav-item">나의 운동 일지</router-link>
-                <router-link :to="{ name: '' }" class="sub-nav-item"></router-link>
+                <router-link :to="{ name: 'MyLesson' }" class="sub-nav-item">나의 레슨</router-link>
             </aside>
             <main class="main-content">
                 <router-view></router-view>
@@ -24,17 +24,13 @@
 }
 
 .content-wrapper {
-    font-family: 'Do Hyeon', sans-serif;
-    display: flex; /* 추가: flexbox 사용 */
-    height: 100%; /* 추가: 전체 높이 사용 */
-}
-
-.content-wrapper {
-    font-family: 'Do Hyeon', sans-serif;
+    display: flex;
+    height: 100%;
 }
 
 .sidebar {
-    width: 250px;
+    font-family: 'Do Hyeon', sans-serif;
+    width: 200px;
     padding: 1rem;
 }
 
