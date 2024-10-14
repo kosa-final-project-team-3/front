@@ -7,6 +7,7 @@ import trainerpageRoutes from './trainerpageRoutes';
 import HomePage from '../pages/HomePage.vue';
 import lessonpageRoutes from './lessonpageRoutes';
 import modalRoutes from './modalRoutes';
+import MBTIPage from '../components/mainpage/MBTIPage.vue';
 const routes = [
     {
         path: '/',
@@ -16,6 +17,11 @@ const routes = [
                 path: '',
                 name: 'HomePage',
                 component: HomePage,
+            },
+            {
+                path: '/mbti',
+                name: 'MBTIPage',
+                component: MBTIPage,
             },
             ...lessonpageRoutes,
         ],
