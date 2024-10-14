@@ -1,19 +1,32 @@
 import { createWebHistory, createRouter } from 'vue-router';
-import MainPage from '../pages/MainPage.vue';
 import loginRoutes from './loginRoutes';
-import AIFeedback from '../components/lesson/AIFeedback.vue';
 import mypageRoutes from './mypageRoutes';
 import trainerpageRoutes from './trainerpageRoutes';
 import MemberDashboard from '../components/member/MemberDashboard.vue';
+import HomePage from '../pages/HomePage.vue';
+import lessonpageRoutes from './lessonpageRoutes';
+import MiddleCompo from '../components/layouts/MiddleCompo.vue';
+import modalRoutes from './modalRoutes';
+import AIFeedback from '../components/lesson/AIFeedback.vue';
+
 const routes = [
     {
         path: '/',
-        component: MainPage,
-    },
-    {
-        path: '/feedback/ai',
-        name: 'AIFeedback',
-        component: AIFeedback,
+        component: MiddleCompo,
+        meta: { useLayout: true },
+        children: [
+            {
+                path: '',
+                name: 'HomePage',
+                component: HomePage,
+            },
+            {
+                path: 'feedback/ai',
+                name: 'AIFeedback',
+                component: AIFeedback,
+            },
+            ...lessonpageRoutes,
+        ],
     },
     {
         path: '/member/dashboard',
@@ -23,6 +36,6 @@ const routes = [
 
 const router = createRouter({
     history: createWebHistory(),
-    routes: [...routes, ...loginRoutes, ...mypageRoutes, ...trainerpageRoutes],
+    routes: [...routes, ...loginRoutes, ...mypageRoutes, ...trainerpageRoutes, ...modalRoutes],
 });
 export default router;

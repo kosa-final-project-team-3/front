@@ -72,7 +72,7 @@ const startCountdown = () => {
     count.value = duration.value;
     isRunning.value = true;
     shouldProcessResults.value = false;
-    textToSpeech(count.value + "초 안에 자세를 맞춰주세요");
+    textToSpeech(count.value + '초 안에 자세를 맞춰주세요');
     setTimeout(() => {
         countdown();
         textToSpeech(count.value);
@@ -277,7 +277,6 @@ const textToSpeech = async (text) => {
         console.error('Error with TTS API:', error);
     }
 };
-
 </script>
 
 <style scoped>
