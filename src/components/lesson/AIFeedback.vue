@@ -45,10 +45,12 @@
                         v-model="duration"
                         min="7"
                         max="30"
-                        :disabled="isRunning"
+                        :disabled="isRunning || !isWebcamEnabled"
                         class="timer-slider"
                     />
-                    <button @click="startCountdown" :disabled="isRunning" class="start-button">Start</button>
+                    <button @click="startCountdown" :disabled="isRunning || !isWebcamEnabled" class="start-button">
+                        Start
+                    </button>
                 </div>
             </div>
         </main>
@@ -73,6 +75,7 @@ const isRunning = ref(false);
 const duration = ref(7);
 const circumference = 2 * Math.PI * 20;
 const shouldProcessResults = ref(false);
+const isWebcamEnabled = ref(false);
 
 // 카운트다운 애니메이션
 const dashOffset = computed(() => {
@@ -146,15 +149,23 @@ const enableWebcam = async () => {
 
     if (!selectedDeviceId) {
         alert('사용 가능한 비디오 장치가 없습니다.');
+        isWebcamEnabled.value = false;
         return;
     }
 
-    stream = await navigator.mediaDevices.getUserMedia({
-        video: { deviceId: selectedDeviceId, width: 960, height: 540 },
-    });
-    video.value.srcObject = stream;
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: { deviceId: selectedDeviceId, width: 960, height: 540 },
+        });
 
-    video.value.addEventListener('loadeddata', renderLoop);
+        video.value.srcObject = stream;
+        video.value.addEventListener('loadeddata', renderLoop);
+        isWebcamEnabled.value = true;
+    } catch (error) {
+        console.error('웹캠 활성화 중 오류 발생:', error);
+        alert('웹캠을 활성화할 수 없습니다. 권한을 확인해 주세요.');
+        isWebcamEnabled.value = false;
+    }
 };
 
 // 웹캠을 비활성화하는 함수
@@ -166,6 +177,7 @@ const disableWebcam = () => {
     if (video.value) {
         video.value.srcObject = null;
     }
+    isWebcamEnabled.value = false;
 };
 
 // 실시간 포즈 감지 및 결과 처리 루프
