@@ -12,6 +12,10 @@
                 :loop="true"
                 :pagination="{ clickable: true }"
                 :navigation="true"
+                :autoplay="{
+                    delay: 5000,
+                    disableOnInteraction: false,
+                }"
                 class="mySwiper"
             >
                 <swiper-slide v-for="(image, index) in bannerImages" :key="index">
@@ -55,7 +59,7 @@
 <script setup>
 import { ref } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Pagination, Navigation } from 'swiper/modules';
+import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import KakaoLoginCompo from '../components/login/KakaoLoginCompo.vue';
 import { useAuthStore } from '../stores/authStore';
 import 'swiper/css';
@@ -63,7 +67,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import Modal from '../components/common/Modal.vue';
 
-const modules = [Pagination, Navigation];
+const modules = [Autoplay, Pagination, Navigation];
 const authStore = useAuthStore();
 const showLoginModal = ref(false);
 
