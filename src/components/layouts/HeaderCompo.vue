@@ -15,10 +15,8 @@
                 </div>
                 <div class="navbar-login">
                     <div class="dynamic-link">
-                        <router-link v-if="authStore.isTrainer" to="/trainer">트레이너페이지</router-link>
+                        <router-link v-if="role == 'TRAINER'" to="/trainer">트레이너페이지</router-link>
                         <router-link v-if="isAuthenticated" to="/mypage">마이페이지</router-link>
-                        <!-- <router-link to="/trainer">트레이너페이지</router-link> -->
-                        <!-- <router-link to="/mypage">마이페이지</router-link> -->
                     </div>
                     <div class="auth-links">
                         <a v-if="!isAuthenticated" @click.prevent="openLogin">로그인</a>
@@ -37,21 +35,8 @@ import jwtAxios, { API_SERVER_HOST } from '../../util/jwtUtil';
 const host = API_SERVER_HOST;
 const authStore = useAuthStore();
 const isAuthenticated = computed(() => authStore.isAuthenticated);
-
+const role = computed(() => authStore.role);
 authStore.checkAuthStatus();
-
-const accessPrivateResource = () => [
-    jwtAxios
-        .get(`http://${host}/api/member/private`)
-        .then((res) => {
-            if (res.status === 200) {
-                console.log(res.data);
-            }
-        })
-        .catch((e) => {
-            console.log(e);
-        }),
-];
 
 const handleLogout = () => {
     authStore.logout();
