@@ -147,6 +147,7 @@ const openLogin = () => {
     flex-grow: 1;
     text-align: center;
     white-space: nowrap;
+    cursor: pointer;
 }
 .navbar-login a:hover::after {
     content: '';
