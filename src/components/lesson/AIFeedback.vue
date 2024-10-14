@@ -1,14 +1,13 @@
 <template>
     <div class="container">
-        <div class="content-wrapper">
-            <aside class="sidebar">
-                <h3>AI 피드백</h3>
-            </aside>
-
-            <div class="vedio-container">
-                <div style="position: relative">
-                    <video ref="video" width="640" height="480" autoplay playsinline></video>
-                    <canvas ref="canvas" width="640" height="480" style="position: absolute; top: 0; left: 0"></canvas>
+        <aside class="sidebar">
+            <h3>AI 피드백</h3>
+        </aside>
+        <main class="main-content">
+            <div class="video-container">
+                <div class="video-wrapper">
+                    <video ref="video" width="960" height="540" autoplay playsinline></video>
+                    <canvas ref="canvas" width="960" height="540" style="position: absolute; top: 0; left: 0"></canvas>
 
                     <div v-if="isRunning" class="countdown-overlay">
                         <svg class="w-full h-full" viewBox="0 0 100 100">
@@ -52,7 +51,7 @@
                     <button @click="startCountdown" :disabled="isRunning" class="start-button">Start</button>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 </template>
 
@@ -149,7 +148,7 @@ const enableWebcam = async () => {
     }
 
     const stream = await navigator.mediaDevices.getUserMedia({
-        video: { deviceId: selectedDeviceId },
+        video: { deviceId: selectedDeviceId, width: 960, height: 540 },
     });
     video.value.srcObject = stream;
 
@@ -292,18 +291,13 @@ const textToSpeech = async (text) => {
 <style scoped>
 .container {
     display: flex;
+    font-family: 'Do Hyeon', sans-serif;
+    height: 100vh;
 }
 
-.content-wrapper {
-    font-family: 'Do Hyeon', sans-serif;
-    display: flex;
-    height: 100%;
-    padding: 1rem;
-    text-align: center;
-}
 .sidebar {
     width: 250px;
-    padding: 1rem;
+    padding: 3rem 0rem 3rem 3rem;
 }
 
 .sidebar h3 {
@@ -315,30 +309,25 @@ const textToSpeech = async (text) => {
 .main-content {
     flex: 1;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 10px;
 }
 
 .video-container {
+    width: 960px;
+}
+
+.video-wrapper {
     position: relative;
-    width: 80vw;
-    max-width: 960px;
-    height: 0;
-    padding-bottom: 56.25%;
-    margin-bottom: 20px;
+    width: 960px;
+    height: 540px;
 }
-
-.sidebar {
-    width: 250px;
-    padding: 1rem;
-    font-family: 'Do Hyeon', sans-serif;
-}
-
-.sidebar h3 {
-    font-size: 1.5em;
-    padding: 0.5rem;
-    margin: 1rem 1rem 2rem 1rem;
+.video-wrapper video,
+.video-wrapper canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .countdown-overlay {
@@ -356,8 +345,9 @@ const textToSpeech = async (text) => {
 .controls {
     display: flex;
     align-items: center;
-    margin-top: 10px;
-    font-family: 'Do Hyeon', sans-serif;
+    justify-content: center; /* 추가 */
+    margin-top: 30px;
+    /* font-family: 'Do Hyeon', sans-serif; */
     font-size: 1.5em;
 }
 
