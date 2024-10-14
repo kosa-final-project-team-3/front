@@ -11,7 +11,6 @@
                 <span>카카오 로그인</span>
             </button>
         </form>
-        <button class="close-btn" @click="$emit('close')">X</button>
     </div>
 </template>
 
@@ -59,11 +58,12 @@ defineEmits(['close']);
     background-color: #fae100 !important;
     border-color: #fae100 !important;
     color: #3c1e1e !important;
-    width: 100%;
+    width: 20vw;
     max-width: 300px;
     height: 50px;
     border-radius: 8px;
 }
+
 .btn > span.btn_ico_kakao:before {
     content: '';
     display: inline-block;
@@ -74,30 +74,16 @@ defineEmits(['close']);
     background-size: contain;
     vertical-align: middle;
 }
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: #333;
-}
 
 .login-popup-content {
-    background-color: white;
     padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     position: relative;
-    width: 80%;
-    max-width: 400px;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
 }
+
 .login-popup-content p {
     margin-bottom: 20px;
 }
