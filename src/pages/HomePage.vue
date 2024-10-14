@@ -51,6 +51,7 @@
         </div>
     </div>
 </template>
+
 <script setup>
 import { ref } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
@@ -86,7 +87,7 @@ const lessonTypes = ref([
         alt: '그룹 레슨 아이콘',
         text: '그룹 레슨',
         isActive: false,
-        route: '/lesson/offline', // group
+        route: '/lesson/offline/group', // group
     },
     {
         icon: 'https://kosa-final-project-team-3.github.io/cdn/icon_online.png',
@@ -147,7 +148,6 @@ authStore.openLogin = openLogin;
     border-radius: 10px;
     margin: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
     transition: all 0.3s ease;
     cursor: pointer;
 }
@@ -164,6 +164,7 @@ authStore.openLogin = openLogin;
     text-decoration: none;
     color: black;
 }
+
 .lesson-type img {
     width: 50px;
     height: 50px;

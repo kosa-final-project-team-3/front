@@ -42,4 +42,26 @@ const handleLogout = () => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.base-container {
+    margin: -8px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.router-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+</style>
