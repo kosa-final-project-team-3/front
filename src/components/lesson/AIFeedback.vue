@@ -59,12 +59,14 @@
 import { onMounted, ref, onUnmounted, computed } from 'vue';
 import { PoseLandmarker, FilesetResolver, DrawingUtils } from '@mediapipe/tasks-vision';
 import axios from 'axios';
+import { onBeforeRouteLeave } from 'vue-router';
 
 const video = ref(null);
 const canvas = ref(null);
 let poseLandmarker = null;
 let canvasCtx = null;
 let lastVideoTime = -1;
+let stream = null;
 
 const count = ref(7);
 const isRunning = ref(false);
@@ -147,12 +149,23 @@ const enableWebcam = async () => {
         return;
     }
 
-    const stream = await navigator.mediaDevices.getUserMedia({
+    stream = await navigator.mediaDevices.getUserMedia({
         video: { deviceId: selectedDeviceId, width: 960, height: 540 },
     });
     video.value.srcObject = stream;
 
     video.value.addEventListener('loadeddata', renderLoop);
+};
+
+// 웹캠을 비활성화하는 함수
+const disableWebcam = () => {
+    if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+        stream = null;
+    }
+    if (video.value) {
+        video.value.srcObject = null;
+    }
 };
 
 // 실시간 포즈 감지 및 결과 처리 루프
@@ -255,11 +268,15 @@ const calculateAngle = (pointA, pointB, pointC) => {
     return (angle * 180) / Math.PI; // 라디안을 각도로 변환
 };
 
+// 라우트를 떠나기 전에 웹캠 비활성화
+onBeforeRouteLeave((to, from, next) => {
+    disableWebcam();
+    next();
+});
+
 // 컴포넌트가 언마운트될 때 웹캠 종료
 onUnmounted(() => {
-    const stream = video.value.srcObject;
-    const tracks = stream.getTracks();
-    tracks.forEach((track) => track.stop());
+    disableWebcam();
 });
 
 const audio = new Audio();
