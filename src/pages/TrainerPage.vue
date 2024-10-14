@@ -8,9 +8,9 @@
                 <router-link :to="{ name: 'TrainerPageUserDiary' }" class="sidebar-item">회원 일지 관리</router-link>
             </aside>
 
-            <div class="main-content">
+            <main class="main-content">
                 <router-view></router-view>
-            </div>
+            </main>
         </div>
     </div>
 </template>
@@ -18,8 +18,9 @@
 <script setup></script>
 
 <style scoped>
-.container {
+.trainer-page {
     display: flex;
+    height: 100vh;
 }
 
 .content-wrapper {
