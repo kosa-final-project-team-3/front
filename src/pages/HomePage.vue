@@ -1,8 +1,8 @@
 <template>
     <div class="home-container">
-        <div v-if="showLogin" class="login-popup">
-            <KakaoLoginCompo @close="closeLogin" />
-        </div>
+        <Modal v-if="showLoginModal" @close="showLoginModal = false">
+            <KakaoLoginCompo />
+        </Modal>
 
         <div class="banner">
             <swiper
@@ -51,6 +51,7 @@
         </div>
     </div>
 </template>
+
 <script setup>
 import { ref } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
@@ -60,10 +61,11 @@ import { useAuthStore } from '../stores/authStore';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
+import Modal from '../components/common/Modal.vue';
 
 const modules = [Pagination, Navigation];
 const authStore = useAuthStore();
-const showLogin = ref(false);
+const showLoginModal = ref(false);
 
 const bannerImages = ref([
     { src: 'https://kosa-final-project-team-3.github.io/cdn/banner_1.png', alt: 'Banner 1' },
@@ -85,7 +87,7 @@ const lessonTypes = ref([
         alt: '그룹 레슨 아이콘',
         text: '그룹 레슨',
         isActive: false,
-        route: '/lesson/offline', // group
+        route: '/lesson/offline/group', // group
     },
     {
         icon: 'https://kosa-final-project-team-3.github.io/cdn/icon_online.png',
@@ -108,11 +110,7 @@ const setActive = (index, isActive) => {
 };
 
 const openLogin = () => {
-    showLogin.value = true;
-};
-
-const closeLogin = () => {
-    showLogin.value = false;
+    showLoginModal.value = true;
 };
 
 authStore.openLogin = openLogin;
@@ -150,7 +148,6 @@ authStore.openLogin = openLogin;
     border-radius: 10px;
     margin: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
     transition: all 0.3s ease;
     cursor: pointer;
 }
@@ -167,6 +164,7 @@ authStore.openLogin = openLogin;
     text-decoration: none;
     color: black;
 }
+
 .lesson-type img {
     width: 50px;
     height: 50px;

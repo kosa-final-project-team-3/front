@@ -30,6 +30,7 @@ defineEmits(['close']);
     padding: 20px;
     border-radius: 5px;
     position: relative;
+    box-shadow: 10px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .close-button {
