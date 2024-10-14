@@ -5,10 +5,10 @@
                 <h3>AI 피드백</h3>
             </aside>
 
-            <div class="main-content">
-                <div class="video-container">
-                    <video ref="video" autoplay playsinline />
-                    <canvas ref="canvas" />
+            <div class="vedio-container">
+                <div style="position: relative">
+                    <video ref="video" width="640" height="480" autoplay playsinline></video>
+                    <canvas ref="canvas" width="640" height="480" style="position: absolute; top: 0; left: 0"></canvas>
 
                     <div v-if="isRunning" class="countdown-overlay">
                         <svg class="w-full h-full" viewBox="0 0 100 100">
@@ -144,7 +144,7 @@ const enableWebcam = async () => {
     // const selectedDeviceId = videoDevices[1]?.deviceId;
 
     if (!selectedDeviceId) {
-        console.log('사용 가능한 비디오 장치가 없습니다.');
+        alert('사용 가능한 비디오 장치가 없습니다.');
         return;
     }
 
@@ -164,7 +164,7 @@ const renderLoop = async () => {
     if (videoElement.currentTime !== lastVideoTime) {
         const poseLandmarkerResult = await poseLandmarker.detectForVideo(videoElement, performance.now());
 
-        canvasCtx.clearRect(0, 0, video.value.width, video.value.height);
+        canvasCtx.clearRect(0, 0, canvas.value.width, canvas.value.height);
 
         // 랜드마크 그리기
         if (poseLandmarkerResult.landmarks) {
@@ -229,7 +229,6 @@ const processResults = (results) => {
             if (feedback === '') {
                 feedback = '올바른 자세입니다.';
             }
-            console.log(angleWaist);
         } else {
             feedback = '자세를 정확히 감지할 수 없습니다. 다시 시도해주세요.';
         }
@@ -293,12 +292,24 @@ const textToSpeech = async (text) => {
 <style scoped>
 .container {
     display: flex;
-    height: 100vh;
 }
 
 .content-wrapper {
+    font-family: 'Do Hyeon', sans-serif;
     display: flex;
     height: 100%;
+    padding: 1rem;
+    text-align: center;
+}
+.sidebar {
+    width: 250px;
+    padding: 1rem;
+}
+
+.sidebar h3 {
+    font-size: 1.5em;
+    padding: 0.5rem;
+    margin: 1rem 1rem 2rem 1rem;
 }
 
 .main-content {
@@ -319,7 +330,7 @@ const textToSpeech = async (text) => {
 }
 
 .sidebar {
-    width: 150px;
+    width: 250px;
     padding: 1rem;
     font-family: 'Do Hyeon', sans-serif;
 }
@@ -340,16 +351,6 @@ const textToSpeech = async (text) => {
     justify-content: center;
     align-items: center;
     background-color: rgba(0, 0, 0, 0.5);
-}
-
-video,
-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
 }
 
 .controls {
