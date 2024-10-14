@@ -221,8 +221,8 @@ const saveDiary = async () => {
         const diaryData = {
             memberId: memberId.value,
             workoutDate: currentDiary.value.exerciseDate,
-            workoutStartTime: `${currentDiary.value.exerciseDate}T${currentDiary.value.startTime}`,
-            workoutEndTime: `${currentDiary.value.exerciseDate}T${currentDiary.value.endTime}`,
+            workoutStartTime: currentDiary.value.startTime,
+            workoutEndTime: currentDiary.value.endTime,
             content: currentDiary.value.content,
             bodyWeight: currentDiary.value.weight,
             carb: currentDiary.value.carbohydrates,
@@ -254,28 +254,30 @@ const saveDiary = async () => {
     isEditing.value = false;
     resetCurrentDiary();
 };
+
 const fetchDiaries = async () => {
     try {
         const response = await jwtAxios.get(`http://${host}/api/exercise-logs`, {
             params: { memberId: memberId.value },
         });
-        console.log('Fetched diaries:', response.data); // 로그 추가
+        console.log('Fetched diaries:', response.data);
         diaries.value = response.data.map((diary) => ({
             id: diary.logId,
             exerciseDate: diary.workoutDate,
-            startTime: new Date(diary.workoutStartTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            endTime: new Date(diary.workoutEndTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            startTime: diary.workoutStartTime,
+            endTime: diary.workoutEndTime,
             content: diary.content,
             weight: diary.bodyWeight,
             carbohydrates: diary.carb,
             protein: diary.protein,
             fat: diary.fat,
         }));
-        console.log('Processed diaries:', diaries.value); // 로그 추가
+        console.log('Processed diaries:', diaries.value);
     } catch (error) {
         console.error('Failed to fetch exercise logs:', error);
     }
 };
+
 const cancelDiaryForm = () => {
     if (
         currentDiary.value.content ||

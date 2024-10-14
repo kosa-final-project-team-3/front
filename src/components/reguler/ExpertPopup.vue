@@ -140,30 +140,60 @@ const fetchExerciseCategories = async () => {
     }
 };
 
+const uploadFiles = async () => {
+    const uploadedFiles = [];
+    for (const file of attachedFiles.value) {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('mediaTypeCode', '1');
+        formData.append('resourceId', authStore.id);
+
+        try {
+            const response = await jwtAxios.post(`http://${API_SERVER_HOST}/api/file`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            console.log(response.data);
+            uploadedFiles.push(response.data);
+        } catch (error) {
+            console.error('Failed to upload file:', error);
+            alert(`파일 업로드 중 오류가 발생했습니다: ${file.name}`);
+        }
+    }
+    return uploadedFiles;
+};
+
 const submitApplication = async () => {
     if (hasAnyCertification.value && selectedCategory.value) {
-        const profiles = certificationCategories.flatMap((category) =>
-            category.certifications.map((cert) => ({
-                trainerId: authStore.id,
-                categoryCode: getCategoryCode(category.name),
-                categoryName: category.name,
-                title: cert.name,
-                startDate: cert.startDate || cert.date,
-                endDate: cert.endDate || cert.date,
-                detail: cert.detail,
-            })),
-        );
-
-        console.log(profiles);
         try {
-            await jwtAxios.post(`http://${host}/api/trainer/save`, profiles);
-            await jwtAxios.put(`http://${host}/api/trainer/${authStore.id}/update-category`, null, {
+            // 파일 업로드
+            const uploadedFiles = await uploadFiles();
+
+            const profiles = certificationCategories.flatMap((category) =>
+                category.certifications.map((cert) => ({
+                    trainerId: authStore.id,
+                    categoryCode: getCategoryCode(category.name),
+                    categoryName: category.name,
+                    title: cert.name,
+                    startDate: cert.startDate || cert.date,
+                    endDate: cert.endDate || cert.date,
+                    detail: cert.detail,
+                })),
+            );
+
+            // 프로필 정보 저장
+            await jwtAxios.post(`http://${API_SERVER_HOST}/api/trainer/save`, profiles);
+
+            // 운동 카테고리 업데이트
+            await jwtAxios.put(`http://${API_SERVER_HOST}/api/trainer/${authStore.id}/update-category`, null, {
                 params: { exerciseCategoryCode: selectedCategory.value },
             });
+
             alert('전문가 전환 신청이 완료되었습니다.');
             emit('close');
         } catch (error) {
-            console.error('Failed to save trainer profiles:', error);
+            console.error('Failed to submit application:', error);
             alert('전문가 전환 신청 중 오류가 발생했습니다.');
         }
     }
