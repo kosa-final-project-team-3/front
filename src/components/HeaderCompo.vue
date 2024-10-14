@@ -8,7 +8,7 @@
         <div class="navbar">
             <div class="left-nav">
                 <router-link to="/offlinelessonlist">오프라인 레슨</router-link>
-                <router-link to="/onlinelessonlist">온라인 레슨</router-link>
+                <router-link to="/online">온라인 레슨</router-link>
                 <router-link to="/questions">질문 게시판</router-link>
             </div>
             <div class="right-nav">
