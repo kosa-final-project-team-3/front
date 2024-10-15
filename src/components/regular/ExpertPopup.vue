@@ -303,7 +303,7 @@ const close = () => {
 }
 
 .add-btn {
-    background-color: #00bf63;
+    background-color: #f13223;
     color: white;
 }
 
@@ -334,7 +334,7 @@ const close = () => {
 }
 
 .btn-submit {
-    background-color: #00bf63;
+    background-color: #f13223;
     color: white;
 }
 
@@ -386,7 +386,7 @@ const close = () => {
 }
 
 .btn-file-upload {
-    background-color: #00bf63;
+    background-color: #f13223;
     color: white;
     border: none;
     padding: 0.6rem 1.2rem;

@@ -349,16 +349,16 @@ onMounted(async () => {
 
 :deep(.vc-day) {
     min-width: 40px;
-    min-height: 40px; 
+    min-height: 40px;
 }
 
 :deep(.vc-day-content) {
-    font-size: 0.9em; 
-    font-weight: bold; 
+    font-size: 0.9em;
+    font-weight: bold;
 }
 
 :deep(.vc-weekday) {
-    font-size: 0.9em; 
+    font-size: 0.9em;
     font-weight: bold;
 }
 
@@ -376,7 +376,7 @@ onMounted(async () => {
 }
 
 .btn-add-diary {
-    background-color: #00bf63;
+    background-color: #f13223;
     color: white;
     border: none;
     padding: 0.6rem 1.2rem;
@@ -443,7 +443,7 @@ onMounted(async () => {
 
 .form-group input:focus {
     outline: none;
-    border-color: #00bf63;
+    border-color: #f13223;
 }
 
 .form-group textarea {
@@ -477,7 +477,7 @@ onMounted(async () => {
 
 .btn-save,
 .btn-edit {
-    background-color: #00bf63;
+    background-color: #f13223;
     color: white;
 }
 
@@ -489,7 +489,7 @@ onMounted(async () => {
 
 .btn-save:hover,
 .btn-edit:hover {
-    background-color: #00a854;
+    background-color: #f13223;
 }
 
 .btn-close:hover,

@@ -127,7 +127,7 @@ const closeDiaryDetail = () => {
 }
 
 .category-selector button.active {
-    background-color: #00bf63;
+    background-color: #f13223;
     color: white;
 }
 

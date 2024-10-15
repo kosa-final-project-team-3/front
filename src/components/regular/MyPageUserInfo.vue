@@ -198,7 +198,7 @@ select {
 }
 
 .btn-become-expert {
-    background-color: #00bf63;
+    background-color: #f13223;
     color: white;
     border: none;
     padding: 0.7rem 1.4rem;
@@ -226,7 +226,7 @@ select {
 
 .btn-save,
 .btn-edit {
-    background-color: #00bf63;
+    background-color: #f13223;
     color: white;
     border: none;
     transition: background-color 0.3s ease;
