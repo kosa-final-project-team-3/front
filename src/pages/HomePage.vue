@@ -157,7 +157,7 @@ authStore.openLogin = openLogin;
 }
 
 .lesson-type.active {
-    background-color: #00bf63;
+    background-color: #f13223;
     color: white;
 }
 .lesson-type.active img {
@@ -212,9 +212,10 @@ authStore.openLogin = openLogin;
     display: flex;
     justify-content: center;
 }
+
 :deep(.swiper-button-next),
 :deep(.swiper-button-prev) {
-    color: #00bf63;
+    color: #f13223;
     border-radius: 3px;
     display: flex;
     align-items: center;
@@ -233,12 +234,12 @@ authStore.openLogin = openLogin;
 :deep(.swiper-pagination-bullet) {
     width: 10px;
     height: 10px;
-    background: rgba(0, 191, 99, 0.5); /* #00bf63 with 50% opacity */
+    background: rgba(241, 50, 35, 0.5); /* #f13223 with 50% opacity */
     opacity: 1;
 }
 
 :deep(.swiper-pagination-bullet-active) {
-    background: #00bf63; /* Active dot color */
+    background: #f13223; /* Active dot color */
 }
 .banner-image {
     width: 70%;

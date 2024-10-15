@@ -42,7 +42,7 @@ const chartData = computed(() => {
             {
                 label: '체중 (kg)',
                 data: weightData.value.map((item) => item.weight),
-                borderColor: '#00bf63',
+                borderColor: '#f13223',
                 tension: 0.1,
                 fill: false,
             },

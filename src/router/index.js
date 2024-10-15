@@ -2,13 +2,13 @@ import { createWebHistory, createRouter } from 'vue-router';
 import loginRoutes from './loginRoutes';
 import mypageRoutes from './mypageRoutes';
 import trainerpageRoutes from './trainerpageRoutes';
-import MemberDashboard from '../components/regular/MemberDashboard.vue';
 import HomePage from '../pages/HomePage.vue';
 import lessonpageRoutes from './lessonpageRoutes';
 import MiddleCompo from '../components/layouts/MiddleCompo.vue';
 import modalRoutes from './modalRoutes';
 import AIFeedback from '../components/lesson/AIFeedback.vue';
 import MBTIPage from '../components/mainpage/MBTIPage.vue';
+
 const routes = [
     {
         path: '/',
@@ -32,10 +32,6 @@ const routes = [
             },
             ...lessonpageRoutes,
         ],
-    },
-    {
-        path: '/member/dashboard',
-        component: MemberDashboard,
     },
 ];
 

@@ -207,9 +207,9 @@ function closeInquiryForm() {
 }
 
 .search-container button {
-    background-color: #00bf63;
+    background-color: #f13223;
     color: white;
-    border: 1px solid #00bf63;
+    border: 1px solid #f13223;
     border-radius: 4px;
     cursor: pointer;
 }
@@ -234,7 +234,7 @@ function closeInquiryForm() {
 
 .lesson-category-button {
     padding: 15px;
-    background-color: #00bf63;
+    background-color: #f13223;
     color: white;
     border: none;
     cursor: pointer;

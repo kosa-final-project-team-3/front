@@ -2,21 +2,25 @@
     <div v-if="isVisible" class="expert-popup-overlay">
         <div class="expert-popup">
             <h3>전문가 전환 신청</h3>
-            <p>✔️ 하나 이상의 인증을 등록해야 전문가로 전환됩니다.</p>
-            <p>✔️ 인증 소요시간 2일~3일 입니다.</p>
+            <div class="expert-popup-info">
+                <p>✔️ 하나 이상의 인증을 등록해야 전문가로 전환됩니다.</p>
+                <p>✔️ 인증 소요기간은 2일~3일 입니다.</p>
+            </div>
 
             <div class="form-group">
-                <label for="exerciseCategory">운동 카테고리:</label>
-                <select id="exerciseCategory" v-model="selectedCategory" required>
-                    <option value="">카테고리 선택</option>
-                    <option
-                        v-for="category in exerciseCategories"
-                        :key="category.exerciseCategoryCode"
-                        :value="category.exerciseCategoryCode"
-                    >
-                        {{ category.exerciseCategoryName }}
-                    </option>
-                </select>
+                <div class="category-select-wrapper">
+                    <label for="exerciseCategory">운동 카테고리 : </label>
+                    <select id="exerciseCategory" v-model="selectedCategory" required>
+                        <option value="">카테고리 선택</option>
+                        <option
+                            v-for="category in exerciseCategories"
+                            :key="category.exerciseCategoryCode"
+                            :value="category.exerciseCategoryCode"
+                        >
+                            {{ category.exerciseCategoryName }}
+                        </option>
+                    </select>
+                </div>
             </div>
 
             <div v-for="(category, index) in certificationCategories" :key="index" class="certification-category">
@@ -226,31 +230,60 @@ const close = () => {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1000;
 }
 
 .expert-popup {
     background-color: white;
     padding: 2rem;
-    border-radius: 8px;
+    border-radius: 12px;
     max-width: 600px;
-    width: 100%;
-    max-height: 80vh;
+    width: 90%;
+    max-height: 85vh;
     overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.expert-popup-info {
+    margin-bottom: 1.5rem;
+    font-size: 1em;
+    color: #555;
+}
+
+.expert-popup h3 {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.8em;
+    margin-bottom: 1rem;
+    text-align: center;
+    color: #333;
 }
 
 .certification-category {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.certification-category h4 {
+    font-size: 1.2em;
+    margin-bottom: 0.8rem;
+    color: #333;
 }
 
 .certification-item {
     display: flex;
     flex-direction: column;
     margin-bottom: 1rem;
+    background-color: #f9f9f9;
+    padding: 0.8rem;
+    border-radius: 8px;
 }
 
 .certification-item input,
 .certification-item textarea {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
+    padding: 0.6rem;
+    font-size: 1em;
+    border: 1px solid #ddd;
+    border-radius: 4px;
 }
 
 .certification-item textarea {
@@ -260,28 +293,49 @@ const close = () => {
 
 .add-btn,
 .remove-btn {
-    padding: 0.25rem 0.5rem;
+    padding: 0.4rem 0.8rem;
     cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    font-size: 1.1em;
+    margin-left: 0.5rem;
+    transition: background-color 0.3s ease;
+}
+
+.add-btn {
+    background-color: #f13223;
+    color: white;
+}
+
+.remove-btn {
+    background-color: #ababa4;
+    color: white;
+}
+
+.add-btn:hover,
+.remove-btn:hover {
+    opacity: 0.9;
 }
 
 .popup-actions {
     display: flex;
     justify-content: flex-end;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
 }
 
+.btn-submit,
 .btn-cancel {
-    padding: 0.5rem 1rem;
-    margin-left: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 1.1em;
     cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    transition: background-color 0.3s ease;
 }
 
 .btn-submit {
-    padding: 0.5rem 1rem;
-    background-color: #4caf50;
+    background-color: #f13223;
     color: white;
-    border: none;
-    cursor: pointer;
 }
 
 .btn-submit:disabled {
@@ -290,58 +344,83 @@ const close = () => {
 }
 
 .btn-cancel {
-    background-color: #f44336;
+    background-color: #ababa4;
     color: white;
-    border: none;
+    margin-left: 1rem;
+}
+
+.btn-submit:hover,
+.btn-cancel:hover {
+    opacity: 0.9;
 }
 
 .document-submission {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 2rem;
-    padding: 1rem;
+    margin-top: 1.5rem;
+    padding: 1.2rem;
     border-top: 1px solid #e0e0e0;
+    font-size: 1em;
 }
 
 .file-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
     width: 100%;
-    max-width: 300px;
+    max-width: 400px;
+    background-color: #f9f9f9;
+    padding: 0.6rem;
+    border-radius: 4px;
 }
 
 .file-upload {
     display: flex;
     align-items: center;
-    margin-bottom: 0.5rem;
+    margin-top: 1rem;
     width: 100%;
-    max-width: 300px;
+    max-width: 400px;
     justify-content: center;
 }
 
 .btn-file-upload {
-    padding: 0.5rem 1rem;
-    background-color: #f0f0f0;
+    background-color: #f13223;
+    color: white;
     border: none;
+    padding: 0.6rem 1.2rem;
     cursor: pointer;
-    margin-right: 0.5rem;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.btn-file-upload:hover {
+    background-color: #00a854;
 }
 
 .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
+.category-select-wrapper {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1em;
 }
 
-.form-group select {
-    width: 100%;
-    padding: 0.5rem;
-    font-size: 1rem;
+.category-select-wrapper label {
+    margin-right: 1rem;
+    white-space: nowrap;
+}
+
+.category-select-wrapper select {
+    flex-grow: 1;
+    padding: 0.6rem;
+    font-size: 1em;
+    border: 1px solid #ddd;
+    border-radius: 4px;
 }
 </style>
