@@ -68,7 +68,7 @@ const lessons = ref([
         price: 60000,
         trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
         location: '서울 종로구 혜화로 20',
-        image: 'https://www.example.com/lesson-pt.jpg',
+        image: 'https://kosa-final-project-team-3.github.io/cdn/lesson_image1.jpg',
         maxParticipants: 10,
         reviews: [
             '친절하고 설명이 명확합니다.',
@@ -92,7 +92,7 @@ const lessons = ref([
         price: 50000,
         trainerProfile: ['요가 전문 자격증 보유'],
         location: '서울 마포구',
-        image: 'https://www.example.com/lesson-yoga.jpg',
+        image: 'https://kosa-final-project-team-3.github.io/cdn/lesson_image2.jpg',
         maxParticipants: 12,
         reviews: ['유연성이 많이 향상되었어요!', '운동 중간중간 자세 교정이 꼼꼼해서 좋습니다.'],
         ratings: {
@@ -111,7 +111,7 @@ const lessons = ref([
         price: 70000,
         trainerProfile: ['필라테스 마스터 트레이너'],
         location: '서울 강북구',
-        image: 'https://www.example.com/lesson-pilates.jpg',
+        image: 'https://kosa-final-project-team-3.github.io/cdn/lesson_image3.jpg',
         maxParticipants: 8,
         reviews: ['수업이 아주 체계적이고 좋아요.', '상세한 피드백을 받을 수 있어요.'],
         ratings: {

@@ -1,10 +1,13 @@
 <template>
     <div class="lesson-detail-container">
         <div class="modal-content">
-            <button class="close-button" @click="$emit('close')">X</button>
+            <button class="close-button" @click="$emit('close')">×</button>
 
             <div class="lesson-header">
-                <img :src="lesson.image" alt="레슨 이미지" class="lesson-image" />
+                <div class="lesson-image-container">
+                    <img v-if="lesson.image" :src="lesson.image" alt="레슨 이미지" class="lesson-image" />
+                    <div v-else class="lesson-image-placeholder">이미지 없음</div>
+                </div>
                 <div class="lesson-details">
                     <p><strong>종목:</strong> {{ lesson.category }}</p>
                     <p v-if="selectedType !== '온라인 피드백'"><strong>레슨명:</strong> {{ lesson.title }}</p>
@@ -48,14 +51,15 @@
                     </div>
                 </div>
             </div>
-
-            <button class="inquiry-button" @click="$emit('openInquiry')">문의하기</button>
+            <div class="inquiry-button-container">
+                <button class="inquiry-button" @click="handleInquiry">문의하기</button>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, defineEmits } from 'vue';
 import RadarChart from './RadarChart.vue';
 import MapView from './MapView.vue';
 
@@ -63,6 +67,13 @@ const props = defineProps({
     lesson: Object,
     selectedType: String,
 });
+
+const emit = defineEmits(['close', 'openInquiry']);
+
+const handleInquiry = () => {
+    emit('openInquiry', props.lesson);
+    emit('close');
+};
 </script>
 
 <style scoped>
@@ -76,6 +87,10 @@ const props = defineProps({
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 2;
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.2em;
+    border-radius: 5px;
 }
 
 .modal-content {
@@ -83,8 +98,9 @@ const props = defineProps({
     padding: 30px;
     border-radius: 10px;
     width: 500px;
-    height: 90%;
+    height: 600px;
     overflow-y: auto;
+    position: relative;
 }
 
 .modal-content::-webkit-scrollbar {
@@ -96,8 +112,31 @@ const props = defineProps({
     margin-bottom: 20px;
 }
 
+.lesson-image-container {
+    width: 200px;
+    height: 200px;
+    margin-right: 20px;
+}
+
+.lesson-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.lesson-image-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    color: #666;
+}
+
 .lesson-details {
-    margin-left: 20px;
+    flex: 1;
 }
 
 .evaluation-container {
@@ -125,23 +164,33 @@ const props = defineProps({
 }
 
 .close-button {
-    background-color: white;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: transparent;
     border: none;
+    font-size: 20px;
     cursor: pointer;
+    color: #333;
+}
+
+.inquiry-button-container {
+    display: flex;
+    justify-content: right;
 }
 
 .inquiry-button {
-    padding: 10px;
-    background-color: black;
+    margin: 10px 0px 0px 0px;
+    padding: 10px 20px;
+    background-color: #00bf63;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
-    margin-top: 20px;
 }
 
 .inquiry-button:hover {
-    background-color: #4f4f4f;
+    background-color: #009e52;
 }
 </style>

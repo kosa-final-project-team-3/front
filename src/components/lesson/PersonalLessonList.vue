@@ -46,7 +46,7 @@
             @openInquiry="openInquiryForm"
         />
 
-        <inquiry-form v-if="showInquiryForm" :lesson="selectedLesson" @close="closeInquiryForm" />
+        <inquiry-form v-if="showInquiryForm" :lesson="inquiryLesson" @close="closeInquiryForm" />
     </div>
 </template>
 
@@ -65,7 +65,7 @@ const lessons = ref([
         price: 60000,
         trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
         location: '서울 종로구 혜화로 20',
-        image: 'https://www.example.com/lesson-pt.jpg',
+        image: 'https://kosa-final-project-team-3.github.io/cdn/lesson_image1.jpg',
         reviews: [
             '친절하고 설명이 명확합니다.',
             '운동 동작을 세심하게 지도해줘서 좋았어요.',
@@ -88,7 +88,7 @@ const lessons = ref([
         price: 50000,
         trainerProfile: ['요가 전문 자격증 보유'],
         location: '서울 마포구',
-        image: 'https://www.example.com/lesson-yoga.jpg',
+        image: 'https://kosa-final-project-team-3.github.io/cdn/lesson_image2.jpg',
         reviews: ['유연성이 많이 향상되었어요!', '운동 중간중간 자세 교정이 꼼꼼해서 좋습니다.'],
         ratings: {
             전문성: 5,
@@ -106,7 +106,7 @@ const lessons = ref([
         price: 70000,
         trainerProfile: ['필라테스 마스터 트레이너'],
         location: '서울 강북구',
-        image: 'https://www.example.com/lesson-pilates.jpg',
+        image: 'https://kosa-final-project-team-3.github.io/cdn/lesson_image3.jpg',
         reviews: ['수업이 아주 체계적이고 좋아요.', '상세한 피드백을 받을 수 있어요.'],
         ratings: {
             전문성: 5,
@@ -126,6 +126,7 @@ const selectedCategory = ref('');
 const searchKeyword = ref(''); // 검색
 const selectedSort = ref('popular'); // 정렬
 const showInquiryForm = ref(false); // 문의하기 폼 상태
+const inquiryLesson = ref(null);
 
 const filteredLessons = computed(() => {
     return lessons.value.filter((lesson) => {
@@ -172,12 +173,15 @@ function closeLessonDetail() {
     selectedLesson.value = null;
 }
 
-function openInquiryForm() {
+function openInquiryForm(lesson) {
+    inquiryLesson.value = lesson;
     showInquiryForm.value = true;
+    selectedLesson.value = null;
 }
 
 function closeInquiryForm() {
     showInquiryForm.value = false;
+    inquiryLesson.value = null;
 }
 </script>
 
