@@ -51,7 +51,7 @@
 }
 
 .sub-nav-item:hover {
-    color: #00bf63;
+    color: #f13223;
 }
 
 .main-content {
@@ -61,6 +61,6 @@
 
 .router-link-active {
     font-weight: bold;
-    color: #00bf63;
+    color: #f13223;
 }
 </style>

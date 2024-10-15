@@ -65,7 +65,7 @@ const sortDefault = ref('latest');
 }
 
 .sidebar-item:hover {
-    color: #00bf63;
+    color: #f13223;
 }
 
 .main-content {
@@ -88,9 +88,9 @@ const sortDefault = ref('latest');
 }
 
 .search-container button {
-    background-color: #00bf63;
+    background-color: #f13223;
     color: white;
-    border: 1px solid #00bf63;
+    border: 1px solid #f13223;
 }
 
 .sort-container select {
