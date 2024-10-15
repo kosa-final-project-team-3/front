@@ -162,13 +162,15 @@ const displayUserInfo = computed(() => {
 
 <style scoped>
 .my-page-user-info {
-    max-width: 600px;
+    max-width: 650px;
     margin: 40px;
+    font-size: 1em;
 }
 
 .my-page-user-info h2 {
     font-family: 'Do Hyeon', sans-serif;
     font-size: 1.5em;
+    margin-bottom: 1.2rem;
 }
 
 .my-page-user-info form {
@@ -178,84 +180,86 @@ const displayUserInfo = computed(() => {
 .form-group {
     display: flex;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
 }
 
 label {
-    flex: 0 0 120px; /* 라벨의 너비를 고정 */
+    flex: 0 0 140px;
     margin-right: 1rem;
+    font-size: 1.1em;
+    font-weight: bold;
 }
 
 input,
 select {
-    flex: 1; /* 입력 필드가 남은 공간을 차지하도록 */
-    padding: 0.5rem;
+    flex: 1;
+    padding: 0.6rem;
+    font-size: 1.1em;
 }
 
 .btn-become-expert {
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
     background-color: #00bf63;
-    border: none;
-    cursor: pointer;
     color: white;
+    border: none;
+    padding: 0.7rem 1.4rem;
+    cursor: pointer;
     border-radius: 5px;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
 }
 
 .form-actions {
     display: flex;
     justify-content: flex-end;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
 }
 
 .btn-cancel,
-.btn-save {
-    padding: 0.5rem 1rem;
-    margin-left: 0.5rem;
+.btn-save,
+.btn-edit {
+    padding: 0.7rem 1.4rem;
+    margin-left: 0.7rem;
     cursor: pointer;
+    font-size: 1.1em;
+    border-radius: 5px;
 }
 
-.btn-save {
-    background-color: #4caf50;
+.btn-save,
+.btn-edit {
+    background-color: #00bf63;
     color: white;
     border: none;
+    transition: background-color 0.3s ease;
 }
 
 .btn-cancel {
-    background-color: #f44336;
+    background-color: #ababa4;
     color: white;
     border: none;
 }
 
 .expert-info {
-    margin-top: 2rem;
+    margin-top: 2.5rem;
     border-top: 1px solid #e0e0e0;
-    padding-top: 1rem;
+    padding-top: 1.5rem;
 }
 
 .expert-category {
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
 }
 
 .expert-category h4 {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.7rem;
+    font-size: 1.2em;
 }
 
 .expert-category ul {
     list-style-type: none;
-    padding-left: 1rem;
+    padding-left: 1.2rem;
 }
 
 .expert-category li {
-    margin-bottom: 0.25rem;
-}
-
-.btn-edit {
-    background-color: #00bf63;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    border-radius: 5px;
+    margin-bottom: 0.4rem;
+    font-size: 1.1em;
 }
 </style>
