@@ -8,9 +8,16 @@
             <h3>{{ selectedDate }} 일지</h3>
             <ul>
                 <li v-for="diary in selectedDiaries" :key="diary.id" @click="viewDiary(diary)">
-                    운동 시작 : {{ diary.startTime }} - 운동 끝 : {{ diary.endTime }} , 내용: {{ diary.content }} 체중:
-                    {{ diary.weight }} 탄수화물: {{ diary.carbohydrates }} 단백질: {{ diary.protein }} 지방:
-                    {{ diary.fat }}
+                    <div class="diary-header">
+                        운동 시작: {{ formatTime(diary.startTime) }} - 운동 끝: {{ formatTime(diary.endTime) }}
+                    </div>
+                    <div class="diary-content">내용: {{ diary.content }}</div>
+                    <div class="diary-stats">
+                        <span>체중: {{ diary.weight }}kg </span>
+                        <span>탄수화물: {{ diary.carbohydrates }}g </span>
+                        <span>단백질: {{ diary.protein }}g </span>
+                        <span>지방: {{ diary.fat }}g</span>
+                    </div>
                 </li>
             </ul>
             <button @click="openDiaryForm" class="btn-add-diary">일지 작성</button>
@@ -132,6 +139,11 @@ const currentDiary = ref({
     protein: '',
     fat: '',
 });
+
+const formatTime = (time) => {
+    if (!time) return '';
+    return time.substring(0, 5); // HH:MM 형식으로 자름
+};
 
 const attributes = computed(() => {
     return diaries.value.map((diary) => ({
@@ -304,13 +316,59 @@ onMounted(async () => {
 
 <style scoped>
 .my-page-user-diary {
-    max-width: 800px;
-    margin: 0 auto;
-    position: relative; /* 추가 */
+    max-width: 100%;
+    margin: 40px;
+}
+
+.diary-list h3 {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.2em;
+}
+
+.my-page-user-diary h2 {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    text-align: left;
 }
 
 .calendar-container {
     margin-bottom: 2rem;
+    width: 100%;
+}
+
+:deep(.vc-container) {
+    width: 100%;
+    max-width: none;
+    font-size: 1.2em;
+}
+
+:deep(.vc-weeks) {
+    width: 100%;
+}
+
+:deep(.vc-day) {
+    min-width: 40px;
+    min-height: 40px;
+}
+
+:deep(.vc-day-content) {
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+:deep(.vc-weekday) {
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+:deep(.vc-title) {
+    font-size: 1em;
+}
+
+.calendar-wrapper {
+    width: 100%;
+    max-width: 1000px;
 }
 
 .diary-list {
@@ -318,12 +376,14 @@ onMounted(async () => {
 }
 
 .btn-add-diary {
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
-    background-color: #4caf50;
+    background-color: #f13223;
     color: white;
     border: none;
+    padding: 0.6rem 1.2rem;
     cursor: pointer;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
 }
 
 .diary-form-overlay {
@@ -336,43 +396,112 @@ onMounted(async () => {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* 추가 */
+    z-index: 1000;
 }
 
 .diary-form {
     background-color: white;
     padding: 2rem;
-    border-radius: 8px;
+    border-radius: 12px;
     max-width: 500px;
-    width: 100%;
-    max-height: 90%;
+    width: 90%;
+    max-height: 90vh;
     overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.diary-form h3 {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.5em;
+    margin-bottom: 1.5rem;
+    color: #333;
+    text-align: center;
 }
 
 .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #555;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #f13223;
+}
+
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1.2em;
+    transition: border-color 0.3s ease;
+    min-height: 150px;
+    resize: vertical;
 }
 
 .form-actions {
     display: flex;
     justify-content: space-between;
-    margin-top: 1rem;
+    margin-top: 2rem;
 }
 
-.btn-save {
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
+.btn-save,
 .btn-edit,
 .btn-close,
 .btn-cancel {
-    background-color: #f44336; /* 빨간색 */
-    color: white;
+    padding: 0.75rem 1.5rem;
     border: none;
+    border-radius: 6px;
+    font-size: 1em;
     cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.btn-save,
+.btn-edit {
+    background-color: #f13223;
+    color: white;
+}
+
+.btn-close,
+.btn-cancel {
+    background-color: #ababa4;
+    color: white;
+}
+
+.btn-save:hover,
+.btn-edit:hover {
+    background-color: #f13223;
+}
+
+.btn-close:hover,
+.btn-cancel:hover {
+    background-color: #e0e0e0;
+}
+
+.btn-save:active,
+.btn-edit:active,
+.btn-close:active,
+.btn-cancel:active {
+    transform: translateY(1px);
 }
 
 .diary-dot {
@@ -380,5 +509,24 @@ onMounted(async () => {
     height: 10px;
     width: 10px;
     background-color: blue; /* 색상 */
+}
+
+.diary-list li {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.diary-list li:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.diary-header {
+    font-weight: bold;
 }
 </style>
