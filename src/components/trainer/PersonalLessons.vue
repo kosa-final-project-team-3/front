@@ -1,7 +1,7 @@
 <template>
     <div class="personal-lessons">
         <div class="header">
-            <h3>온라인 PT</h3>
+            <h3></h3>
             <button @click="showRegisterPopup" class="register-lesson-btn">레슨 등록하기</button>
         </div>
         <RegisterLessonPopup
@@ -9,6 +9,25 @@
             @close="closeRegisterPopup"
             @register="handleRegisterLesson"
         />
+
+        <div class="lesson-card-list">
+            <div v-for="(lesson, index) in lessons" :key="index" class="lesson-card" @click="openLessonDetail(lesson)">
+                <div class="lesson-info">
+                    <h4 class="lesson-title">{{ lesson.title }}</h4>
+                    <p class="lesson-category">{{ lesson.category }}</p>
+                </div>
+            </div>
+        </div>
+
+        <lesson-detail
+            v-if="selectedLesson"
+            :lesson="selectedLesson"
+            :selectedType="selectedType"
+            @close="closeLessonDetail"
+            @openInquiry="openInquiryForm"
+        />
+
+        <inquiry-form v-if="showInquiryForm" :lesson="selectedLesson" @close="closeInquiryForm" />
     </div>
 </template>
 
@@ -17,6 +36,42 @@ import RegisterLessonPopup from './RegisterLessonPopup.vue';
 import { ref } from 'vue';
 
 const isRegisterPopupVisible = ref(false);
+const selectedType = ref('개인 레슨');
+const selectedLesson = ref(null); // 선택된 레슨
+
+const lessons = ref([
+    {
+        title: '전신 운동 PT',
+        trainer: '강철희',
+        category: '헬스',
+        description: '초보자에게 적합한 전신 강화 트레이닝.',
+        price: 60000,
+        trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
+        location: '서울 종로구 혜화로 20',
+        image: 'https://www.example.com/lesson-pt.jpg',
+        reviews: [
+            '친절하고 설명이 명확합니다.',
+            '운동 동작을 세심하게 지도해줘서 좋았어요.',
+            '시간 약속을 잘 지킵니다.',
+            '강의 준비가 철저해요.',
+        ],
+        ratings: {
+            전문성: 4,
+            친절: 5,
+            설명: 4,
+            시간엄수: 5,
+            열정: 4,
+        },
+    },
+]);
+
+function openLessonDetail(lesson) {
+    selectedLesson.value = lesson;
+}
+
+function closeLessonDetail() {
+    selectedLesson.value = null;
+}
 
 const showRegisterPopup = () => {
     isRegisterPopupVisible.value = true;
@@ -47,9 +102,54 @@ const handleRegisterLesson = async (lessonData) => {
 
 .register-lesson-btn {
     padding: 0.5rem 1rem;
-    background-color: red;
+    background-color: #f13223;
     color: white;
     border: none;
     cursor: pointer;
+    border-radius: 10px;
+}
+
+.lesson-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.lesson-card {
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    display: flex;
+    padding: 20px;
+    margin: 10px;
+    font-family: 'Do Hyeon', sans-serif;
+    justify-content: space-between;
+}
+
+.lesson-card:hover {
+    transform: translateY(-5px);
+}
+
+.lesson-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.lesson-title {
+    width: 50%;
+    font-size: 2rem;
+    margin: 10px;
+}
+
+.lesson-category {
+    font-size: 1.4rem;
+    margin: 10px;
+    color: #888;
+    width: 10%;
 }
 </style>

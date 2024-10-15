@@ -49,6 +49,6 @@ import MBTICompo from '../components/MBTI/MBTICompo.vue';
 }
 
 .sidebar-item:hover {
-    color: #00bf63;
+    color: #f13223;
 }
 </style>

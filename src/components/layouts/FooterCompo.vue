@@ -24,7 +24,7 @@ const showContactModal = () => {
 
 <style scoped>
 .footer {
-    background-color: #00bf63;
+    background-color: #f13223;
     padding: 5px;
     display: flex;
     justify-content: space-between;

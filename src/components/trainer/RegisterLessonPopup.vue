@@ -4,17 +4,6 @@
             <h4>레슨 등록</h4>
             <form @submit.prevent="registerLesson">
                 <div class="form-group">
-                    <label for="category">종목:</label>
-                    <select id="category" v-model="lessonData.category" required>
-                        <option value="" disabled>종목을 선택하세요</option>
-                        <option value="헬스">헬스</option>
-                        <option value="요가">요가</option>
-                        <option value="수영">수영</option>
-                        <option value="댄스">댄스</option>
-                        <option value="골프">골프</option>
-                    </select>
-                </div>
-                <div class="form-group">
                     <label for="title">레슨명:</label>
                     <input id="title" v-model="lessonData.title" type="text" required />
                 </div>

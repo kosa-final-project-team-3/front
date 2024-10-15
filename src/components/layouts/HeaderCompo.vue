@@ -114,7 +114,7 @@ const openLogin = () => {
     position: absolute;
     left: 15%;
     margin-top: 10px;
-    border-bottom: 3px solid #00bf63;
+    border-bottom: 3px solid #f13223;
     justify-content: center;
 }
 .navbar-login {
@@ -143,7 +143,7 @@ const openLogin = () => {
     position: absolute;
     left: 15%;
     margin-top: 10px;
-    border-bottom: 3px solid #00bf63;
+    border-bottom: 3px solid #f13223;
     justify-content: right;
 }
 </style>

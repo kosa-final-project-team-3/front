@@ -383,7 +383,7 @@ const textToSpeech = async (text) => {
 .start-button {
     margin-left: 30px;
     padding: 8px 30px;
-    background-color: #00bf63;
+    background-color: #f13223;
     color: white;
     border: none;
     border-radius: 8px;
@@ -413,7 +413,7 @@ const textToSpeech = async (text) => {
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    background: #00bf63;
+    background: #f13223;
     cursor: pointer;
 }
 
@@ -421,7 +421,7 @@ const textToSpeech = async (text) => {
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    background: #00bf63;
+    background: #f13223;
     cursor: pointer;
 }
 </style>

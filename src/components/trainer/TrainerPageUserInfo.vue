@@ -298,7 +298,7 @@ const saveNewProfile = async () => {
 }
 
 .tabs button.active {
-    background-color: #00bf63;
+    background-color: #f13223;
     color: white;
     font-size: 20px;
 }
@@ -382,13 +382,13 @@ const saveNewProfile = async () => {
 }
 
 .time-table td.selected {
-    background-color: #00bf63;
+    background-color: #f13223;
 }
 
 .time-table button {
     margin: 1rem 1rem 1rem 0;
     padding: 0.5rem 1rem;
-    background-color: #00bf63;
+    background-color: #f13223;
     color: white;
     border: none;
     cursor: pointer;
@@ -396,7 +396,7 @@ const saveNewProfile = async () => {
 }
 
 .time-table button:hover {
-    background-color: #00994d;
+    background-color: #d32f2f;
 }
 
 .form-group {
@@ -425,7 +425,7 @@ const saveNewProfile = async () => {
 .btn-add {
     margin: 1rem 5rem 1rem 0;
     padding: 0.5rem 1rem;
-    background-color: #00bf63;
+    background-color: #f13223;
     color: white;
     border: none;
     cursor: pointer;
@@ -433,7 +433,7 @@ const saveNewProfile = async () => {
 }
 
 .btn-add:hover {
-    background-color: #00994d;
+    background-color: #d32f2f;
 }
 
 .add-profile-form {
@@ -474,7 +474,7 @@ const saveNewProfile = async () => {
 }
 
 .btn-cancel {
-    background-color: #f44336;
+    background-color: #f13223;
 }
 
 .btn-cancel:hover {
@@ -482,10 +482,10 @@ const saveNewProfile = async () => {
 }
 
 .btn-save {
-    background-color: #00bf63;
+    background-color: #f13223;
 }
 
 .btn-save:hover {
-    background-color: #00994d;
+    background-color: #d32f2f;
 }
 </style>
