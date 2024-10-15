@@ -61,6 +61,7 @@ const inquirySubmit = () => {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 2;
 }
 
 .modal-content {
@@ -85,7 +86,7 @@ const inquirySubmit = () => {
 
 .submit-button {
     padding: 10px;
-    background-color: black;
+    background-color: #00bf63;
     color: white;
     border: none;
     border-radius: 4px;
@@ -95,7 +96,7 @@ const inquirySubmit = () => {
 }
 
 .submit-button:hover {
-    background-color: #4f4f4f;
+    background-color: #009e52;
 }
 
 .close-button {
