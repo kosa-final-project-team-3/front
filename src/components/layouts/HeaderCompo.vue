@@ -20,7 +20,7 @@
                     </div>
                     <div class="auth-links">
                         <a v-if="!isAuthenticated" @click.prevent="openLogin">로그인</a>
-                        <router-link v-if="isAuthenticated" to="/logout" @click="handleLogout">로그아웃</router-link>
+                        <router-link v-if="isAuthenticated" to="/" @click="handleLogout">로그아웃</router-link>
                     </div>
                 </div>
             </div>
@@ -40,7 +40,6 @@ authStore.checkAuthStatus();
 
 const handleLogout = () => {
     authStore.logout();
-    router.push('/');
 };
 
 const openLogin = () => {
