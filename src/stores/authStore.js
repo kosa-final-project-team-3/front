@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { getCookie } from '../util/cookieUtil';
 import jwtAxios, { API_SERVER_HOST } from '../util/jwtUtil';
 import axios from 'axios';
+import router from '../router';
 
 export const useAuthStore = defineStore('auth', () => {
     const host = API_SERVER_HOST;
@@ -44,6 +44,7 @@ export const useAuthStore = defineStore('auth', () => {
             .then((res) => {
                 if (res.status === 200) {
                     updateAuthState(false, '', '');
+                    router.push('/');
                 }
             })
             .catch((e) => {

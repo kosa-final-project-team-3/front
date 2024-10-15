@@ -10,20 +10,14 @@
 
         <div class="main-content">
             <router-view />
-            <div class="mbti-content">
-                <router-link to="/mbti">
-                    <img
-                        class="mbti-image"
-                        src="https://kosa-final-project-team-3.github.io/cdn/mbti.png"
-                        alt="운BTI"
-                    />
-                </router-link>
-            </div>
+            <MBTICompo />
         </div>
     </div>
 </template>
 
-<script setup></script>
+<script setup>
+import MBTICompo from '../components/MBTI/MBTICompo.vue';
+</script>
 <style scoped>
 .container {
     display: flex;
@@ -55,59 +49,6 @@
 }
 
 .sidebar-item:hover {
-    color: #00bf63;
-}
-
-.main-content {
-    flex: 1;
-    padding: 20px;
-}
-
-.mbti-content {
-    position: fixed;
-    top: 200px;
-    right: 50px;
-    z-index: 1;
-}
-
-.mbti-image {
-    width: 200px;
-    height: 200px;
-}
-
-.search-sort-container {
-    display: flex;
-    justify-content: space-between;
-    margin: 20px;
-}
-
-.search-container {
-    display: flex;
-}
-.search-container form {
-    display: flex;
-    gap: 10px;
-}
-
-.search-container button {
-    background-color: #00bf63;
-    color: white;
-    border: 1px solid #00bf63;
-}
-
-.sort-container select {
-    margin-right: 20px;
-}
-
-.search-container input {
-    width: 200px;
-}
-
-select,
-input,
-button {
-    padding: 5px 10px;
-    border-radius: 5px;
-    border: 1px solid #000000;
+    color: #f13223;
 }
 </style>

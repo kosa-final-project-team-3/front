@@ -1,4 +1,4 @@
-import OfflineLessonPage from '../components/lesson/OfflineLessonPage.vue';
+import OfflineLessonPage from '../pages/OfflineLessonPage.vue';
 import PersonalLessonList from '../components/lesson/PersonalLessonList.vue';
 import GroupLessonList from '../components/lesson/GroupLessonList.vue';
 import OnlineLessonPage from '../pages/OnlineLessonPage.vue';

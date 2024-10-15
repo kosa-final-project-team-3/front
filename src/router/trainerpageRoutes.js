@@ -12,7 +12,7 @@ export default [
         props: true,
     },
     {
-        path: '/trainerpage',
+        path: '/trainer',
         component: TrainerPage,
         children: [
             { path: 'info', name: 'TrainerPageUserInfo', component: TrainerPageUserInfo },
