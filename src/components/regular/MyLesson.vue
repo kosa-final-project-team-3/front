@@ -42,7 +42,6 @@ const currentTabComponent = computed(() => {
 
 <style scoped>
 .my-lessons {
-    max-width: 1000px;
     margin: 40px;
     font-size: 1em;
 }

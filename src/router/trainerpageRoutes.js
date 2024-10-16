@@ -1,4 +1,4 @@
-import Room from '../components/trainer/Room.vue';
+import Room from '../components/trainer/userdiary/Room.vue';
 import TrainerPageLessons from '../components/trainer/TrainerPageLessons.vue';
 import TrainerPage from '../pages/TrainerPage.vue';
 import TrainerPageUserInfo from '../components/trainer/TrainerPageUserInfo.vue';

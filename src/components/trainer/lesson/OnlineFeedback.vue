@@ -1,7 +1,7 @@
 <template>
     <div class="personal-lessons">
         <div class="header">
-            <h3></h3>
+            <h2>온라인 피드백</h2>
             <button @click="showRegisterPopup" class="register-lesson-btn">레슨 등록하기</button>
         </div>
         <RegisterLessonPopup
@@ -63,6 +63,98 @@ const lessons = ref([
             열정: 4,
         },
     },
+    {
+        title: '가슴 운동 PT',
+        trainer: '강철희',
+        category: '헬스',
+        description: '초보자에게 적합한 전신 강화 트레이닝.',
+        price: 60000,
+        trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
+        location: '서울 종로구 혜화로 20',
+        image: 'https://www.example.com/lesson-pt.jpg',
+        reviews: [
+            '친절하고 설명이 명확합니다.',
+            '운동 동작을 세심하게 지도해줘서 좋았어요.',
+            '시간 약속을 잘 지킵니다.',
+            '강의 준비가 철저해요.',
+        ],
+        ratings: {
+            전문성: 4,
+            친절: 5,
+            설명: 4,
+            시간엄수: 5,
+            열정: 4,
+        },
+    },
+    {
+        title: '어깨 운동 PT',
+        trainer: '강철희',
+        category: '헬스',
+        description: '초보자에게 적합한 전신 강화 트레이닝.',
+        price: 60000,
+        trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
+        location: '서울 종로구 혜화로 20',
+        image: 'https://www.example.com/lesson-pt.jpg',
+        reviews: [
+            '친절하고 설명이 명확합니다.',
+            '운동 동작을 세심하게 지도해줘서 좋았어요.',
+            '시간 약속을 잘 지킵니다.',
+            '강의 준비가 철저해요.',
+        ],
+        ratings: {
+            전문성: 4,
+            친절: 5,
+            설명: 4,
+            시간엄수: 5,
+            열정: 4,
+        },
+    },
+    {
+        title: '등 운동 PT',
+        trainer: '강철희',
+        category: '헬스',
+        description: '초보자에게 적합한 전신 강화 트레이닝.',
+        price: 60000,
+        trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
+        location: '서울 종로구 혜화로 20',
+        image: 'https://www.example.com/lesson-pt.jpg',
+        reviews: [
+            '친절하고 설명이 명확합니다.',
+            '운동 동작을 세심하게 지도해줘서 좋았어요.',
+            '시간 약속을 잘 지킵니다.',
+            '강의 준비가 철저해요.',
+        ],
+        ratings: {
+            전문성: 4,
+            친절: 5,
+            설명: 4,
+            시간엄수: 5,
+            열정: 4,
+        },
+    },
+    {
+        title: '하체 운동 PT',
+        trainer: '강철희',
+        category: '헬스',
+        description: '초보자에게 적합한 전신 강화 트레이닝.',
+        price: 60000,
+        trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
+        location: '서울 종로구 혜화로 20',
+        image: 'https://www.example.com/lesson-pt.jpg',
+        reviews: [
+            '친절하고 설명이 명확합니다.',
+            '운동 동작을 세심하게 지도해줘서 좋았어요.',
+            '시간 약속을 잘 지킵니다.',
+            '강의 준비가 철저해요.',
+        ],
+        ratings: {
+            전문성: 4,
+            친절: 5,
+            설명: 4,
+            시간엄수: 5,
+            열정: 4,
+        },
+    },
 ]);
 
 function openLessonDetail(lesson) {
@@ -100,13 +192,23 @@ const handleRegisterLesson = async (lessonData) => {
     margin-bottom: 1rem;
 }
 
+.header h2 {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.5em;
+}
+
 .register-lesson-btn {
-    padding: 0.5rem 1rem;
+    padding: 0.7rem 1.4rem;
     background-color: #f13223;
     color: white;
     border: none;
     cursor: pointer;
     border-radius: 10px;
+    font-size: 1.1em;
+}
+
+.register-lesson-btn:hover {
+    background-color: #d32f2f;
 }
 
 .lesson-card-list {
@@ -125,7 +227,6 @@ const handleRegisterLesson = async (lessonData) => {
     display: flex;
     padding: 20px;
     margin: 10px;
-    font-family: 'Do Hyeon', sans-serif;
     justify-content: space-between;
 }
 

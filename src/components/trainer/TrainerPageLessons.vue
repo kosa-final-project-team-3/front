@@ -1,29 +1,35 @@
 <template>
-    <div class="my-lessons">
-        <h2>나의 레슨 관리</h2>
-        <div class="lesson-tabs">
-            <button
-                v-for="tab in tabs"
-                :key="tab.id"
-                @click="currentTab = tab.id"
-                :class="{ active: currentTab === tab.id }"
-                class="tab-button"
-            >
-                {{ tab.name }}
-            </button>
+    <div v-if="isTrainer" class="trainer-page-my-lessons">
+        <div class="my-lessons">
+            <h2>나의 레슨 관리</h2>
+            <div class="lesson-tabs">
+                <button
+                    v-for="tab in tabs"
+                    :key="tab.id"
+                    @click="currentTab = tab.id"
+                    :class="{ active: currentTab === tab.id }"
+                    class="tab-button"
+                >
+                    {{ tab.name }}
+                </button>
+            </div>
+            <div class="tab-content">
+                <component :is="currentTabComponent"></component>
+            </div>
         </div>
-        <div class="tab-content">
-            <component :is="currentTabComponent"></component>
-        </div>
+    </div>
+    <div v-else>
+        <h2>접근 권한이 없습니다.</h2>
     </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
-import PersonalLessons from '../trainer/PersonalLessons.vue';
-import GroupLessons from '../trainer/GroupLessons.vue';
-import OnlinePT from '../trainer/OnlinePT.vue';
-import OnlineFeedback from '../trainer/OnlineFeedback.vue';
+import { useAuthStore } from '../../stores/authStore';
+import PersonalLessons from './lesson/PersonalLessons.vue';
+import GroupLessons from './lesson/GroupLessons.vue';
+import OnlinePT from './lesson/OnlinePT.vue';
+import OnlineFeedback from './lesson/OnlineFeedback.vue';
 
 const tabs = [
     { id: 'personal', name: '개인 레슨', component: PersonalLessons },
@@ -31,8 +37,9 @@ const tabs = [
     { id: 'online', name: '온라인 PT', component: OnlinePT },
     { id: 'feedback', name: '온라인 피드백', component: OnlineFeedback },
 ];
-
+const authStore = useAuthStore();
 const currentTab = ref('personal');
+const isTrainer = computed(() => authStore.role === 'TRAINER');
 
 const currentTabComponent = computed(() => {
     const tab = tabs.find((tab) => tab.id === currentTab.value);
