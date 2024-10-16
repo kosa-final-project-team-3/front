@@ -9,18 +9,19 @@
             <hr />
 
             <div class="inquiry-form">
-                <label>신청인 이름</label>
+                <strong class="inquiry-label">신청인 이름</strong>
                 <input type="text" v-model="applicantName" />
 
-                <label>신청인 연락처</label>
-                <input type="text" v-model="applicantContact" />
+                <strong class="inquiry-label">신청인 연락처</strong>
+                <input type="tel" v-model="applicantContact" placeholder="010-1234-5678" />
 
-                <label>문의 내용</label>
+                <strong class="inquiry-label">문의 내용</strong>
                 <textarea v-model="inquiryMessage">레슨 신청합니다.</textarea>
             </div>
-
-            <button type="button" class="submit-button" @click="inquirySubmit">등록하기</button>
-            <button type="button" class="close-button" @click="$emit('close')">닫기</button>
+            <div class="button-container">
+                <button type="button" class="submit-button" @click="inquirySubmit">등록하기</button>
+                <button type="button" class="close-button" @click="$emit('close')">닫기</button>
+            </div>
         </div>
     </div>
 </template>
@@ -71,9 +72,19 @@ const inquirySubmit = () => {
     width: 500px;
 }
 
+.modal-content h2 {
+    font-family: 'Do Hyeon', sans-serif;
+    text-align: center;
+}
+
 .inquiry-form {
     display: flex;
     flex-direction: column;
+}
+
+.inquiry-label {
+    margin-top: 10px;
+    margin-bottom: 5px;
 }
 
 .inquiry-form input,
@@ -84,27 +95,32 @@ const inquirySubmit = () => {
     border-radius: 5px;
 }
 
-.submit-button {
-    padding: 10px;
-    background-color: #00bf63;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+.button-container {
+    display: flex;
+    justify-content: center;
     margin-top: 20px;
 }
 
+.submit-button {
+    background-color: #f13223;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
 .submit-button:hover {
-    background-color: #009e52;
+    background-color: #d32f2f;
 }
 
 .close-button {
     padding: 10px;
-    background-color: #a6a6a6;
+    background-color: #ababa4;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 10px;
     cursor: pointer;
     transition: background-color 0.3s;
     margin-left: 10px;
