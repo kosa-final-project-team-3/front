@@ -1,5 +1,5 @@
 <template>
-    <div class="my-page-lessons">
+    <div v-if="isTrainer" class="trainer-page-my-lessons">
         <div class="my-lessons">
             <h2>나의 레슨 관리</h2>
             <div class="lesson-tabs">
@@ -23,6 +23,9 @@
             @close="closePopup"
             @register="registerLesson"
         />
+    </div>
+    <div v-else>
+        <h2>접근 권한이 없습니다.</h2>
     </div>
 </template>
 
