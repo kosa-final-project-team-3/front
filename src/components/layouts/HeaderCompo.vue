@@ -2,7 +2,7 @@
     <header class="header">
         <div class="logo-container">
             <div class="logo-container-inner">
-                <router-link to="/">
+                <router-link to="/" class="logo-link">
                     <img class="logo" src="https://kosa-final-project-team-3.github.io/cdn/logo.png" alt="정도인" />
                 </router-link>
             </div>
@@ -80,6 +80,16 @@ const openLogin = () => {
     justify-content: center; /* 수평 중앙 정렬 */
     align-items: center; /* 수직 중앙 정렬 */
 }
+.logo-container-inner {
+    display: flex;
+    justify-content: center;
+}
+
+.logo-link {
+    display: inline-block;
+    line-height: 0;
+}
+
 .logo {
     width: 120px;
     height: 60px;
@@ -88,7 +98,7 @@ const openLogin = () => {
 
 .navbar-container {
     display: flex;
-    flex: 1;
+    /* flex: 1; */
     align-items: center;
     text-align: center;
 }
@@ -139,7 +149,7 @@ const openLogin = () => {
 .navbar-login {
     width: 40%;
     display: flex;
-    margin-left: auto;
+    justify-content: flex-end; /* 오른쪽 정렬 */
 }
 .navbar-login a {
     color: #545454;
