@@ -73,6 +73,7 @@ function sort() {
     background-color: #f13223;
     color: white;
     cursor: pointer;
+    border: none;
 }
 
 .search-container button:hover {
@@ -92,6 +93,6 @@ input,
 button {
     padding: 5px 10px;
     border-radius: 5px;
-    border: 1px solid #000000;
+    border: 1px solid #ccc;
 }
 </style>
