@@ -1,5 +1,5 @@
 <template>
-    <div class="personal-lessons">
+    <div class="online-feedback">
         <div class="header">
             <h2>온라인 피드백</h2>
             <button @click="$emit('open-popup')" class="register-lesson-btn">레슨 등록하기</button>
@@ -11,148 +11,56 @@
         />
 
         <div class="lesson-card-list">
-            <div v-for="(lesson, index) in lessons" :key="index" class="lesson-card" @click="openLessonDetail(lesson)">
+            <div
+                v-for="lesson in onlineFeedbackLessons"
+                :key="lesson.id"
+                class="lesson-card"
+                @click="openLessonDetail(lesson)"
+            >
                 <div class="lesson-info">
                     <h4 class="lesson-title">{{ lesson.title }}</h4>
                     <p class="lesson-category">{{ lesson.category }}</p>
                 </div>
             </div>
         </div>
-
-        <lesson-detail
+        <LessonDetailPopup
             v-if="selectedLesson"
             :lesson="selectedLesson"
             :selectedType="selectedType"
             @close="closeLessonDetail"
-            @openInquiry="openInquiryForm"
         />
-
-        <inquiry-form v-if="showInquiryForm" :lesson="selectedLesson" @close="closeInquiryForm" />
     </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
+import LessonDetailPopup from './LessonDetailPopup.vue';
+import RegisterLessonPopup from './RegisterLessonPopup.vue';
 
-const selectedType = ref('개인 레슨');
-const selectedLesson = ref(null); // 선택된 레슨
+const selectedType = ref('온라인 피드백');
+const selectedLesson = ref(null);
+const isRegisterPopupVisible = ref(false);
 
-const lessons = ref([
+const onlineFeedbackLessons = ref([
     {
-        title: '전신 운동 PT',
-        trainer: '강철희',
+        id: 1,
+        title: '운동 자세 피드백',
+        trainer: '김지훈',
         category: '헬스',
-        description: '초보자에게 적합한 전신 강화 트레이닝.',
-        price: 60000,
-        trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
-        location: '서울 종로구 혜화로 20',
-        image: 'https://www.example.com/lesson-pt.jpg',
-        reviews: [
-            '친절하고 설명이 명확합니다.',
-            '운동 동작을 세심하게 지도해줘서 좋았어요.',
-            '시간 약속을 잘 지킵니다.',
-            '강의 준비가 철저해요.',
-        ],
-        ratings: {
-            전문성: 4,
-            친절: 5,
-            설명: 4,
-            시간엄수: 5,
-            열정: 4,
-        },
+        description: '운동 자세에 대한 전문적인 피드백을 제공합니다.',
+        price: 30000,
+        image: 'https://www.example.com/online-feedback-posture.jpg',
     },
     {
-        title: '가슴 운동 PT',
-        trainer: '강철희',
-        category: '헬스',
-        description: '초보자에게 적합한 전신 강화 트레이닝.',
-        price: 60000,
-        trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
-        location: '서울 종로구 혜화로 20',
-        image: 'https://www.example.com/lesson-pt.jpg',
-        reviews: [
-            '친절하고 설명이 명확합니다.',
-            '운동 동작을 세심하게 지도해줘서 좋았어요.',
-            '시간 약속을 잘 지킵니다.',
-            '강의 준비가 철저해요.',
-        ],
-        ratings: {
-            전문성: 4,
-            친절: 5,
-            설명: 4,
-            시간엄수: 5,
-            열정: 4,
-        },
+        id: 2,
+        title: '식단 분석 및 조언',
+        trainer: '이영희',
+        category: '영양',
+        description: '개인 맞춤 식단 분석과 조언을 제공합니다.',
+        price: 35000,
+        image: 'https://www.example.com/online-feedback-diet.jpg',
     },
-    {
-        title: '어깨 운동 PT',
-        trainer: '강철희',
-        category: '헬스',
-        description: '초보자에게 적합한 전신 강화 트레이닝.',
-        price: 60000,
-        trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
-        location: '서울 종로구 혜화로 20',
-        image: 'https://www.example.com/lesson-pt.jpg',
-        reviews: [
-            '친절하고 설명이 명확합니다.',
-            '운동 동작을 세심하게 지도해줘서 좋았어요.',
-            '시간 약속을 잘 지킵니다.',
-            '강의 준비가 철저해요.',
-        ],
-        ratings: {
-            전문성: 4,
-            친절: 5,
-            설명: 4,
-            시간엄수: 5,
-            열정: 4,
-        },
-    },
-    {
-        title: '등 운동 PT',
-        trainer: '강철희',
-        category: '헬스',
-        description: '초보자에게 적합한 전신 강화 트레이닝.',
-        price: 60000,
-        trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
-        location: '서울 종로구 혜화로 20',
-        image: 'https://www.example.com/lesson-pt.jpg',
-        reviews: [
-            '친절하고 설명이 명확합니다.',
-            '운동 동작을 세심하게 지도해줘서 좋았어요.',
-            '시간 약속을 잘 지킵니다.',
-            '강의 준비가 철저해요.',
-        ],
-        ratings: {
-            전문성: 4,
-            친절: 5,
-            설명: 4,
-            시간엄수: 5,
-            열정: 4,
-        },
-    },
-    {
-        title: '하체 운동 PT',
-        trainer: '강철희',
-        category: '헬스',
-        description: '초보자에게 적합한 전신 강화 트레이닝.',
-        price: 60000,
-        trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
-        location: '서울 종로구 혜화로 20',
-        image: 'https://www.example.com/lesson-pt.jpg',
-        reviews: [
-            '친절하고 설명이 명확합니다.',
-            '운동 동작을 세심하게 지도해줘서 좋았어요.',
-            '시간 약속을 잘 지킵니다.',
-            '강의 준비가 철저해요.',
-        ],
-        ratings: {
-            전문성: 4,
-            친절: 5,
-            설명: 4,
-            시간엄수: 5,
-            열정: 4,
-        },
-    },
+    // 더 많은 온라인 피드백 레슨 데이터...
 ]);
 
 function openLessonDetail(lesson) {
@@ -163,14 +71,18 @@ function closeLessonDetail() {
     selectedLesson.value = null;
 }
 
+function closeRegisterPopup() {
+    isRegisterPopupVisible.value = false;
+}
+
 const handleRegisterLesson = async (lessonData) => {
     try {
         // TODO: API를 통해 새 레슨 등록
-        console.log('Registering new lesson:', lessonData);
+        console.log('Registering new online feedback lesson:', lessonData);
         // 성공 시 팝업 닫기
         closeRegisterPopup();
     } catch (error) {
-        console.error('Failed to register lesson:', error);
+        console.error('Failed to register online feedback lesson:', error);
     }
 };
 </script>

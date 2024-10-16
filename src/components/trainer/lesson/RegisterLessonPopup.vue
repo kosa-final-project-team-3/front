@@ -271,6 +271,7 @@ onMounted(() => {
     flex: 0 0 120px;
     margin-right: 1rem;
     display: block;
+    font-weight: bold;
 }
 
 .form-group input,
