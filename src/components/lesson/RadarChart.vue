@@ -1,6 +1,6 @@
 <template>
     <div>
-        <canvas ref="radarCanvas" width="200" height="200"></canvas>
+        <canvas ref="radarCanvas" width="300" height="300"></canvas>
     </div>
 </template>
 
@@ -60,8 +60,8 @@ onMounted(() => {
 
 <style scoped>
 .radar-chart-container {
-    width: 50px;
-    height: 50px;
+    width: 300px;
+    height: 300px;
     margin: 20px auto;
 }
 </style>

@@ -133,38 +133,38 @@ const searchKeyword = ref(''); // 검색
 const selectedSort = ref('popular'); // 정렬
 const showInquiryForm = ref(false); // 문의하기 폼 상태
 
-const filteredLessons = computed(() => {
-    return lessons.value.filter((lesson) => {
-        const matchesType = selectedType.value;
-        const matchesSearch =
-            lesson.title.includes(searchKeyword.value) ||
-            lesson.trainer.includes(searchKeyword.value) ||
-            lesson.location.includes(searchKeyword.value);
+// const filteredLessons = computed(() => {
+//     return lessons.value.filter((lesson) => {
+//         const matchesType = selectedType.value;
+//         const matchesSearch =
+//             lesson.title.includes(searchKeyword.value) ||
+//             lesson.trainer.includes(searchKeyword.value) ||
+//             lesson.location.includes(searchKeyword.value);
 
-        const matchesCategory = !selectedCategory.value || lesson.category === selectedCategory.value;
+//         const matchesCategory = !selectedCategory.value || lesson.category === selectedCategory.value;
 
-        return matchesType && matchesSearch && matchesCategory;
-    });
-});
+//         return matchesType && matchesSearch && matchesCategory;
+//     });
+// });
 
-const sortedLessons = computed(() => {
-    const sorted = [...filteredLessons.value];
-    if (selectedSort.value === 'popular') {
-        // 인기순: 리뷰 개수
-        sorted.sort((a, b) => b.reviews.length - a.reviews.length);
-    } else if (selectedSort.value === 'rating') {
-        // 만족도순: 총합 평점
-        sorted.sort((a, b) => {
-            const aRatingSum = Object.values(a.ratings).reduce((acc, rating) => acc + rating, 0);
-            const bRatingSum = Object.values(b.ratings).reduce((acc, rating) => acc + rating, 0);
-            return bRatingSum - aRatingSum;
-        });
-    } else if (selectedSort.value === 'price') {
-        // 가격순
-        sorted.sort((a, b) => a.price - b.price);
-    }
-    return sorted;
-});
+// const sortedLessons = computed(() => {
+//     const sorted = [...filteredLessons.value];
+//     if (selectedSort.value === 'popular') {
+//         // 인기순: 리뷰 개수
+//         sorted.sort((a, b) => b.reviews.length - a.reviews.length);
+//     } else if (selectedSort.value === 'rating') {
+//         // 만족도순: 총합 평점
+//         sorted.sort((a, b) => {
+//             const aRatingSum = Object.values(a.ratings).reduce((acc, rating) => acc + rating, 0);
+//             const bRatingSum = Object.values(b.ratings).reduce((acc, rating) => acc + rating, 0);
+//             return bRatingSum - aRatingSum;
+//         });
+//     } else if (selectedSort.value === 'price') {
+//         // 가격순
+//         sorted.sort((a, b) => a.price - b.price);
+//     }
+//     return sorted;
+// });
 
 function selectCategory(category) {
     selectedCategory.value = category;

@@ -3,8 +3,19 @@
         <div class="content-wrapper">
             <aside class="sidebar">
                 <h3>오프라인 레슨</h3>
-                <router-link class="sidebar-item" :to="{ name: 'PersonalLessonList' }">개인 레슨</router-link>
-                <router-link class="sidebar-item" :to="{ name: 'GroupLessonList' }">그룹 레슨</router-link>
+                <router-link
+                    class="sidebar-item"
+                    :to="{ name: 'PersonalLessonList' }"
+                    :class="{ active: $route.name === 'PersonalLessonList' }"
+                >
+                    개인 레슨
+                </router-link>
+                <router-link
+                    class="sidebar-item"
+                    :to="{ name: 'GroupLessonList' }"
+                    :class="{ active: $route.name === 'GroupLessonList' }"
+                    >그룹 레슨</router-link
+                >
             </aside>
         </div>
 
@@ -53,6 +64,10 @@ const showMBTI = ref(true);
 }
 
 .sidebar-item:hover {
+    color: #f13223;
+}
+
+.sidebar-item.active {
     color: #f13223;
 }
 
