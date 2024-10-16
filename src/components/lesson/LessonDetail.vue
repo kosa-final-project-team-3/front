@@ -127,6 +127,7 @@ const handleInquiry = () => {
     float: left;
     width: 50%;
     margin-right: 20px;
+    max-height: 300px;
 }
 
 .lesson-image {
@@ -229,8 +230,9 @@ const handleInquiry = () => {
 }
 
 .close-button {
-    position: sticky;
-    float: right;
+    position: fixed;
+    top: calc(10vh + 30px);
+    right: calc(50% - 370px);
     background-color: white;
     border: none;
     font-size: 2rem;
@@ -242,6 +244,7 @@ const handleInquiry = () => {
     display: flex;
     justify-content: center;
     align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     z-index: 1001;
 }
 
@@ -255,6 +258,7 @@ const handleInquiry = () => {
     font-size: 1.1em;
     transition: background-color 0.3s ease;
     float: right;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .inquiry-button:hover {
