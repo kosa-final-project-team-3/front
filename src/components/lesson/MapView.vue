@@ -22,9 +22,7 @@ onMounted(async () => {
     if (data.length > 0) {
         const { lat, lon } = data[0];
         const map = L.map(mapContainer.value).setView([lat, lon], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors',
-        }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
         L.marker([lat, lon]).addTo(map).bindPopup(`<b>${location}</b>`).openPopup();
     } else {
