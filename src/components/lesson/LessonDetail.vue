@@ -51,10 +51,8 @@
                     </div>
                 </div>
             </div>
-            <div class="inquiry-button-container">
-                <button class="inquiry-button" @click="handleInquiry">문의하기</button>
-            </div>
         </div>
+        <button class="inquiry-button floating" @click="handleInquiry">문의하기</button>
     </div>
 </template>
 
@@ -87,10 +85,7 @@ const handleInquiry = () => {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 2;
-    font-family: 'Do Hyeon', sans-serif;
-    font-size: 1.2em;
-    border-radius: 5px;
+    z-index: 1000;
 }
 
 .modal-content {
@@ -98,9 +93,10 @@ const handleInquiry = () => {
     padding: 30px;
     border-radius: 10px;
     width: 500px;
-    height: 600px;
+    max-height: 75vh;
     overflow-y: auto;
     position: relative;
+    margin: 10vh auto;
 }
 
 .modal-content::-webkit-scrollbar {
@@ -164,33 +160,55 @@ const handleInquiry = () => {
 }
 
 .close-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: transparent;
+    position: fixed;
+    top: calc(10vh + 10px);
+    right: calc(50% - 250px);
+    background-color: white;
     border: none;
     font-size: 20px;
     cursor: pointer;
     color: #333;
-}
-
-.inquiry-button-container {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
     display: flex;
-    justify-content: right;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
 }
 
 .inquiry-button {
-    margin: 10px 0px 0px 0px;
-    padding: 10px 20px;
+    padding: 15px 30px;
     background-color: #00bf63;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 30px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.3s;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .inquiry-button:hover {
     background-color: #009e52;
+    transform: translateY(-2px);
+}
+
+.inquiry-button.floating {
+    position: fixed;
+    bottom: calc(10vh + 20px);
+    right: calc(50% - 250px);
+    z-index: 1002;
+}
+
+.map-view {
+    position: relative;
+    z-index: 1;
+}
+
+.evaluation-container {
+    padding-bottom: 60px;
 }
 </style>
