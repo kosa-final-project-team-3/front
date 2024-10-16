@@ -140,24 +140,24 @@ const inquiryLesson = ref(null);
 //     });
 // });
 
-const sortedLessons = computed(() => {
-    const sorted = [...filteredLessons.value];
-    if (selectedSort.value === 'popular') {
-        // 인기순: 리뷰 개수
-        sorted.sort((a, b) => b.reviews.length - a.reviews.length);
-    } else if (selectedSort.value === 'rating') {
-        // 만족도순: 총합 평점
-        sorted.sort((a, b) => {
-            const aRatingSum = Object.values(a.ratings).reduce((acc, rating) => acc + rating, 0);
-            const bRatingSum = Object.values(b.ratings).reduce((acc, rating) => acc + rating, 0);
-            return bRatingSum - aRatingSum;
-        });
-    } else if (selectedSort.value === 'price') {
-        // 가격순
-        sorted.sort((a, b) => a.price - b.price);
-    }
-    return sorted;
-});
+// const sortedLessons = computed(() => {
+//     const sorted = [...filteredLessons.value];
+//     if (selectedSort.value === 'popular') {
+//         // 인기순: 리뷰 개수
+//         sorted.sort((a, b) => b.reviews.length - a.reviews.length);
+//     } else if (selectedSort.value === 'rating') {
+//         // 만족도순: 총합 평점
+//         sorted.sort((a, b) => {
+//             const aRatingSum = Object.values(a.ratings).reduce((acc, rating) => acc + rating, 0);
+//             const bRatingSum = Object.values(b.ratings).reduce((acc, rating) => acc + rating, 0);
+//             return bRatingSum - aRatingSum;
+//         });
+//     } else if (selectedSort.value === 'price') {
+//         // 가격순
+//         sorted.sort((a, b) => a.price - b.price);
+//     }
+//     return sorted;
+// });
 
 function selectCategory(category) {
     selectedCategory.value = category;
