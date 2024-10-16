@@ -1,7 +1,7 @@
 <template>
     <div class="register-lesson-popup">
         <div class="popup-content">
-            <h3>레슨 등록</h3>
+            <h3>회원 일지 등록</h3>
             <p>선택된 날짜: {{ formattedDate }}</p>
             <form @submit.prevent="registerLesson">
                 <div class="form-group">
@@ -72,7 +72,7 @@ const memberSearch = ref('');
 
 // 더미 회원 데이터
 const members = [
-    { id: 1, name: '김철수' },
+    { id: 1, name: '이다영' },
     { id: 2, name: '이영희' },
     { id: 3, name: '박민수' },
     { id: 4, name: '정지원' },
@@ -113,6 +113,11 @@ const resetForm = () => {
 </script>
 
 <style scoped>
+.register-lesson-popup h3 {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.5em;
+    margin-bottom: 1.2rem;
+}
 .register-lesson-popup {
     position: fixed;
     top: 0;
@@ -137,14 +142,21 @@ const resetForm = () => {
 h3 {
     margin-top: 0;
 }
+p {
+    font-family: 'Do Hyeon', sans-serif;
+}
 
 .form-group {
     margin-bottom: 15px;
+    font-family: 'Do Hyeon', sans-serif;
+    display: flex;
+    flex-direction: column;
 }
 
 label {
-    display: block;
+    display: inline-block;
     margin-bottom: 5px;
+    width: 100%;
 }
 
 input,
@@ -153,6 +165,7 @@ select {
     padding: 5px;
     border: 1px solid #ccc;
     border-radius: 3px;
+    box-sizing: border-box;
 }
 
 .member-list {
@@ -196,12 +209,24 @@ button {
 }
 
 button[type='submit'] {
-    background-color: #4caf50;
+    background-color: #f44336;
     color: white;
+    border-radius: 10px;
 }
 
 button[type='button'] {
-    background-color: #f44336;
+    background-color: #ababa4;
     color: white;
+    border-radius: 10px;
+}
+
+/* 시간 입력 필드에 대한 특별한 스타일 */
+input[type='time'] {
+    width: 100%;
+}
+
+/* 회원 검색 입력 필드에 대한 특별한 스타일 */
+#memberSearch {
+    width: 100%;
 }
 </style>

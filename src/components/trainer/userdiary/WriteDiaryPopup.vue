@@ -10,7 +10,16 @@
             </div>
             <form @submit.prevent="saveDiary">
                 <div class="form-group">
-                    <label for="diaryContent">일지 내용:</label>
+                    <div class="label-diary-container">
+                        <label for="diaryContent" class="label-diary">일지 내용:</label>
+                        <div v-if="!isViewMode" class="toggle-container">
+                            <span class="toggle-label">AI 피드백 활성화</span>
+                            <label class="switch">
+                                <input type="checkbox" v-model="isAIEnabled" />
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
                     <textarea
                         id="diaryContent"
                         v-model="diaryContent"
@@ -30,11 +39,19 @@
                 </div>
             </form>
         </div>
+        <AIFeedbackModal
+            v-if="showAIFeedbackModal && !isViewMode"
+            :selectedMembers="selectedDiary.selectedMembers"
+            :diaryContent="diaryContent"
+            @close="closeAIFeedbackModal"
+            @feedbackGenerated="handleFeedbackGenerated"
+        />
     </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
+import AIFeedbackModal from './AIFeedbackModal.vue';
 
 const props = defineProps({
     selectedDiary: {
@@ -73,11 +90,13 @@ const getLessonTypeText = (type) => {
 };
 
 const saveDiary = () => {
-    emit('save', {
-        ...props.selectedDiary,
-        content: diaryContent.value,
-        status: props.selectedDiary.status, // 현재 상태를 유지
-    });
+    if (confirm('한 번 저장하면 수정 및 삭제할 수 없습니다. 정말 저장하시겠습니까?')) {
+        emit('save', {
+            ...props.selectedDiary,
+            content: diaryContent.value,
+            status: props.selectedDiary.status,
+        });
+    }
 };
 
 const tempSaveDiary = () => {
@@ -86,6 +105,31 @@ const tempSaveDiary = () => {
         content: diaryContent.value,
         status: 'in-progress',
     });
+};
+
+const isAIEnabled = ref(false);
+const showAIFeedbackModal = ref(false);
+
+const onAIToggle = () => {
+    if (isAIEnabled.value && !props.isViewMode) {
+        showAIFeedbackModal.value = true;
+    } else {
+        showAIFeedbackModal.value = false;
+    }
+};
+
+watch(isAIEnabled, onAIToggle);
+
+const closeAIFeedbackModal = () => {
+    showAIFeedbackModal.value = false;
+    isAIEnabled.value = false;
+};
+
+const handleFeedbackGenerated = (feedback) => {
+    if (!props.isViewMode) {
+        diaryContent.value += '\n\n--- AI 피드백 ---\n' + feedback;
+    }
+    closeAIFeedbackModal();
 };
 </script>
 
@@ -106,13 +150,21 @@ const tempSaveDiary = () => {
     background-color: white;
     padding: 20px;
     border-radius: 5px;
-    width: 500px;
-    max-height: 90vh;
+    width: 60vw;
+    height: 70vh;
     overflow-y: auto;
+}
+
+.label-diary {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.2em;
 }
 
 h3 {
     margin-top: 0;
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.5em;
+    margin-bottom: 1.2rem;
 }
 
 .lesson-info {
@@ -124,6 +176,7 @@ h3 {
 
 .lesson-info p {
     margin: 5px 0;
+    font-family: 'Do Hyeon', sans-serif;
 }
 
 .form-group {
@@ -137,10 +190,12 @@ label {
 
 textarea {
     width: 100%;
+    height: 50vh;
     padding: 5px;
     border: 1px solid #ccc;
     border-radius: 3px;
-    resize: vertical;
+    font-size: 1.2em;
+    resize: none;
 }
 
 .button-group {
@@ -156,17 +211,92 @@ button {
 }
 
 button[type='submit'] {
-    background-color: #4caf50;
+    background-color: #f13223;
+    border-radius: 10px;
     color: white;
+    font-size: 1em;
 }
 
 button[type='button']:nth-child(2) {
     background-color: #2196f3;
+    border-radius: 10px;
     color: white;
+    font-size: 1em;
 }
 
 button[type='button']:last-child {
-    background-color: #f44336;
+    background-color: #ababa4;
+    border-radius: 10px;
     color: white;
+    font-size: 1em;
+}
+
+.label-diary-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.toggle-container {
+    display: flex;
+    align-items: center;
+}
+
+.toggle-label {
+    margin-right: 10px;
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1em;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: '';
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+}
+
+input:checked + .slider {
+    background-color: #f13223;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
 }
 </style>
