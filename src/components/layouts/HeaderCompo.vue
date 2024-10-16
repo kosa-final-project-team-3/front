@@ -9,9 +9,15 @@
 
             <div class="navbar-container">
                 <div class="navbar-inner">
-                    <router-link to="/lesson/offline">오프라인 레슨</router-link>
-                    <router-link to="/lesson/online">온라인 레슨</router-link>
-                    <router-link to="/feedback/ai">AI 피드백</router-link>
+                    <router-link to="/lesson/offline" :class="{ active: $route.path === '/lesson/offline' }"
+                        >오프라인 레슨</router-link
+                    >
+                    <router-link to="/lesson/online" :class="{ active: $route.path === '/lesson/online' }"
+                        >온라인 레슨</router-link
+                    >
+                    <router-link to="/feedback/ai" :class="{ active: $route.path === '/feedback/ai' }"
+                        >AI 피드백</router-link
+                    >
                 </div>
                 <div class="navbar-login">
                     <div class="dynamic-link">
@@ -105,6 +111,21 @@ const openLogin = () => {
     white-space: nowrap;
 }
 .navbar-inner a:hover::after {
+    content: '';
+    width: 70%;
+    height: 2px;
+    display: block;
+    position: absolute;
+    left: 15%;
+    margin-top: 10px;
+    border-bottom: 3px solid #f13223;
+    justify-content: center;
+}
+.navbar-inner a.active {
+    font-weight: bold;
+    color: #f13223;
+}
+.navbar-inner a.active::after {
     content: '';
     width: 70%;
     height: 2px;
