@@ -131,7 +131,7 @@ const lessons = ref([
     },
 ]);
 
-const categories = ref(['헬스', '요가', '필라테스', '수영', '댄스', '볼링', '골프', '기타']);
+const categories = ref(['헬스', '요가', '필라테스', '수영', '댄스', '기타']);
 
 const selectedType = ref('그룹 레슨');
 const selectedLesson = ref(null); // 선택된 레슨
@@ -204,12 +204,15 @@ function closeLessonDetail() {
     selectedLesson.value = null;
 }
 
-function openInquiryForm() {
+function openInquiryForm(lesson) {
+    inquiryLesson.value = lesson;
     showInquiryForm.value = true;
+    selectedLesson.value = null;
 }
 
 function closeInquiryForm() {
     showInquiryForm.value = false;
+    inquiryLesson.value = null;
 }
 </script>
 
