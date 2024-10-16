@@ -236,7 +236,7 @@ const handleInquiry = () => {
 .close-button {
     position: fixed;
     top: calc(10vh + 30px);
-    right: calc(50% - 370px);
+    right: calc(20%);
     background-color: white;
     border: none;
     font-size: 2rem;
@@ -273,7 +273,7 @@ const handleInquiry = () => {
 .inquiry-button.floating {
     position: fixed;
     bottom: calc(10vh + 20px);
-    right: calc(50% - 370px);
+    right: calc(20%);
     z-index: 1002;
 }
 
