@@ -9,10 +9,18 @@
 
             <div class="navbar-container">
                 <div class="navbar-inner">
-                    <router-link to="/lesson/offline" :class="{ active: $route.path === '/lesson/offline' }"
+                    <router-link
+                        to="/lesson/offline"
+                        :class="{
+                            active: $route.path === '/lesson/offline' || $route.path === '/lesson/offline/group',
+                        }"
                         >오프라인 레슨</router-link
                     >
-                    <router-link to="/lesson/online" :class="{ active: $route.path === '/lesson/online' }"
+                    <router-link
+                        to="/lesson/online"
+                        :class="{
+                            active: $route.path === '/lesson/online' || $route.path === '/lesson/online/feedback',
+                        }"
                         >온라인 레슨</router-link
                     >
                     <router-link to="/feedback/ai" :class="{ active: $route.path === '/feedback/ai' }"

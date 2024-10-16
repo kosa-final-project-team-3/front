@@ -1,6 +1,6 @@
 <template>
     <div class="lesson-container">
-        <search-compo />
+        <search-compo @search="handleSearch" @sort="handleSort" />
         <div class="lesson-category">
             <button
                 @click="selectCategory('')"
@@ -27,14 +27,20 @@
                 class="lesson-card"
                 @click="openLessonDetail(lesson)"
             >
-                <img :src="lesson.image" alt="레슨 이미지" class="lesson-image" />
-                <div class="lesson-info">
-                    <h3 v-if="selectedType === '온라인 레슨'" class="lesson-title">{{ lesson.title }}</h3>
-                    <p>강사: {{ lesson.trainer }}</p>
-                    <p>{{ lesson.category }}</p>
-                    <p>가격: {{ lesson.price }}원</p>
+                <div class="lesson-image-container">
+                    <img :src="lesson.image" alt="레슨 이미지" class="lesson-image" />
+                    <div class="lesson-content">
+                        <div class="lesson-info">
+                            <div class="lesson-title">{{ lesson.title }}</div>
+                            <p><strong>강사:</strong> {{ lesson.trainer }}</p>
+                            <p><strong>카테고리:</strong> {{ lesson.category }}</p>
+                            <p><strong>가격:</strong> {{ lesson.price }}원</p>
+                        </div>
+                        <div class="button-container">
+                            <button class="join-button">문의하기</button>
+                        </div>
+                    </div>
                 </div>
-                <button class="join-button">문의하기</button>
             </div>
         </div>
 
@@ -46,7 +52,7 @@
             @openInquiry="openInquiryForm"
         />
 
-        <feedback-request v-if="showInquiryForm" :lesson="selectedLesson" @close="closeInquiryForm" />
+        <feedback-request v-if="showInquiryForm" :lesson="inquiryLesson" @close="closeInquiryForm" />
     </div>
 </template>
 
@@ -61,6 +67,7 @@ const lessons = ref([
         type: '온라인 피드백',
         trainer: '강철희',
         category: '헬스',
+        title: '전신 강화 트레이닝',
         description: '초보자에게 적합한 전신 강화 트레이닝.',
         price: 5000,
         trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
@@ -83,6 +90,7 @@ const lessons = ref([
         type: '온라인 피드백',
         trainer: '서진이',
         category: '요가',
+        title: '요가 피드백',
         description: '유연성 향상과 근력 강화에 도움을 주는 요가 피드백.',
         price: 4000,
         trainerProfile: ['요가 전문 자격증 보유'],
@@ -100,6 +108,7 @@ const lessons = ref([
         type: '온라인 피드백',
         trainer: '이은정',
         category: '필라테스',
+        title: '필라테스 피드백',
         description: '코어 강화에 특화된 필라테스 피드백입니다.',
         price: 6000,
         trainerProfile: ['필라테스 마스터 트레이너'],
@@ -115,43 +124,65 @@ const lessons = ref([
     },
 ]);
 
-const categories = ref(['헬스', '요가', '필라테스', '수영', '댄스', '볼링', '골프', '기타']);
+const categories = ref(['헬스', '요가', '필라테스', '수영', '댄스', '기타']);
 
 const selectedType = ref('온라인 피드백');
 const selectedLesson = ref(null); // 선택된 레슨
 const selectedCategory = ref('');
-const searchKeyword = ref(''); // 검색
-const selectedSort = ref('popular'); // 정렬
 const showInquiryForm = ref(false); // 문의하기 폼 상태
+const inquiryLesson = ref(null);
+const searchType = ref('total');
+const searchKeyword = ref(''); // 검색
+const sortType = ref('popular'); // 정렬
 
-// const filteredLessons = computed(() => {
-//     return lessons.value.filter((lesson) => {
-//         const matchesType = selectedType.value;
-//         const matchesSearch = lesson.trainer.includes(searchKeyword.value);
-//         const matchesCategory = !selectedCategory.value || lesson.category === selectedCategory.value;
+const filteredLessons = computed(() => {
+    return lessons.value.filter((lesson) => {
+        let matchesSearch = true;
 
-//         return matchesType && matchesSearch && matchesCategory;
-//     });
-// });
+        if (searchKeyword.value) {
+            const keyword = searchKeyword.value.toLowerCase();
+            if (searchType.value === 'total') {
+                matchesSearch =
+                    lesson.title.toLowerCase().includes(keyword) || lesson.trainer.toLowerCase().includes(keyword);
+            } else if (searchType.value === 'title') {
+                matchesSearch = lesson.title.toLowerCase().includes(keyword);
+            } else if (searchType.value === 'trainer') {
+                matchesSearch = lesson.trainer.toLowerCase().includes(keyword);
+            }
+        }
 
-// const sortedLessons = computed(() => {
-//     const sorted = [...filteredLessons.value];
-//     if (selectedSort.value === 'popular') {
-//         // 인기순: 리뷰 개수
-//         sorted.sort((a, b) => b.reviews.length - a.reviews.length);
-//     } else if (selectedSort.value === 'rating') {
-//         // 만족도순: 총합 평점
-//         sorted.sort((a, b) => {
-//             const aRatingSum = Object.values(a.ratings).reduce((acc, rating) => acc + rating, 0);
-//             const bRatingSum = Object.values(b.ratings).reduce((acc, rating) => acc + rating, 0);
-//             return bRatingSum - aRatingSum;
-//         });
-//     } else if (selectedSort.value === 'price') {
-//         // 가격순
-//         sorted.sort((a, b) => a.price - b.price);
-//     }
-//     return sorted;
-// });
+        const matchesCategory = !selectedCategory.value || lesson.category === selectedCategory.value;
+
+        return matchesSearch && matchesCategory;
+    });
+});
+
+const sortedLessons = computed(() => {
+    const sorted = [...filteredLessons.value];
+
+    if (sortType.value === 'popular') {
+        sorted.sort((a, b) => b.reviews.length - a.reviews.length);
+    } else if (sortType.value === 'rating') {
+        sorted.sort((a, b) => {
+            const aRatingSum = Object.values(a.ratings).reduce((acc, rating) => acc + rating, 0);
+            const bRatingSum = Object.values(b.ratings).reduce((acc, rating) => acc + rating, 0);
+            return bRatingSum - aRatingSum;
+        });
+    } else if (sortType.value === 'price') {
+        sorted.sort((a, b) => a.price - b.price);
+    }
+
+    return sorted;
+});
+
+function handleSearch(searchData) {
+    searchType.value = searchData.type;
+    searchKeyword.value = searchData.keyword;
+}
+
+function handleSort(newSortType) {
+    sortType.value = newSortType;
+}
 
 function selectCategory(category) {
     selectedCategory.value = category;
@@ -165,12 +196,15 @@ function closeLessonDetail() {
     selectedLesson.value = null;
 }
 
-function openInquiryForm() {
+function openInquiryForm(lesson) {
+    inquiryLesson.value = lesson;
     showInquiryForm.value = true;
+    selectedLesson.value = null;
 }
 
 function closeInquiryForm() {
     showInquiryForm.value = false;
+    inquiryLesson.value = null;
 }
 </script>
 
@@ -179,53 +213,34 @@ function closeInquiryForm() {
     width: 60vw;
 }
 
-.search-sort-container {
-    display: flex;
-    margin: 20px;
-    justify-content: center;
-}
-
-.search-container {
-    display: flex;
-}
-.search-container form {
-    display: flex;
-    gap: 10px;
-}
-
-.search-container button {
-    background-color: #f13223;
-    color: white;
-    border: 1px solid #f13223;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.search-container input {
-    width: 200px;
-    padding: 8px;
-}
-
-.sort-container {
-    margin-left: 30px;
-}
-
-.sort-container select {
-    padding: 8px;
-}
-
 .lesson-category {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .lesson-category-button {
-    padding: 15px;
-    background-color: #f13223;
-    color: white;
+    flex: 1;
+    padding: 0.8rem 0;
+    font-size: 1rem;
+    background-color: #f0f0f0;
     border: none;
     cursor: pointer;
-    text-align: center;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    color: #555;
+}
+
+.lesson-category-button:hover {
+    background-color: #e0e0e0;
+}
+
+.lesson-category-button.active {
+    background-color: #f13223;
+    color: white;
 }
 
 .lesson-card-list {
@@ -241,39 +256,70 @@ function closeInquiryForm() {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: transform 0.3s ease;
-    display: flex;
-    padding: 20px;
-    margin: 10px;
+    margin-bottom: 20px;
+    height: 200px;
+}
+
+.lesson-card:last-child {
+    margin-bottom: 300px;
 }
 
 .lesson-card:hover {
     transform: translateY(-5px);
 }
 
+.lesson-image-container {
+    display: flex;
+    justify-content: space-between;
+    max-height: 100%;
+    height: 200px;
+}
+
 .lesson-image {
-    width: 150px;
-    height: 150px;
+    width: 40%;
+    height: 100%;
+    overflow: hidden;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 10px 0 0 10px;
+}
+
+.lesson-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 60%;
+    padding: 20px;
+    flex-direction: row;
 }
 
 .lesson-info {
-    padding-left: 20px;
+    flex-grow: 1;
+    width: 70%;
 }
 
 .lesson-title {
+    font-family: 'Do Hyeon', sans-serif;
     font-size: 1.4rem;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.button-container {
+    position: relative;
+    transform: translateY(70%);
 }
 
 .join-button {
-    background-color: #ff6f61;
+    background-color: #f13223;
     color: white;
-    padding: 20px;
     border: none;
-    border-radius: 4px;
+    padding: 0.7rem 1.4rem;
     cursor: pointer;
-    margin-left: auto;
-    margin-top: auto;
+    border-radius: 5px;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
+}
+
+.join-button:hover {
+    background-color: #d32f2f;
 }
 </style>
