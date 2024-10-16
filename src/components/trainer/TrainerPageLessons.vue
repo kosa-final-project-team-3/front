@@ -1,5 +1,6 @@
 <template>
-    <div class="my-page-lessons">
+    <div class="my-lessons">
+        <h2>나의 레슨 관리</h2>
         <div class="lesson-tabs">
             <button
                 v-for="tab in tabs"
@@ -40,25 +41,41 @@ const currentTabComponent = computed(() => {
 </script>
 
 <style scoped>
-.my-page-lessons {
+.my-lessons {
     width: 70vw;
     margin: 40px auto;
+}
+
+.my-lessons h2 {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.5em;
+    margin-bottom: 1.2rem;
+    text-align: left;
 }
 
 .lesson-tabs {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .tab-button {
-    padding: 10px 20px;
-    font-size: 18px;
-    font-family: 'Do Hyeon', sans-serif;
     flex: 1;
+    padding: 0.8rem 0;
+    font-size: 1rem;
     background-color: #f0f0f0;
     border: none;
     cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    color: #555;
+}
+
+.tab-button:hover {
+    background-color: #e0e0e0;
 }
 
 .tab-button.active {
@@ -66,15 +83,25 @@ const currentTabComponent = computed(() => {
     color: white;
 }
 
-.tab-button:hover {
-    background-color: #f13223;
-    color: white;
-    transition: background-color 0.3s;
+.tab-content {
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.tab-content {
-    /* background-color: #fff; */
-    padding: 1rem;
-    /* border: 1px solid #e0e0e0; */
+@media (max-width: 600px) {
+    .my-lessons h2 {
+        font-size: 1.8rem;
+    }
+
+    .lesson-tabs {
+        flex-direction: column;
+    }
+
+    .tab-button {
+        padding: 0.6rem 0;
+        font-size: 0.9rem;
+    }
 }
 </style>
