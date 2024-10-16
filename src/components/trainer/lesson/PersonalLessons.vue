@@ -4,11 +4,6 @@
             <h2>개인 레슨</h2>
             <button @click="$emit('open-popup')" class="register-lesson-btn">레슨 등록하기</button>
         </div>
-        <RegisterLessonPopup
-            :is-visible="isRegisterPopupVisible"
-            @close="closeRegisterPopup"
-            @register="handleRegisterLesson"
-        />
 
         <div class="lesson-card-list">
             <div v-for="(lesson, index) in lessons" :key="index" class="lesson-card" @click="openLessonDetail(lesson)">
@@ -19,12 +14,11 @@
             </div>
         </div>
 
-        <lesson-detail
+        <LessonDetailPopup
             v-if="selectedLesson"
             :lesson="selectedLesson"
             :selectedType="selectedType"
             @close="closeLessonDetail"
-            @openInquiry="openInquiryForm"
         />
 
         <inquiry-form v-if="showInquiryForm" :lesson="selectedLesson" @close="closeInquiryForm" />
@@ -33,6 +27,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import LessonDetailPopup from './LessonDetailPopup.vue';
 
 const selectedType = ref('개인 레슨');
 const selectedLesson = ref(null); // 선택된 레슨
@@ -40,7 +35,7 @@ const selectedLesson = ref(null); // 선택된 레슨
 const lessons = ref([
     {
         title: '전신 운동 PT',
-        trainer: '강철희',
+        trainer: '박정환',
         category: '헬스',
         description: '초보자에게 적합한 전신 강화 트레이닝.',
         price: 60000,
