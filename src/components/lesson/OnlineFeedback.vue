@@ -52,7 +52,7 @@
             @openInquiry="openInquiryForm"
         />
 
-        <feedback-request v-if="showInquiryForm" :lesson="selectedLesson" @close="closeInquiryForm" />
+        <feedback-request v-if="showInquiryForm" :lesson="inquiryLesson" @close="closeInquiryForm" />
     </div>
 </template>
 
@@ -130,7 +130,7 @@ const selectedType = ref('온라인 피드백');
 const selectedLesson = ref(null); // 선택된 레슨
 const selectedCategory = ref('');
 const showInquiryForm = ref(false); // 문의하기 폼 상태
-
+const inquiryLesson = ref(null);
 const searchType = ref('total');
 const searchKeyword = ref(''); // 검색
 const sortType = ref('popular'); // 정렬
@@ -194,6 +194,17 @@ function openLessonDetail(lesson) {
 
 function closeLessonDetail() {
     selectedLesson.value = null;
+}
+
+function openInquiryForm(lesson) {
+    inquiryLesson.value = lesson;
+    showInquiryForm.value = true;
+    selectedLesson.value = null;
+}
+
+function closeInquiryForm() {
+    showInquiryForm.value = false;
+    inquiryLesson.value = null;
 }
 </script>
 
