@@ -93,6 +93,7 @@ const handleInquiry = () => {
     padding: 30px;
     border-radius: 10px;
     width: 500px;
+    height: 800px;
     max-height: 75vh;
     overflow-y: auto;
     position: relative;
