@@ -67,7 +67,7 @@ const lessons = ref([
         title: '전신 운동 PT',
         trainer: '강철희',
         category: '헬스',
-        description: '초보자에게 적합한 전신 강화 트레이닝.',
+        description: '초보자에게 적합한 전신 강화 트레이닝. 가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하',
         price: 60000,
         trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
         location: '서울 종로구 혜화로 20',
@@ -263,8 +263,8 @@ function closeInquiryForm() {
     padding: 0.8rem 0;
     font-size: 1rem;
     background-color: #f0f0f0;
-    color: white;
     border: none;
+    cursor: pointer;
     transition: all 0.3s ease;
     font-weight: bold;
     color: #555;
@@ -292,7 +292,6 @@ function closeInquiryForm() {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: transform 0.3s ease;
-    display: flex;
     margin-bottom: 20px;
     height: 200px;
 }
@@ -305,22 +304,6 @@ function closeInquiryForm() {
     transform: translateY(-5px);
 }
 
-.lesson-image {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 10px;
-}
-
-.lesson-info {
-    padding-left: 20px;
-}
-
-.lesson-title {
-    font-size: 1.4rem;
-    margin-bottom: 10px;
-}
-
 .lesson-image-container {
     display: flex;
     justify-content: space-between;
@@ -328,14 +311,51 @@ function closeInquiryForm() {
     height: 200px;
 }
 
-.join-button {
-    background-color: #ff6f61;
-    color: white;
+.lesson-image {
+    width: 40%;
+    height: 100%;
+    overflow: hidden;
+    object-fit: cover;
+    border-radius: 10px 0 0 10px;
+}
+
+.lesson-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 60%;
     padding: 20px;
+    flex-direction: row;
+}
+
+.lesson-info {
+    flex-grow: 1;
+    width: 70%;
+}
+
+.lesson-title {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+}
+
+.button-container {
+    position: relative;
+    transform: translateY(70%);
+}
+
+.join-button {
+    background-color: #f13223;
+    color: white;
     border: none;
-    border-radius: 4px;
+    padding: 0.7rem 1.4rem;
     cursor: pointer;
-    margin-left: auto;
-    margin-top: auto;
+    border-radius: 5px;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
+}
+
+.join-button:hover {
+    background-color: #d32f2f;
 }
 </style>
