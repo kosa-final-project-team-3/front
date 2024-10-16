@@ -1,5 +1,6 @@
 <template>
     <div v-if="isTrainer" class="trainer-page-user-info">
+        <h2>나의 정보</h2>
         <div class="tabs">
             <button @click="activeTab = 'myInfo'" :class="{ active: activeTab === 'myInfo' }">나의 정보</button>
             <button @click="activeTab = 'timeTable'" :class="{ active: activeTab === 'timeTable' }">타임테이블</button>
@@ -283,24 +284,41 @@ const saveNewProfile = async () => {
     padding: 20px;
 }
 
+.trainer-page-user-info h2 {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.5em;
+    margin-bottom: 1.2rem;
+    text-align: left;
+}
+
 .tabs {
     display: flex;
     margin-bottom: 50px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    justify-content: space-between;
 }
 
 .tabs button {
-    padding: 10px 20px;
-    border: none;
+    flex: 1;
+    padding: 0.8rem 0;
+    font-size: 1rem;
     background-color: #f0f0f0;
+    border: none;
     cursor: pointer;
-    font-size: 18px;
-    font-family: 'Do Hyeon', sans-serif;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    color: #555;
+}
+
+.tabs button:hover {
+    background-color: #e0e0e0;
 }
 
 .tabs button.active {
     background-color: #f13223;
     color: white;
-    font-size: 20px;
 }
 
 .my-info p {
@@ -387,12 +405,13 @@ const saveNewProfile = async () => {
 
 .time-table button {
     margin: 1rem 1rem 1rem 0;
-    padding: 0.5rem 1rem;
+    padding: 0.7rem 1.4rem;
     background-color: #f13223;
     color: white;
     border: none;
     cursor: pointer;
     border-radius: 10px;
+    font-size: 1.1em;
 }
 
 .time-table button:hover {
@@ -424,12 +443,13 @@ const saveNewProfile = async () => {
 
 .btn-add {
     margin: 1rem 5rem 1rem 0;
-    padding: 0.5rem 1rem;
+    padding: 0.7rem 1.4rem;
     background-color: #f13223;
     color: white;
     border: none;
     cursor: pointer;
     border-radius: 10px;
+    font-size: 1.1em;
 }
 
 .btn-add:hover {

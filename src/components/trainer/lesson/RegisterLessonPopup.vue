@@ -1,7 +1,7 @@
 <template>
     <div v-if="isVisible" class="popup-overlay">
         <div class="popup">
-            <h4>레슨 등록</h4>
+            <h2>레슨 등록</h2>
             <form @submit.prevent="registerLesson">
                 <div class="form-group">
                     <label for="title">레슨명:</label>
@@ -77,6 +77,13 @@ const registerLesson = () => {
     max-width: 500px;
 }
 
+.popup h2 {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.5em;
+    margin-bottom: 4rem;
+    text-align: center;
+}
+
 .form-group {
     margin-bottom: 1rem;
 }
@@ -84,6 +91,7 @@ const registerLesson = () => {
 .form-group label {
     display: block;
     margin-bottom: 0.5rem;
+    font-weight: bold;
 }
 
 .form-group input,
@@ -95,24 +103,26 @@ const registerLesson = () => {
 .form-actions {
     display: flex;
     justify-content: flex-end;
-    margin-top: 1rem;
+    margin-top: 4rem;
 }
 
 .btn-cancel,
 .btn-register {
-    padding: 0.5rem 1rem;
-    margin-left: 0.5rem;
+    padding: 0.7rem 1.4rem;
+    margin-left: 1rem;
     cursor: pointer;
+    border-radius: 10px;
+    font-size: 1.1em;
 }
 
 .btn-register {
-    background-color: #4caf50;
+    background-color: #f13223;
     color: white;
     border: none;
 }
 
 .btn-cancel {
-    background-color: #f44336;
+    background-color: #ababa4;
     color: white;
     border: none;
 }

@@ -314,18 +314,6 @@ const isSameDay = (date1, date2) => {
     width: 70vw;
 }
 
-.trainer-page-user-diary h2 {
-    font-family: 'Do Hyeon', sans-serif;
-    font-size: 1.5em;
-    margin-bottom: 1.2rem;
-}
-
-.trainer-page-user-diary h4 {
-    font-family: 'Do Hyeon', sans-serif;
-    font-size: 1.2em;
-    margin-bottom: 1.2rem;
-}
-
 .calendar-container {
     width: 100%;
     max-width: 1200px;
