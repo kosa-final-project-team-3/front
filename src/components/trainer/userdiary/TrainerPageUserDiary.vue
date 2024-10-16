@@ -5,7 +5,6 @@
         <div class="calendar-container">
             <v-calendar
                 :attributes="attributes"
-                :min-date="new Date()"
                 :selected-date="selectedDate"
                 @dayclick="onDayClick"
                 @update:from-page="onUpdateFromPage"
@@ -49,8 +48,8 @@
                             {{ getLessonTypeText(diary.type) }}
                             <span v-for="member in diary.selectedMembers" :key="member.id">{{ member.name }} </span>
                             ({{ diary.startTime }} - {{ diary.endTime }})
-                            <button @click="showWriteDiaryPopup(diary)">작성</button>
-                            <button @click="deleteDiary(diary.id)">삭제</button>
+                            <button @click="showWriteDiaryPopup(diary)" class="btn-write">작성</button>
+                            <button @click="deleteDiary(diary.id)" class="btn-delete">삭제</button>
                         </li>
                     </ul>
                 </div>
@@ -312,6 +311,19 @@ const isSameDay = (date1, date2) => {
 <style scoped>
 .trainer-page-user-diary {
     padding: 20px;
+    width: 70vw;
+}
+
+.trainer-page-user-diary h2 {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.5em;
+    margin-bottom: 1.2rem;
+}
+
+.trainer-page-user-diary h4 {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.2em;
+    margin-bottom: 1.2rem;
 }
 
 .calendar-container {
@@ -377,10 +389,10 @@ const isSameDay = (date1, date2) => {
 .diary-list button {
     margin-left: 5px;
     padding: 2px 5px;
-    background-color: #4caf50;
+    background-color: #f13223;
     color: white;
     border: none;
-    border-radius: 3px;
+    border-radius: 10px;
     cursor: pointer;
 }
 
@@ -408,7 +420,6 @@ const isSameDay = (date1, date2) => {
 }
 
 :deep(.vc-header) {
-    background-color: #f0f0f0;
     margin-top: 0px;
 }
 
@@ -455,7 +466,7 @@ const isSameDay = (date1, date2) => {
     position: absolute;
     bottom: 5px;
     right: 5px;
-    background-color: #4caf50;
+    background-color: #f13223;
     color: white;
     border: none;
     border-radius: 50%;
@@ -467,7 +478,7 @@ const isSameDay = (date1, date2) => {
 }
 
 .add-lesson:hover {
-    background-color: #45a049;
+    background-color: #f13223;
 }
 
 .selected-date-list {
@@ -512,14 +523,23 @@ const isSameDay = (date1, date2) => {
     border-radius: 4px;
 }
 
-.selected-date-list button {
+.selected-date-list .btn-write {
     margin-left: 5px;
     padding: 2px 5px;
-    background-color: #4caf50;
+    background-color: #f13223;
     color: white;
     border: none;
-    border-radius: 3px;
     cursor: pointer;
+    border-radius: 10px;
+}
+.selected-date-list .btn-delete {
+    margin-left: 5px;
+    padding: 2px 5px;
+    background-color: #ababa4;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
 }
 
 .status-indicators {
@@ -575,5 +595,56 @@ const isSameDay = (date1, date2) => {
 
 .vc-day.is-today.is-selected .vc-day-content {
     color: white !important;
+}
+
+/* 캘린더 날짜 셀에 대한 스타일 */
+:deep(.vc-day) {
+    cursor: pointer;
+}
+
+/* 선택 불가능한 날짜(과거 날짜 등)에 대한 스타일 */
+:deep(.vc-day-not-in-month),
+:deep(.vc-day-disabled) {
+    cursor: default;
+}
+
+/* vc-header를 투명하게 만들�� 항상 표시 */
+:deep(.vc-header) {
+    background-color: transparent !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* 제목 스타일 조정 */
+:deep(.vc-title) {
+    color: #333;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+/* 월 표시를 굵게 만들기 */
+:deep(.vc-title .vc-month) {
+    font-weight: 700;
+}
+
+/* 이전/다음 월 버튼 스타일 조정 */
+:deep(.vc-arrow) {
+    opacity: 1 !important;
+    visibility: visible !important;
+    color: #333;
+}
+
+/* 호버 시 스타일 */
+:deep(.vc-title:hover),
+:deep(.vc-arrow:hover) {
+    background-color: rgba(243, 50, 35, 0.1);
+}
+
+:deep(.vc-weeks-header) {
+    padding-top: 10px;
+}
+
+:deep(.vc-day-content) {
+    color: #333;
 }
 </style>
