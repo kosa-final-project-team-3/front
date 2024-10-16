@@ -64,7 +64,7 @@ const lessons = ref([
         description: '초보자에게 적합한 전신 강화 트레이닝.',
         price: 5000,
         trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
-        image: 'https://www.example.com/lesson-pt.jpg',
+        image: 'https://kosa-final-project-team-3.github.io/cdn/lesson_image1.jpg',
         reviews: [
             '친절하고 설명이 명확합니다.',
             '운동 동작을 세심하게 지도해줘서 좋았어요.',
@@ -86,7 +86,7 @@ const lessons = ref([
         description: '유연성 향상과 근력 강화에 도움을 주는 요가 피드백.',
         price: 4000,
         trainerProfile: ['요가 전문 자격증 보유'],
-        image: 'https://www.example.com/lesson-yoga.jpg',
+        image: 'https://kosa-final-project-team-3.github.io/cdn/lesson_image2.jpg',
         reviews: ['유연성이 많이 향상되었어요!', '운동 중간중간 자세 교정이 꼼꼼해서 좋습니다.'],
         ratings: {
             전문성: 5,
@@ -103,7 +103,7 @@ const lessons = ref([
         description: '코어 강화에 특화된 필라테스 피드백입니다.',
         price: 6000,
         trainerProfile: ['필라테스 마스터 트레이너'],
-        image: 'https://www.example.com/lesson-pilates.jpg',
+        image: 'https://kosa-final-project-team-3.github.io/cdn/lesson_image3.jpg',
         reviews: ['수업이 아주 체계적이고 좋아요.', '상세한 피드백을 받을 수 있어요.'],
         ratings: {
             전문성: 5,

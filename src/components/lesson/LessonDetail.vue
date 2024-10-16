@@ -1,10 +1,13 @@
 <template>
     <div class="lesson-detail-container">
         <div class="modal-content">
-            <button class="close-button" @click="$emit('close')">X</button>
+            <button class="close-button" @click="$emit('close')">×</button>
 
             <div class="lesson-header">
-                <img :src="lesson.image" alt="레슨 이미지" class="lesson-image" />
+                <div class="lesson-image-container">
+                    <img v-if="lesson.image" :src="lesson.image" alt="레슨 이미지" class="lesson-image" />
+                    <div v-else class="lesson-image-placeholder">이미지 없음</div>
+                </div>
                 <div class="lesson-details">
                     <p><strong>종목:</strong> {{ lesson.category }}</p>
                     <p v-if="selectedType !== '온라인 피드백'"><strong>레슨명:</strong> {{ lesson.title }}</p>
@@ -48,14 +51,13 @@
                     </div>
                 </div>
             </div>
-
-            <button class="inquiry-button" @click="$emit('openInquiry')">문의하기</button>
         </div>
+        <button class="inquiry-button floating" @click="handleInquiry">문의하기</button>
     </div>
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, defineEmits } from 'vue';
 import RadarChart from './RadarChart.vue';
 import MapView from './MapView.vue';
 
@@ -63,6 +65,13 @@ const props = defineProps({
     lesson: Object,
     selectedType: String,
 });
+
+const emit = defineEmits(['close', 'openInquiry']);
+
+const handleInquiry = () => {
+    emit('openInquiry', props.lesson);
+    emit('close');
+};
 </script>
 
 <style scoped>
@@ -76,6 +85,7 @@ const props = defineProps({
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1000;
 }
 
 .modal-content {
@@ -83,8 +93,11 @@ const props = defineProps({
     padding: 30px;
     border-radius: 10px;
     width: 500px;
-    height: 90%;
+    height: 800px;
+    max-height: 75vh;
     overflow-y: auto;
+    position: relative;
+    margin: 10vh auto;
 }
 
 .modal-content::-webkit-scrollbar {
@@ -96,8 +109,31 @@ const props = defineProps({
     margin-bottom: 20px;
 }
 
+.lesson-image-container {
+    width: 200px;
+    height: 200px;
+    margin-right: 20px;
+}
+
+.lesson-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.lesson-image-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    color: #666;
+}
+
 .lesson-details {
-    margin-left: 20px;
+    flex: 1;
 }
 
 .evaluation-container {
@@ -125,23 +161,55 @@ const props = defineProps({
 }
 
 .close-button {
+    position: fixed;
+    top: calc(10vh + 10px);
+    right: calc(50% - 250px);
     background-color: white;
     border: none;
+    font-size: 20px;
     cursor: pointer;
+    color: #333;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
 }
 
 .inquiry-button {
-    padding: 10px;
-    background-color: black;
+    padding: 15px 30px;
+    background-color: #00bf63;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 30px;
     cursor: pointer;
-    transition: background-color 0.3s;
-    margin-top: 20px;
+    transition: background-color 0.3s, transform 0.3s;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .inquiry-button:hover {
-    background-color: #4f4f4f;
+    background-color: #009e52;
+    transform: translateY(-2px);
+}
+
+.inquiry-button.floating {
+    position: fixed;
+    bottom: calc(10vh + 20px);
+    right: calc(50% - 250px);
+    z-index: 1002;
+}
+
+.map-view {
+    position: relative;
+    z-index: 1;
+}
+
+.evaluation-container {
+    padding-bottom: 60px;
 }
 </style>
