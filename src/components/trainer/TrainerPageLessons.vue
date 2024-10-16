@@ -1,5 +1,5 @@
 <template>
-    <div v-if="isTrainer" class="trainer-page-my-lessons">
+    <div class="my-page-lessons">
         <div class="my-lessons">
             <h2>나의 레슨 관리</h2>
             <div class="lesson-tabs">
@@ -14,12 +14,15 @@
                 </button>
             </div>
             <div class="tab-content">
-                <component :is="currentTabComponent"></component>
+                <component :is="currentTabComponent" @open-popup="openPopup"></component>
             </div>
         </div>
-    </div>
-    <div v-else>
-        <h2>접근 권한이 없습니다.</h2>
+        <RegisterLessonPopup
+            :isVisible="showPopup"
+            :lessonType="currentTab"
+            @close="closePopup"
+            @register="registerLesson"
+        />
     </div>
 </template>
 
@@ -30,6 +33,7 @@ import PersonalLessons from './lesson/PersonalLessons.vue';
 import GroupLessons from './lesson/GroupLessons.vue';
 import OnlinePT from './lesson/OnlinePT.vue';
 import OnlineFeedback from './lesson/OnlineFeedback.vue';
+import RegisterLessonPopup from './lesson/RegisterLessonPopup.vue';
 
 const tabs = [
     { id: 'personal', name: '개인 레슨', component: PersonalLessons },
@@ -39,12 +43,27 @@ const tabs = [
 ];
 const authStore = useAuthStore();
 const currentTab = ref('personal');
+const showPopup = ref(false);
+
 const isTrainer = computed(() => authStore.role === 'TRAINER');
 
 const currentTabComponent = computed(() => {
     const tab = tabs.find((tab) => tab.id === currentTab.value);
     return tab ? tab.component : null;
 });
+
+const openPopup = () => {
+    showPopup.value = true;
+};
+
+const closePopup = () => {
+    showPopup.value = false;
+};
+
+const registerLesson = (lessonData) => {
+    console.log('Registering lesson:', lessonData);
+    closePopup();
+};
 </script>
 
 <style scoped>

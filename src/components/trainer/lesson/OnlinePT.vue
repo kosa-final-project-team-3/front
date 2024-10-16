@@ -2,7 +2,7 @@
     <div class="online-pt">
         <div class="header">
             <h2>온라인 PT</h2>
-            <button @click="showRegisterPopup" class="register-lesson-btn">레슨 등록하기</button>
+            <button @click="$emit('open-popup')" class="register-lesson-btn">레슨 등록하기</button>
         </div>
         <div class="lesson-list">
             <div v-for="lesson in onlinePTLessons" :key="lesson.id" class="lesson-item">
@@ -32,7 +32,6 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
-import RegisterLessonPopup from './RegisterLessonPopup.vue';
 
 const onlinePTLessons = ref([
     {
@@ -101,15 +100,6 @@ const createRoom = async (lesson) => {
     }
 };
 
-const isRegisterPopupVisible = ref(false);
-
-const showRegisterPopup = () => {
-    isRegisterPopupVisible.value = true;
-};
-
-const closeRegisterPopup = () => {
-    isRegisterPopupVisible.value = false;
-};
 const handleRegisterLesson = async (lessonData) => {
     try {
         // TODO: API를 통해 새 레슨 등록

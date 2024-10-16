@@ -2,7 +2,7 @@
     <div class="group-lessons">
         <div class="header">
             <h2>그룹 레슨</h2>
-            <button @click="showRegisterPopup" class="register-lesson-btn">레슨 등록하기</button>
+            <button @click="$emit('open-popup')" class="register-lesson-btn">레슨 등록하기</button>
         </div>
         <RegisterLessonPopup
             :is-visible="isRegisterPopupVisible"
