@@ -72,7 +72,6 @@ function sort() {
 .search-container button {
     background-color: #f13223;
     color: white;
-    border: 1px solid #f13223;
     cursor: pointer;
 }
 
