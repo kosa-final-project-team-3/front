@@ -101,7 +101,6 @@ const openLogin = () => {
     font-family: 'Do Hyeon', sans-serif;
     font-size: 1.4em;
     position: relative;
-    flex-grow: 1;
     text-align: center;
     white-space: nowrap;
 }
@@ -120,7 +119,6 @@ const openLogin = () => {
     width: 40%;
     display: flex;
     margin-left: auto;
-    justify-content: space-evenly;
 }
 .navbar-login a {
     color: #545454;
@@ -144,5 +142,15 @@ const openLogin = () => {
     margin-top: 10px;
     border-bottom: 3px solid #f13223;
     justify-content: right;
+}
+
+.dynamic-link,
+.auth-links {
+    display: flex;
+}
+
+.dynamic-link a,
+.auth-links a {
+    width: 13vw;
 }
 </style>
