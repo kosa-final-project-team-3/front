@@ -106,6 +106,7 @@ const handleInquiry = () => {
 
 .lesson-header {
     display: flex;
+    margin-top: 30px;
     margin-bottom: 20px;
 }
 

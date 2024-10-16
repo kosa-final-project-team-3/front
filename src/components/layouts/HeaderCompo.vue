@@ -2,16 +2,22 @@
     <header class="header">
         <div class="logo-container">
             <div class="logo-container-inner">
-                <router-link to="/">
+                <router-link to="/" class="logo-link">
                     <img class="logo" src="https://kosa-final-project-team-3.github.io/cdn/logo.png" alt="정도인" />
                 </router-link>
             </div>
 
             <div class="navbar-container">
                 <div class="navbar-inner">
-                    <router-link to="/lesson/offline">오프라인 레슨</router-link>
-                    <router-link to="/lesson/online">온라인 레슨</router-link>
-                    <router-link to="/feedback/ai">AI 피드백</router-link>
+                    <router-link to="/lesson/offline" :class="{ active: $route.path === '/lesson/offline' }"
+                        >오프라인 레슨</router-link
+                    >
+                    <router-link to="/lesson/online" :class="{ active: $route.path === '/lesson/online' }"
+                        >온라인 레슨</router-link
+                    >
+                    <router-link to="/feedback/ai" :class="{ active: $route.path === '/feedback/ai' }"
+                        >AI 피드백</router-link
+                    >
                 </div>
                 <div class="navbar-login">
                     <div class="dynamic-link">
@@ -74,6 +80,16 @@ const openLogin = () => {
     justify-content: center; /* 수평 중앙 정렬 */
     align-items: center; /* 수직 중앙 정렬 */
 }
+.logo-container-inner {
+    display: flex;
+    justify-content: center;
+}
+
+.logo-link {
+    display: inline-block;
+    line-height: 0;
+}
+
 .logo {
     width: 120px;
     height: 60px;
@@ -82,7 +98,7 @@ const openLogin = () => {
 
 .navbar-container {
     display: flex;
-    flex: 1;
+    /* flex: 1; */
     align-items: center;
     text-align: center;
 }
@@ -115,10 +131,25 @@ const openLogin = () => {
     border-bottom: 3px solid #f13223;
     justify-content: center;
 }
+.navbar-inner a.active {
+    font-weight: bold;
+    color: #f13223;
+}
+.navbar-inner a.active::after {
+    content: '';
+    width: 70%;
+    height: 2px;
+    display: block;
+    position: absolute;
+    left: 15%;
+    margin-top: 10px;
+    border-bottom: 3px solid #f13223;
+    justify-content: center;
+}
 .navbar-login {
     width: 40%;
     display: flex;
-    margin-left: auto;
+    justify-content: flex-end; /* 오른쪽 정렬 */
 }
 .navbar-login a {
     color: #545454;
