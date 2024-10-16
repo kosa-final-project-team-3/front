@@ -277,6 +277,7 @@ function closeInquiryForm() {
 .lesson-category-button.active {
     background-color: #f13223;
     color: white;
+}
 
 .lesson-card-list {
     display: flex;
