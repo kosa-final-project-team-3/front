@@ -24,7 +24,7 @@
                 </div>
             </div>
 
-            <div v-if="selectedType === '그룹 레슨'">
+            <div class="lesson-info" v-if="selectedType === '그룹 레슨'">
                 <p><strong>모집 기간</strong>: {{ lesson.recruitmentPeriod }}</p>
                 <p><strong>최대 인원</strong>: {{ lesson.maxParticipants }}명</p>
                 <p><strong>레슨 일정</strong>: {{ lesson.schedule }}</p>
@@ -178,6 +178,10 @@ const handleInquiry = () => {
 
 .description-content::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+.lesson-info {
+    margin: 40px;
 }
 
 .lesson-location {
