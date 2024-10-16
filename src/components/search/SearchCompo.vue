@@ -16,8 +16,8 @@
 
                 <div class="sort-container">
                     <select v-model="sortType" @change="sort">
-                        <option value="latest">최신순</option>
                         <option value="popular">인기순</option>
+                        <option value="latest">최신순</option>
                         <option value="latest">만족도순</option>
                         <option value="oldest">가격순</option>
                     </select>
