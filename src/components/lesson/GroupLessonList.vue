@@ -133,19 +133,19 @@ const searchKeyword = ref(''); // 검색
 const selectedSort = ref('popular'); // 정렬
 const showInquiryForm = ref(false); // 문의하기 폼 상태
 
-const filteredLessons = computed(() => {
-    return lessons.value.filter((lesson) => {
-        const matchesType = selectedType.value;
-        const matchesSearch =
-            lesson.title.includes(searchKeyword.value) ||
-            lesson.trainer.includes(searchKeyword.value) ||
-            lesson.location.includes(searchKeyword.value);
+// const filteredLessons = computed(() => {
+//     return lessons.value.filter((lesson) => {
+//         const matchesType = selectedType.value;
+//         const matchesSearch =
+//             lesson.title.includes(searchKeyword.value) ||
+//             lesson.trainer.includes(searchKeyword.value) ||
+//             lesson.location.includes(searchKeyword.value);
 
-        const matchesCategory = !selectedCategory.value || lesson.category === selectedCategory.value;
+//         const matchesCategory = !selectedCategory.value || lesson.category === selectedCategory.value;
 
-        return matchesType && matchesSearch && matchesCategory;
-    });
-});
+//         return matchesType && matchesSearch && matchesCategory;
+//     });
+// });
 
 const sortedLessons = computed(() => {
     const sorted = [...filteredLessons.value];
