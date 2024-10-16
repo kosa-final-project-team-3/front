@@ -2,7 +2,7 @@
     <div class="personal-lessons">
         <div class="header">
             <h2>온라인 피드백</h2>
-            <button @click="showRegisterPopup" class="register-lesson-btn">레슨 등록하기</button>
+            <button @click="$emit('open-popup')" class="register-lesson-btn">레슨 등록하기</button>
         </div>
         <RegisterLessonPopup
             :is-visible="isRegisterPopupVisible"
@@ -32,10 +32,8 @@
 </template>
 
 <script setup>
-import RegisterLessonPopup from './RegisterLessonPopup.vue';
 import { ref } from 'vue';
 
-const isRegisterPopupVisible = ref(false);
 const selectedType = ref('개인 레슨');
 const selectedLesson = ref(null); // 선택된 레슨
 
@@ -165,13 +163,6 @@ function closeLessonDetail() {
     selectedLesson.value = null;
 }
 
-const showRegisterPopup = () => {
-    isRegisterPopupVisible.value = true;
-};
-
-const closeRegisterPopup = () => {
-    isRegisterPopupVisible.value = false;
-};
 const handleRegisterLesson = async (lessonData) => {
     try {
         // TODO: API를 통해 새 레슨 등록

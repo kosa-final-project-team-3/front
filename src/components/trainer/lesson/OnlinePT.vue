@@ -1,23 +1,21 @@
 <template>
     <div class="online-pt">
         <div class="header">
-            <h2>온라인 PT</h2>
+            <h3>온라인 PT</h3>
             <button @click="showRegisterPopup" class="register-lesson-btn">레슨 등록하기</button>
         </div>
         <div class="lesson-list">
             <div v-for="lesson in onlinePTLessons" :key="lesson.id" class="lesson-item">
                 <h4>{{ lesson.title }}</h4>
-                <div class="lesson-info">
-                    <p><strong>회원명:</strong> {{ lesson.memberName }}</p>
-                    <p><strong>날짜:</strong> {{ lesson.date }}</p>
-                    <p><strong>시간:</strong> {{ lesson.time }}</p>
-                    <p><strong>상태:</strong> {{ lesson.status }}</p>
-                    <button @click="createRoom(lesson)" :disabled="roomUrl">방 생성하기</button>
-                    <div v-if="lesson.roomUrl">
-                        <p>
-                            생성된 방 링크: <a :href="lesson.roomUrl" target="_blank">{{ lesson.roomUrl }}</a>
-                        </p>
-                    </div>
+                <p><strong>회원명:</strong> {{ lesson.memberName }}</p>
+                <p><strong>날짜:</strong> {{ lesson.date }}</p>
+                <p><strong>시간:</strong> {{ lesson.time }}</p>
+                <p><strong>상태:</strong> {{ lesson.status }}</p>
+                <button @click="createRoom(lesson)" :disabled="roomUrl">방 생성하기</button>
+                <div v-if="lesson.roomUrl">
+                    <p>
+                        생성된 방 링크: <a :href="lesson.roomUrl" target="_blank">{{ lesson.roomUrl }}</a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -123,60 +121,37 @@ const handleRegisterLesson = async (lessonData) => {
 </script>
 
 <style scoped>
-.header h2 {
-    font-family: 'Do Hyeon', sans-serif;
-    font-size: 1.5em;
-}
-
 .lesson-list {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
 }
 
 .lesson-item {
-    background-color: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    display: flex;
-    padding: 20px;
-    margin: 10px;
-    flex-direction: column;
-    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.lesson-item:last-child {
+    border-bottom: none;
 }
 
 .lesson-item h4 {
     margin-top: 0;
     margin-bottom: 0.5rem;
-    font-size: 1.2em;
-    font-weight: bold;
 }
 
 .lesson-item p {
     margin: 0.25rem 0;
-    font-size: 1.1em;
-    vertical-align: middle;
 }
-
-.lesson-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-}
-
 button {
     margin-top: 0.5rem;
-    padding: 0.7rem 1.4rem;
-    background-color: #f13223;
+    padding: 0.5rem 1rem;
+    background-color: red;
     color: white;
     border: none;
     cursor: pointer;
-    border-radius: 10px;
-    font-size: 1.1em;
 }
 
 button:disabled {

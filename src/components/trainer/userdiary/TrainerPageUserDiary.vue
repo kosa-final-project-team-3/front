@@ -1,5 +1,5 @@
 <template>
-    <div class="trainer-page-user-diary">
+    <div v-if="isTrainer" class="trainer-page-user-diary">
         <h2>회원 일지 관리</h2>
         <h4>🔴 : 작성 전 🔵 : 작성 중 🟢 : 작성 완료</h4>
         <div class="calendar-container">
@@ -98,6 +98,9 @@
             @temp-save="tempSaveDiary"
         />
     </div>
+    <div v-else>
+        <h2>접근 권한이 없습니다.</h2>
+    </div>
 </template>
 
 <script setup>
@@ -106,7 +109,9 @@ import { Calendar } from 'v-calendar';
 import 'v-calendar/dist/style.css';
 import RegisterLessonPopup from './RegisterLessonDiaryPopup.vue';
 import WriteDiaryPopup from './WriteDiaryPopup.vue';
+import { useAuthStore } from '../../../stores/authStore';
 
+const authStore = useAuthStore();
 const selectedDate = ref(null);
 const selectedPopupDate = ref(null);
 const isRegisterLessonPopupVisible = ref(false);
@@ -115,6 +120,7 @@ const selectedDiary = ref(null);
 const isViewMode = ref(false);
 const isAddButtonVisible = ref(false);
 const hoveredDate = ref(null);
+const isTrainer = computed(() => authStore.role === 'TRAINER');
 
 const writingList = ref([]);
 const inProgressList = ref([]);
