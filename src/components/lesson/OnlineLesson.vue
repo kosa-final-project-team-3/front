@@ -47,12 +47,13 @@ import SearchCompo from '../search/SearchCompo.vue';
 const lessons = ref([
     {
         type: '온라인 레슨',
-        title: '고강도 홈트레이닝',
-        trainer: '김종국',
+        title: '전신 운동 PT',
+        trainer: '박정환',
         category: '헬스',
-        description: '바른 자세와 근력 강화에 도움을 줍니다. 쉬운 설명으로 운동에 재미를 느낄 수 있도록 합니다.',
-        price: 50000,
-        image: 'https://kosa-final-project-team-3.github.io/cdn/of1.jpg',
+        description: '초보자에게 적합한 전신 강화 트레이닝.',
+        price: 60000,
+        trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
+        image: 'https://kosa-final-project-team-3.github.io/cdn/lesson_image4.jpeg',
         reviews: [
             '자세를 잘 잡아줍니다!',
             '운동 중간중간 자세 교정이 꼼꼼해서 좋습니다.',
@@ -60,9 +61,10 @@ const lessons = ref([
         ],
         ratings: {
             전문성: 5,
-            친절: 3.5,
+            친절: 5,
             설명: 5,
             시간엄수: 5,
+            열정: 5,
             열정: 5,
         },
     },
