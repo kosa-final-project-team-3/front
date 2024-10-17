@@ -4,15 +4,17 @@
             <button class="close-button" @click="$emit('close')">×</button>
 
             <div class="lesson-header">
-                <div class="lesson-image-container">
-                    <img v-if="lesson.image" :src="lesson.image" alt="레슨 이미지" class="lesson-image" />
-                    <div v-else class="lesson-image-placeholder">이미지 없음</div>
-                </div>
-                <div class="lesson-details">
-                    <p><strong>종목:</strong> {{ lesson.category }}</p>
-                    <p><strong>레슨명:</strong> {{ lesson.title }}</p>
-                    <p><strong>강사:</strong> {{ lesson.trainer }}</p>
-                    <p><strong>가격:</strong> {{ lesson.price }}원</p>
+                <div class="lesson-title">{{ lesson.title }}</div>
+                <div class="lesson-header-container">
+                    <div class="lesson-image-container">
+                        <img v-if="lesson.image" :src="lesson.image" alt="레슨 이미지" class="lesson-image" />
+                        <div v-else class="lesson-image-placeholder">이미지 없음</div>
+                    </div>
+                    <div class="lesson-details">
+                        <p><strong>종목:</strong> {{ lesson.category }}</p>
+                        <p><strong>강사:</strong> {{ lesson.trainer }}</p>
+                        <p><strong>가격:</strong> {{ lesson.price }}원</p>
+                    </div>
                 </div>
             </div>
 
@@ -20,7 +22,6 @@
                 <p><strong>레슨 상세 내역:</strong></p>
                 <p>{{ lesson.description }}</p>
             </div>
-
             <!-- 그룹 레슨 특정 정보 -->
             <div v-if="selectedType === '그룹 레슨'">
                 <p><strong>모집 시작일:</strong> {{ lesson.recruitmentStart }}</p>
@@ -35,6 +36,7 @@
 
             <!-- 요청 리스트 -->
             <div class="request-list">
+                <hr class="hr-line" />
                 <h3>요청 리스트</h3>
                 <ul>
                     <li v-for="request in requests" :key="request.id" class="request-item">
@@ -49,6 +51,7 @@
 
             <!-- 참여 리스트 -->
             <div class="participants-list">
+                <hr class="hr-line" />
                 <h3>참여 리스트</h3>
                 <ul>
                     <li v-for="participant in participants" :key="participant.id" class="participant-item">
@@ -153,7 +156,7 @@ const createRoom = async (participant) => {
     background-color: white;
     padding: 30px;
     border-radius: 10px;
-    width: 500px;
+    width: 700px;
     height: 800px;
     max-height: 75vh;
     overflow-y: auto;
@@ -169,6 +172,19 @@ const createRoom = async (participant) => {
     display: flex;
     margin-top: 30px;
     margin-bottom: 20px;
+    flex-direction: column;
+}
+
+.lesson-title {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.lesson-header-container {
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
 }
 
 .lesson-image-container {
@@ -181,6 +197,7 @@ const createRoom = async (participant) => {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 10px;
 }
 
 .lesson-image-placeholder {
@@ -198,10 +215,14 @@ const createRoom = async (participant) => {
     flex: 1;
 }
 
+.lesson-description {
+    margin-top: 30px;
+}
+
 .close-button {
     position: fixed;
     top: calc(10vh + 10px);
-    right: calc(50% - 250px);
+    right: calc(25%);
     background-color: white;
     border: none;
     font-size: 20px;
@@ -231,7 +252,6 @@ const createRoom = async (participant) => {
     justify-content: space-between;
     align-items: center;
     padding: 10px 0;
-    border-bottom: 1px solid #eee;
 }
 
 .requester-name {
@@ -259,7 +279,7 @@ const createRoom = async (participant) => {
 }
 
 .accept-btn:hover {
-    background-color: #f13223;
+    background-color: #d32f2f;
 }
 
 .reject-btn {
@@ -268,7 +288,7 @@ const createRoom = async (participant) => {
 }
 
 .reject-btn:hover {
-    background-color: #ababa4;
+    background-color: #9a9a94;
 }
 
 .participants-list {
@@ -285,7 +305,6 @@ const createRoom = async (participant) => {
     justify-content: space-between;
     align-items: center;
     padding: 10px 0;
-    border-bottom: 1px solid #eee;
 }
 
 .participant-name {
@@ -334,5 +353,10 @@ const createRoom = async (participant) => {
 
 .close-lesson-btn:hover {
     background-color: #d32f2f;
+}
+
+.hr-line {
+    margin: 30px 0;
+    border: 1px solid #eee;
 }
 </style>

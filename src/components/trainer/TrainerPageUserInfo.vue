@@ -494,11 +494,11 @@ const saveNewProfile = async () => {
 }
 
 .btn-cancel {
-    background-color: #f13223;
+    background-color: #ababa4;
 }
 
 .btn-cancel:hover {
-    background-color: #d32f2f;
+    background-color: #8e8e8e;
 }
 
 .btn-save {
