@@ -9,32 +9,20 @@
 
             <div class="navbar-container">
                 <div class="navbar-inner">
-                    <router-link
-                        to="/lesson/offline"
-                        :class="{
-                            active: $route.path === '/lesson/offline' || $route.path === '/lesson/offline/group',
-                        }"
-                        >오프라인 레슨</router-link
-                    >
-                    <router-link
-                        to="/lesson/online"
-                        :class="{
-                            active: $route.path === '/lesson/online' || $route.path === '/lesson/online/feedback',
-                        }"
-                        >온라인 레슨</router-link
-                    >
-                    <router-link to="/feedback/ai" :class="{ active: $route.path === '/feedback/ai' }"
-                        >AI 피드백</router-link
-                    >
+                    <router-link to="/lesson/offline" active-class="active">오프라인 레슨</router-link>
+                    <router-link to="/lesson/online" active-class="active">온라인 레슨</router-link>
+                    <router-link to="/feedback/ai" active-class="active">AI 피드백</router-link>
                 </div>
                 <div class="navbar-login">
                     <div class="dynamic-link">
-                        <router-link v-if="isTrainer" to="/trainer/info">트레이너페이지</router-link>
-                        <router-link v-if="isAuthenticated" to="/mypage">마이페이지</router-link>
+                        <router-link v-if="isTrainer" to="/trainer/info" active-class="active"
+                            >트레이너페이지</router-link
+                        >
+                        <router-link v-if="isAuthenticated" to="/mypage" active-class="active">마이페이지</router-link>
                     </div>
                     <div class="auth-links">
                         <a v-if="!isAuthenticated" @click.prevent="openLogin">로그인</a>
-                        <router-link v-if="isAuthenticated" to="/" @click="handleLogout">로그아웃</router-link>
+                        <a v-if="isAuthenticated" @click="handleLogout">로그아웃</a>
                     </div>
                 </div>
             </div>
@@ -44,9 +32,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useAuthStore } from '../../stores/authStore';
-import jwtAxios, { API_SERVER_HOST } from '../../util/jwtUtil';
 
-const host = API_SERVER_HOST;
 const authStore = useAuthStore();
 const isAuthenticated = computed(() => authStore.isAuthenticated);
 const isTrainer = computed(() => authStore.role === 'TRAINER');
@@ -83,10 +69,18 @@ const openLogin = () => {
     flex-direction: column;
     margin-top: 20px;
 }
-.logo-container-inner > a {
+
+.logo-container-inner {
     display: flex;
-    justify-content: center; /* 수평 중앙 정렬 */
-    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-container-inner > a {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
 }
 .logo-container-inner {
     display: flex;
@@ -99,17 +93,19 @@ const openLogin = () => {
 }
 
 .logo {
-    width: 120px;
-    height: 60px;
+    width: 180px;
+    height: 100px;
     justify-content: center;
 }
 
 .navbar-container {
     display: flex;
-    /* flex: 1; */
     align-items: center;
     text-align: center;
+    margin: 20px 0px;
+    background-color: #f7edec;
 }
+
 .navbar-inner {
     width: 60%;
     left: 5%;
@@ -118,16 +114,18 @@ const openLogin = () => {
     align-items: center;
     justify-content: space-between;
 }
+
 .navbar-inner a {
     color: black;
     padding-top: 15px;
     text-decoration: none;
     font-family: 'Do Hyeon', sans-serif;
-    font-size: 1.4em;
+    font-size: 2em;
     position: relative;
     text-align: center;
     white-space: nowrap;
 }
+
 .navbar-inner a:hover::after {
     content: '';
     width: 70%;
@@ -139,10 +137,12 @@ const openLogin = () => {
     border-bottom: 3px solid #f13223;
     justify-content: center;
 }
-.navbar-inner a.active {
+
+.router-link-exact-active {
     font-weight: bold;
-    color: #f13223;
+    color: #f13223 !important;
 }
+
 .navbar-inner a.active::after {
     content: '';
     width: 70%;
@@ -154,23 +154,26 @@ const openLogin = () => {
     border-bottom: 3px solid #f13223;
     justify-content: center;
 }
+
 .navbar-login {
     width: 40%;
     display: flex;
     justify-content: flex-end; /* 오른쪽 정렬 */
 }
+
 .navbar-login a {
     color: #545454;
     padding-top: 15px;
     text-decoration: none;
     font-family: 'Do Hyeon', sans-serif;
-    font-size: 1.3em;
+    font-size: 1.5em;
     position: relative;
     flex-grow: 1;
     text-align: center;
     white-space: nowrap;
     cursor: pointer;
 }
+
 .navbar-login a:hover::after {
     content: '';
     width: 70%;
@@ -191,5 +194,29 @@ const openLogin = () => {
 .dynamic-link a,
 .auth-links a {
     width: 13vw;
+}
+
+.active {
+    font-weight: bold;
+    color: #f13223 !important;
+}
+
+.navbar-inner a.active,
+.navbar-login a.active {
+    font-weight: bold;
+    color: #f13223 !important;
+}
+
+.navbar-inner a.active::after,
+.navbar-login a.active::after {
+    content: '';
+    width: 70%;
+    height: 2px;
+    display: block;
+    position: absolute;
+    left: 15%;
+    margin-top: 10px;
+    border-bottom: 3px solid #f13223;
+    justify-content: center;
 }
 </style>
