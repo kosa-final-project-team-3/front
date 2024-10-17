@@ -99,17 +99,19 @@ const openLogin = () => {
 }
 
 .logo {
-    width: 120px;
-    height: 60px;
+    width: 180px;
+    height: 100px;
     justify-content: center;
 }
 
 .navbar-container {
     display: flex;
-    /* flex: 1; */
     align-items: center;
     text-align: center;
+    margin: 20px 0px;
+    background-color: #f7edec;
 }
+
 .navbar-inner {
     width: 60%;
     left: 5%;
@@ -123,7 +125,7 @@ const openLogin = () => {
     padding-top: 15px;
     text-decoration: none;
     font-family: 'Do Hyeon', sans-serif;
-    font-size: 1.4em;
+    font-size: 2em;
     position: relative;
     text-align: center;
     white-space: nowrap;
@@ -164,7 +166,7 @@ const openLogin = () => {
     padding-top: 15px;
     text-decoration: none;
     font-family: 'Do Hyeon', sans-serif;
-    font-size: 1.3em;
+    font-size: 1.5em;
     position: relative;
     flex-grow: 1;
     text-align: center;

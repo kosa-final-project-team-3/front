@@ -36,10 +36,12 @@ const showMBTI = ref(true);
 <style scoped>
 .container {
     display: flex;
+    gap: 45px;
 }
 
 .content-wrapper {
     font-family: 'Do Hyeon', sans-serif;
+    border-right: 1px solid #e0e0e0;
 }
 
 .sidebar {
