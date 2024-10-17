@@ -70,7 +70,7 @@ const lessons = ref([
         title: '이효리와 함께하는 요가 중급 레슨',
         description:
             '마음과 몸의 수양을 통해 평정심을 찾아보세요. 15년 경력의 요가 전문가 이효리와 함께 기초부터 중급 요가 동작을 배웁니다. 호흡법, 아사나, 명상을 통해 몸과 마음의 균형을 찾고 스트레스를 해소할 수 있습니다.',
-        price: 70000,
+        price: 30000,
         image: 'https://kosa-final-project-team-3.github.io/cdn/of7.jpeg',
         reviews: ['친절하고 설명이 명확합니다.', '몸이 한 층 더 유연해졌어요.', '강의 준비가 철저해요.'],
         ratings: {
@@ -88,7 +88,7 @@ const lessons = ref([
         category: '수영',
         description:
             '바른 자세로 영법을 배웁니다. 국가를 대표하는 전문성을 기반으로 수업을 진행합니다. 올림픽 금메달리스트 박태환 선수의 노하우를 직접 전수받을 수 있는 기회! 자유형, 평영, 접영, 배영의 기본 자세부터 고급 기술까지 체계적으로 학습합니다. 수영의 효율성을 높이고 속도를 향상시키는 비밀을 배워보세요.',
-        price: 100000,
+        price: 50000,
         image: 'https://kosa-final-project-team-3.github.io/cdn/of2.jpg',
         reviews: ['자세를 잘 잡아줍니다!', '전문적이여서 좋아요.'],
         ratings: {
@@ -124,7 +124,7 @@ const lessons = ref([
         category: '요가',
         description:
             '제주도의 아름다운 자연과 함께 힐링 요가를 즐겨보세요. 20년 경력의 요가 마스터 이상순과 함께하는 특별한 온라인 클래스! 하타 요가, 빈야사 요가, 인요가 등 다양한 요가 스타일을 경험할 수 있습니다. 스트레스 해소, 근육 이완, 심신 안정에 효과적인 요가 동작들을 배워봅니다.',
-        price: 60000,
+        price: 30000,
         image: 'https://kosa-final-project-team-3.github.io/cdn/of8.jpeg',
         reviews: ['수업 분위기가 너무 좋아요.', '자세를 잘 잡아줍니다!', '즐겁게 운동할 수 있어요.'],
         ratings: {
@@ -142,7 +142,7 @@ const lessons = ref([
         category: '헬스',
         description:
             '중급자부터 숙련자까지 수준 높은 웨이트 트레이닝을 배울 수 있습니다. 대한민국 최고의 보디빌더 이승철 감독의 30년 노하우를 전수받는 프리미엄 클래스! 과학적인 운동 방법과 영양학을 바탕으로 한 체계적인 근육 증가 프로그램을 제공합니다. 개인의 체형과 목표에 맞는 맞춤형 운동 루틴으로 최상의 결과를 얻을 수 있습니다.',
-        price: 80000,
+        price: 60000,
         image: 'https://kosa-final-project-team-3.github.io/cdn/of11.jpeg',
         reviews: ['전문적이에요.', '자세를 잘 잡아줍니다!', '선생님께 많이 배워가고 있어요.'],
         ratings: {
