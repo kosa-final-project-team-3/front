@@ -48,9 +48,13 @@
         <div class="popular-lesson">
             <h2>지금 가장 인기 있는 레슨</h2>
             <div class="lesson-list">
-                <div class="lesson-item"></div>
-                <div class="lesson-item"></div>
-                <div class="lesson-item"></div>
+                <div v-for="lesson in popularLessons" :key="lesson.id" class="lesson-item">
+                    <img :src="lesson.image" :alt="lesson.title" class="lesson-image" />
+                    <div class="lesson-info">
+                        <h3 class="lesson-title">{{ lesson.title }}</h3>
+                        <p class="lesson-trainer">{{ lesson.trainer }}</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -118,6 +122,27 @@ const openLogin = () => {
 };
 
 authStore.openLogin = openLogin;
+
+const popularLessons = ref([
+    {
+        id: 1,
+        title: '올라잇 정신으로 운동하기',
+        trainer: '박재훈',
+        image: 'https://kosa-final-project-team-3.github.io/cdn/popular4.webp',
+    },
+    {
+        id: 2,
+        title: '중급반 요가',
+        trainer: '윤서희',
+        image: 'https://kosa-final-project-team-3.github.io/cdn/pt3.jpeg',
+    },
+    {
+        id: 3,
+        title: '필라테스 집중 코어',
+        trainer: '심으뜸',
+        image: 'https://kosa-final-project-team-3.github.io/cdn/popular2.webp',
+    },
+]);
 </script>
 <style scoped>
 .login-popup {
@@ -195,6 +220,33 @@ authStore.openLogin = openLogin;
     height: 400px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.lesson-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.lesson-info {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.lesson-title {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.lesson-trainer {
+    font-size: 1em;
+    color: #666;
 }
 
 .popular-lesson {
