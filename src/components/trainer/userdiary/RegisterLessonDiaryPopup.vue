@@ -117,6 +117,7 @@ const resetForm = () => {
     font-family: 'Do Hyeon', sans-serif;
     font-size: 1.5em;
     margin-bottom: 1.2rem;
+    text-align: center;
 }
 .register-lesson-popup {
     position: fixed;
@@ -211,13 +212,13 @@ button {
 button[type='submit'] {
     background-color: #f44336;
     color: white;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
 button[type='button'] {
     background-color: #ababa4;
     color: white;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
 /* 시간 입력 필드에 대한 특별한 스타일 */
