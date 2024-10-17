@@ -49,7 +49,7 @@ const links = [
     color: #f13223;
 }
 
-.router-link-active {
+.router-link-exact-active {
     color: #f13223;
 }
 </style>
