@@ -28,6 +28,9 @@
                 전문가로 전환하기
             </button>
 
+            <button type="button" @click="apply" class="btn-become-expert">트레이너 신청</button>
+            <button type="button" @click="approve" class="btn-become-expert">트레이너 신청 승인</button>
+
             <div class="form-actions">
                 <button v-if="isEditing" type="button" @click="cancelEdit" class="btn-cancel">취소</button>
                 <button v-if="!isEditing" type="button" @click="startEditing" class="btn-edit">수정하기</button>
@@ -43,8 +46,55 @@ import { ref, reactive, computed, onMounted } from 'vue';
 import ExpertPopup from './ExpertPopup.vue';
 import { useAuthStore } from '../../stores/authStore';
 import jwtAxios, { API_SERVER_HOST } from '../../util/jwtUtil';
+import axios from 'axios';
 
 const host = API_SERVER_HOST;
+const apply = () => {
+    jwtAxios
+        .post(`http://${host}/api/trainer/save`, [
+            {
+                trainerId: 1,
+                categoryCode: '001',
+                title: 'Personal Trainer',
+                startDate: '2023-01-01',
+                endDate: '2023-12-31',
+                detail: 'Experienced in weight training and nutrition.',
+            },
+            {
+                trainerId: 1,
+                categoryCode: '001',
+                title: 'Yoga Instructor',
+                startDate: '2023-02-01',
+                endDate: '2023-11-30',
+                detail: 'Certified yoga instructor with 5 years of experience.',
+            },
+        ])
+        .then((res) => {
+            const data = res.data;
+            jwtAxios.post(`http://${host}/api/member/trainer-application`, {
+                applicationId: 1,
+                memberId: 1,
+                profileIdList: data,
+            });
+        });
+};
+
+const approve = () => {
+    const applicationId = 1;
+    jwtAxios
+        .patch(`http://${host}/api/admin/trainer-applications/${applicationId}/approve`, null, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then((res) => {
+            console.log(res);
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+};
+
 const authStore = useAuthStore();
 const isAuthenticated = computed(() => authStore.isAuthenticated);
 const memberId = computed(() => authStore.id);
