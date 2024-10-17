@@ -2,76 +2,78 @@
     <div v-if="isVisible" class="popup-overlay">
         <div class="popup">
             <h3 class="popup-title">{{ lessonTypeTitle }} 등록</h3>
-            <div class="form-group">
-                <label for="image">이미지:</label>
-                <div class="image-upload-container">
-                    <div class="image-preview" v-if="imagePreview">
-                        <img :src="imagePreview" alt="Preview" />
+            <div class="popup-content">
+                <div class="form-group">
+                    <label for="image">이미지:</label>
+                    <div class="image-upload-container">
+                        <div class="image-preview" v-if="imagePreview">
+                            <img :src="imagePreview" alt="Preview" />
+                        </div>
+                        <div class="image-upload-button" @click="handleImageButton">
+                            <span>{{ imagePreview ? '-' : '+' }}</span>
+                        </div>
+                        <input
+                            type="file"
+                            id="image"
+                            ref="fileInput"
+                            @change="handleFileUpload"
+                            accept="image/*"
+                            style="display: none"
+                        />
                     </div>
-                    <div class="image-upload-button" @click="handleImageButton">
-                        <span>{{ imagePreview ? '-' : '+' }}</span>
-                    </div>
-                    <input
-                        type="file"
-                        id="image"
-                        ref="fileInput"
-                        @change="handleFileUpload"
-                        accept="image/*"
-                        style="display: none"
-                    />
                 </div>
+                <form @submit.prevent="registerLesson">
+                    <div class="form-group">
+                        <label for="title">레슨명:</label>
+                        <input id="title" v-model="lessonData.title" type="text" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="instructor">강사:</label>
+                        <label>{{ memberId }}</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">가격:</label>
+                        <input
+                            id="price"
+                            v-model="lessonData.price"
+                            type="number"
+                            min="0"
+                            step="100"
+                            @input="validatePrice"
+                            required
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="details">레슨 내용:</label>
+                        <textarea id="details" v-model="lessonData.details" required></textarea>
+                    </div>
+                    <div v-if="isOfflineLesson" class="form-group">
+                        <label for="address">주소:</label>
+                        <div class="address-input">
+                            <input id="address" v-model="lessonData.address" type="text" readonly required />
+                            <button type="button" @click="openAddressSearch">주소 검색</button>
+                        </div>
+                    </div>
+                    <template v-if="isGroupLesson">
+                        <div class="form-group">
+                            <label for="recruitmentStart">모집 시작일:</label>
+                            <input id="recruitmentStart" v-model="lessonData.recruitmentStart" type="date" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="recruitmentEnd">모집 종료일:</label>
+                            <input id="recruitmentEnd" v-model="lessonData.recruitmentEnd" type="date" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="capacity">모집 인원:</label>
+                            <input id="capacity" v-model="lessonData.capacity" type="number" min="1" required />
+                        </div>
+                    </template>
+                </form>
             </div>
-            <form @submit.prevent="registerLesson">
-                <div class="form-group">
-                    <label for="title">레슨명:</label>
-                    <input id="title" v-model="lessonData.title" type="text" required />
-                </div>
-                <div class="form-group">
-                    <label for="instructor">강사:</label>
-                    <label>{{ memberId }}</label>
-                </div>
-                <div class="form-group">
-                    <label for="price">가격:</label>
-                    <input
-                        id="price"
-                        v-model="lessonData.price"
-                        type="number"
-                        min="0"
-                        step="100"
-                        @input="validatePrice"
-                        required
-                    />
-                </div>
-                <div class="form-group">
-                    <label for="details">레슨 내용:</label>
-                    <textarea id="details" v-model="lessonData.details" required></textarea>
-                </div>
-                <div v-if="isOfflineLesson" class="form-group">
-                    <label for="address">주소:</label>
-                    <div class="address-input">
-                        <input id="address" v-model="lessonData.address" type="text" readonly required />
-                        <button type="button" @click="openAddressSearch">주소 검색</button>
-                    </div>
-                </div>
-                <template v-if="isGroupLesson">
-                    <div class="form-group">
-                        <label for="recruitmentStart">모집 시작일:</label>
-                        <input id="recruitmentStart" v-model="lessonData.recruitmentStart" type="date" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="recruitmentEnd">모집 종료일:</label>
-                        <input id="recruitmentEnd" v-model="lessonData.recruitmentEnd" type="date" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="capacity">모집 인원:</label>
-                        <input id="capacity" v-model="lessonData.capacity" type="number" min="1" required />
-                    </div>
-                </template>
-                <div class="form-actions">
-                    <button type="button" @click="close" class="btn-cancel">취소</button>
-                    <button type="submit" class="btn-register">등록하기</button>
-                </div>
-            </form>
+            <div class="form-actions">
+                <button type="button" @click="close" class="btn-cancel">취소</button>
+                <button type="submit" class="btn-register" @click="registerLesson">등록하기</button>
+            </div>
         </div>
     </div>
 </template>
@@ -252,12 +254,22 @@ onMounted(() => {
     border-radius: 8px;
     width: 80%;
     max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.popup-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 1rem;
 }
 
 .popup h2 {
     font-family: 'Do Hyeon', sans-serif;
     font-size: 1.5em;
-    margin-bottom: 4rem;
+    margin-bottom: 2rem;
     text-align: center;
 }
 
@@ -288,7 +300,9 @@ onMounted(() => {
 .form-actions {
     display: flex;
     justify-content: flex-end;
-    margin-top: 4rem;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
 }
 
 .btn-cancel,

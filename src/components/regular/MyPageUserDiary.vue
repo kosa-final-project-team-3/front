@@ -473,7 +473,7 @@ onMounted(async () => {
 .btn-cancel {
     padding: 0.75rem 1.5rem;
     border: none;
-    border-radius: 6px;
+    border-radius: 10px;
     font-size: 1em;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.1s ease;

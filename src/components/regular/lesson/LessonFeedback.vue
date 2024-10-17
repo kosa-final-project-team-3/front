@@ -184,7 +184,7 @@ onMounted(() => {
     margin-bottom: 10px;
     padding: 10px;
     background-color: #f0f0f0;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 .message small {
