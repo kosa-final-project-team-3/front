@@ -1,18 +1,8 @@
 <template>
-    <div class="container">
-        <div class="content-wrapper">
-            <LessonPage :title="'오프라인 레슨'" :links="links" />
-        </div>
-
-        <div class="main-content">
-            <router-view />
-            <MBTICompo />
-        </div>
-    </div>
+    <LessonPage :title="'오프라인 레슨'" :links="links" />
 </template>
 
 <script setup>
-import MBTICompo from '../components/MBTI/MBTICompo.vue';
 import LessonPage from './LessonPage.vue';
 
 const links = [
@@ -21,14 +11,4 @@ const links = [
 ];
 </script>
 
-<style scoped>
-.container {
-    display: flex;
-    gap: 45px;
-}
-
-.content-wrapper {
-    font-family: 'Do Hyeon', sans-serif;
-    border-right: 1px solid #e0e0e0;
-}
-</style>
+<style scoped></style>

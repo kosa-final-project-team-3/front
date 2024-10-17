@@ -1,22 +1,44 @@
 <template>
-    <div class="lesson">
-        <h3>{{ title }}</h3>
-        <router-link class="lesson-item" v-for="link in links" :key="link.name" :to="{ name: link.name }">
-            {{ link.label }}
-        </router-link>
+    <div class="container">
+        <div class="content-wrapper">
+            <div class="lesson">
+                <h3>{{ title }}</h3>
+                <router-link class="lesson-item" v-for="link in links" :key="link.name" :to="{ name: link.name }">
+                    {{ link.label }}
+                </router-link>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <router-view />
+            <MBTICompo v-if="showMBTI" @close="showMBTI = false" />
+        </div>
     </div>
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { ref } from 'vue';
+import MBTICompo from '../components/MBTI/MBTICompo.vue';
 
 const props = defineProps({
     title: String,
     links: Array,
 });
+
+const showMBTI = ref(true);
 </script>
 
 <style scoped>
+.container {
+    display: flex;
+    gap: 45px;
+}
+
+.content-wrapper {
+    font-family: 'Do Hyeon', sans-serif;
+    border-right: 1px solid #e0e0e0;
+}
+
 .lesson {
     width: 250px;
     padding: 1rem;
