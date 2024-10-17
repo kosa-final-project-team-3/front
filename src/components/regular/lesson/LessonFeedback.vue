@@ -106,6 +106,12 @@ onMounted(() => {
     padding: 1rem;
 }
 
+.lesson-feedback h3 {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.5em;
+    margin-bottom: 1.2rem;
+}
+
 .feedback-table {
     width: 100%;
     border-collapse: collapse;
@@ -145,12 +151,20 @@ onMounted(() => {
 .modal-content {
     background-color: #fefefe;
     margin: 15% auto;
-    padding: 20px;
+    padding: 30px;
     border: 1px solid #888;
     width: 80%;
     max-width: 600px;
     max-height: 80vh;
     overflow-y: auto;
+    border-radius: 10px;
+}
+
+.modal-content h4 {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.5em;
+    margin-bottom: 1.2rem;
+    text-align: center;
 }
 
 .close {

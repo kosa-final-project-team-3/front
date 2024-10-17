@@ -386,6 +386,10 @@ onMounted(async () => {
     transition: background-color 0.3s ease;
 }
 
+.btn-add-diary:hover {
+    background-color: #d32f2f;
+}
+
 .diary-form-overlay {
     position: fixed;
     top: 0;
@@ -481,20 +485,20 @@ onMounted(async () => {
     color: white;
 }
 
+.btn-save:hover,
+.btn-edit:hover {
+    background-color: #d32f2f;
+}
+
 .btn-close,
 .btn-cancel {
     background-color: #ababa4;
     color: white;
 }
 
-.btn-save:hover,
-.btn-edit:hover {
-    background-color: #f13223;
-}
-
 .btn-close:hover,
 .btn-cancel:hover {
-    background-color: #e0e0e0;
+    background-color: #9a9a94;
 }
 
 .btn-save:active,

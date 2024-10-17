@@ -397,7 +397,7 @@ const close = () => {
 }
 
 .btn-file-upload:hover {
-    background-color: #00a854;
+    background-color: #d32f2f;
 }
 
 .form-group {
