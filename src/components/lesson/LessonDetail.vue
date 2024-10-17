@@ -27,7 +27,6 @@
             <div class="lesson-info" v-if="selectedType === '그룹 레슨'">
                 <p><strong>모집 기간</strong>: {{ lesson.recruitmentPeriod }}</p>
                 <p><strong>최대 인원</strong>: {{ lesson.maxParticipants }}명</p>
-                <p><strong>레슨 일정</strong>: {{ lesson.schedule }}</p>
             </div>
 
             <div class="lesson-location" v-if="selectedType === '개인 레슨' || selectedType === '그룹 레슨'">
