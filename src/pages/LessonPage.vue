@@ -1,23 +1,13 @@
 <template>
-    <div class="container">
-        <div class="content-wrapper">
-            <div class="lesson">
-                <h3>{{ title }}</h3>
-                <router-link class="lesson-item" v-for="link in links" :key="link.name" :to="{ name: link.name }">
-                    {{ link.label }}
-                </router-link>
-            </div>
-        </div>
-
-        <div class="main-content">
-            <router-view />
-            <MBTICompo v-if="showMBTI" @close="showMBTI = false" />
-        </div>
-    </div>
+    <SidebarLayout :title="title" :links="links">
+        <router-view />
+        <MBTICompo v-if="showMBTI" @close="showMBTI = false" />
+    </SidebarLayout>
 </template>
 
 <script setup>
 import { ref } from 'vue';
+import SidebarLayout from '../components/SidebarLayout.vue';
 import MBTICompo from '../components/MBTI/MBTICompo.vue';
 
 const props = defineProps({
@@ -45,13 +35,13 @@ const showMBTI = ref(true);
 }
 
 .lesson h3 {
-    font-size: 1.5em;
+    font-size: 1.7em;
     padding: 0.5rem;
     margin: 1rem 1rem 2rem 1rem;
 }
 
 .lesson-item {
-    font-size: 1.3em;
+    font-size: 1.45em;
     display: block;
     color: #333;
     padding: 0.5rem;

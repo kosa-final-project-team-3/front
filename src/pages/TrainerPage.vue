@@ -1,21 +1,18 @@
 <template>
-    <div class="trainer-page">
-        <div class="content-wrapper">
-            <aside class="sidebar">
-                <h3>트레이너 페이지</h3>
-                <router-link :to="{ name: 'TrainerPageUserInfo' }" class="sidebar-item">나의 정보</router-link>
-                <router-link :to="{ name: 'TrainerPageLessons' }" class="sidebar-item">나의 레슨 관리</router-link>
-                <router-link :to="{ name: 'TrainerPageUserDiary' }" class="sidebar-item">회원 일지 관리</router-link>
-            </aside>
-        </div>
-
-        <main class="main-content">
-            <router-view></router-view>
-        </main>
-    </div>
+    <SidebarLayout :title="'트레이너 페이지'" :links="links">
+        <router-view></router-view>
+    </SidebarLayout>
 </template>
 
-<script setup></script>
+<script setup>
+import SidebarLayout from '../components/SidebarLayout.vue';
+
+const links = [
+    { name: 'TrainerPageUserInfo', label: '나의 정보' },
+    { name: 'TrainerPageLessons', label: '나의 레슨 관리' },
+    { name: 'TrainerPageUserDiary', label: '회원 일지 관리' },
+];
+</script>
 
 <style scoped>
 .trainer-page {
@@ -33,7 +30,7 @@
 }
 
 .sidebar h3 {
-    font-size: 1.5em;
+    font-size: 1.7em;
     padding: 0.5rem;
     margin: 1rem 1rem 2rem 1rem;
 }

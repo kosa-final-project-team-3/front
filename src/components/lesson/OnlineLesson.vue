@@ -1,24 +1,6 @@
 <template>
     <div class="lesson-container">
         <search-compo @search="handleSearch" @sort="handleSort" />
-        <div class="lesson-category">
-            <button
-                @click="selectCategory('')"
-                :class="{ active: selectedCategory === '' }"
-                class="lesson-category-button"
-            >
-                전체
-            </button>
-            <button
-                v-for="category in categories"
-                :key="category"
-                @click="selectCategory(category)"
-                :class="{ active: selectedCategory === category }"
-                class="lesson-category-button"
-            >
-                {{ category }}
-            </button>
-        </div>
 
         <div class="lesson-card-list">
             <div
