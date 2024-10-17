@@ -96,6 +96,7 @@ const requests = ref([
     { id: 1, name: '김철수' },
     { id: 2, name: '이영희' },
     { id: 3, name: '박지성' },
+    { id: 4, name: '이다영' },
 ]);
 
 const participants = ref([

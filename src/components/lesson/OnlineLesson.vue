@@ -47,13 +47,13 @@ import SearchCompo from '../search/SearchCompo.vue';
 const lessons = ref([
     {
         type: '온라인 레슨',
-        title: '온라인으로 배우는 전신 운동 PT',
-        trainer: '강철희',
+        title: '전신 운동 PT',
+        trainer: '박정환',
         category: '헬스',
         description: '초보자에게 적합한 전신 강화 트레이닝.',
         price: 60000,
         trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
-        image: 'https://kosa-final-project-team-3.github.io/cdn/lesson_image1.jpg',
+        image: 'https://kosa-final-project-team-3.github.io/cdn/lesson_image4.jpeg',
         reviews: [
             '친절하고 설명이 명확합니다.',
             '운동 동작을 세심하게 지도해줘서 좋았어요.',
@@ -61,11 +61,11 @@ const lessons = ref([
             '강의 준비가 철저해요.',
         ],
         ratings: {
-            전문성: 4,
+            전문성: 5,
             친절: 5,
-            설명: 4,
+            설명: 5,
             시간엄수: 5,
-            열정: 4,
+            열정: 5,
         },
     },
     {
