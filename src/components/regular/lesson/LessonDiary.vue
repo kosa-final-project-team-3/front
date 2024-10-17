@@ -130,7 +130,7 @@ const closeDiaryDetail = () => {
     border: none;
     background-color: #f0f0f0;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 .category-selector button:hover {

@@ -203,7 +203,7 @@ select {
     border: none;
     padding: 0.7rem 1.4rem;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 10px;
     font-size: 1.1em;
     transition: background-color 0.3s ease;
     margin-top: 20px;
@@ -226,7 +226,7 @@ select {
     margin-left: 0.7rem;
     cursor: pointer;
     font-size: 1.1em;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 .btn-save,
