@@ -212,21 +212,21 @@ button {
 
 button[type='submit'] {
     background-color: #f13223;
-    border-radius: 10px;
+    border-radius: 5%;
     color: white;
     font-size: 1em;
 }
 
 button[type='button']:nth-child(2) {
     background-color: #2196f3;
-    border-radius: 10px;
+    border-radius: 5px;
     color: white;
     font-size: 1em;
 }
 
 button[type='button']:last-child {
     background-color: #ababa4;
-    border-radius: 10px;
+    border-radius: 5px;
     color: white;
     font-size: 1em;
 }

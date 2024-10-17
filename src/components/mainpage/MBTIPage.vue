@@ -223,7 +223,7 @@ h2 {
 
 .progress {
     height: 100%;
-    background-color: #4caf50; /* 진행 색상 */
+    background-color: #f13223; /* 진행 색상 */
     transition: width 0.3s ease; /* 부드러운 애니메이션 효과 */
 }
 
@@ -240,7 +240,7 @@ h2 {
 
 .answer-button {
     padding: 10px 15px;
-    background-color: #4caf50;
+    background-color: #f13223;
     color: white;
     border: none;
     border-radius: 20px;
@@ -248,12 +248,12 @@ h2 {
 }
 
 .answer-button:hover {
-    background-color: #45a049;
+    background-color: #d32f2f;
 }
 
 .result-button {
     padding: 15px 25px;
-    background-color: #007bff;
+    background-color: #f13223;
     color: white;
     border: none;
     border-radius: 10px;
@@ -264,7 +264,7 @@ h2 {
 }
 
 .result-button:hover {
-    background-color: #0056b3;
+    background-color: #d32f2f;
     transform: scale(1.05);
 }
 
@@ -280,28 +280,30 @@ h2 {
 
 .reset-button {
     padding: 10px 15px;
-    background-color: #f44336;
+    background-color: #ababa4;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
+    font-size: 1.1em;
 }
 
 .reset-button:hover {
-    background-color: #e53935;
+    background-color: #8e8e8e;
 }
 
 .share-button {
     padding: 10px 15px;
-    background-color: #ffeb3b; /* 밝은 노란색 배경 */
-    color: black;
+    background-color: #f13223; /* 밝은 노란색 배경 */
+    color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
     margin: 20px;
+    font-size: 1.1em;
 }
 
 .share-button:hover {
-    background-color: #fdd835;
+    background-color: #d32f2f;
 }
 </style>
