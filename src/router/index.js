@@ -8,7 +8,7 @@ import MiddleCompo from '../components/layouts/MiddleCompo.vue';
 import modalRoutes from './modalRoutes';
 import AIFeedback from '../components/lesson/AIFeedback.vue';
 import MBTIPage from '../components/mainpage/MBTIPage.vue';
-
+import adminRoutes from './adminRoutes';
 const routes = [
     {
         path: '/',
