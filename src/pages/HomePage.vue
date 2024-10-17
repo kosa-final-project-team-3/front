@@ -223,6 +223,7 @@ const popularLessons = ref([
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    margin-bottom: 100px;
 }
 
 .lesson-image {
