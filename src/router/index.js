@@ -8,7 +8,7 @@ import MiddleCompo from '../components/layouts/MiddleCompo.vue';
 import modalRoutes from './modalRoutes';
 import AIFeedback from '../components/lesson/AIFeedback.vue';
 import MBTIPage from '../components/mainpage/MBTIPage.vue';
-
+import adminRoutes from './adminRoutes';
 const routes = [
     {
         path: '/',
@@ -37,7 +37,7 @@ const routes = [
 
 const router = createRouter({
     history: createWebHistory(),
-    routes: [...routes, ...loginRoutes, ...mypageRoutes, ...trainerpageRoutes, ...modalRoutes],
+    routes: [...routes, ...loginRoutes, ...mypageRoutes, ...trainerpageRoutes, ...modalRoutes, ...adminRoutes],
 });
 
 // 전역 네비게이션 가드 추가
