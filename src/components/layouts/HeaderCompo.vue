@@ -15,7 +15,9 @@
                 </div>
                 <div class="navbar-login">
                     <div class="dynamic-link">
-                        <router-link v-if="isTrainer" to="/trainer" active-class="active">트레이너페이지</router-link>
+                        <router-link v-if="isTrainer" to="/trainer/info" active-class="active"
+                            >트레이너페이지</router-link
+                        >
                         <router-link v-if="isAuthenticated" to="/mypage" active-class="active">마이페이지</router-link>
                     </div>
                     <div class="auth-links">
