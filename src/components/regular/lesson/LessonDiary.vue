@@ -34,7 +34,7 @@
         <div v-if="selectedDiary" class="modal">
             <div class="modal-content">
                 <span class="close" @click="closeDiaryDetail">&times;</span>
-                <h4>{{ selectedDiary.title }} 레슨 일지</h4>
+                <h3>{{ selectedDiary.title }} 레슨 일지</h3>
                 <p><strong>트레이너:</strong> {{ selectedDiary.trainer }}</p>
                 <p><strong>날짜:</strong> {{ formatDate(selectedDiary.date) }}</p>
                 <p><strong>내용:</strong></p>
@@ -112,6 +112,12 @@ const closeDiaryDetail = () => {
     padding: 1rem;
 }
 
+.lesson-diary h3 {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.5em;
+    margin-bottom: 1.2rem;
+}
+
 .category-selector {
     display: flex;
     justify-content: center;
@@ -124,8 +130,13 @@ const closeDiaryDetail = () => {
     border: none;
     background-color: #f0f0f0;
     cursor: pointer;
+    border-radius: 5px;
 }
 
+.category-selector button:hover {
+    background-color: #ababa4; /* 호버 시 배경색 변경 */
+    color: white; /* 호버 시 텍스트 색상 변경 (선택사항) */
+}
 .category-selector button.active {
     background-color: #f13223;
     color: white;
@@ -180,6 +191,18 @@ const closeDiaryDetail = () => {
     border: 1px solid #888;
     width: 80%;
     max-width: 600px;
+    border-radius: 10px;
+}
+
+.modal-content h3 {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.5em;
+    margin: 1.2rem 0;
+    text-align: center;
+}
+
+.modal-content p:last-child {
+    margin-bottom: 30px;
 }
 
 .close {
