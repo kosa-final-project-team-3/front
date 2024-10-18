@@ -28,9 +28,6 @@
                 전문가로 전환하기
             </button>
 
-            <button type="button" @click="apply" class="btn-become-expert">트레이너 신청</button>
-            <button type="button" @click="approve" class="btn-become-expert">트레이너 신청 승인</button>
-
             <div class="form-actions">
                 <button v-if="isEditing" type="button" @click="cancelEdit" class="btn-cancel">취소</button>
                 <button v-if="!isEditing" type="button" @click="startEditing" class="btn-edit">수정하기</button>
