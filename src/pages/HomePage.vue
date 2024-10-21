@@ -1,9 +1,5 @@
 <template>
     <div class="home-container">
-        <Modal v-if="showLoginModal" @close="showLoginModal = false">
-            <KakaoLoginCompo />
-        </Modal>
-
         <div class="banner">
             <swiper
                 :modules="modules"
@@ -64,16 +60,11 @@
 import { ref } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
-import KakaoLoginCompo from '../components/login/KakaoLoginCompo.vue';
-import { useAuthStore } from '../stores/authStore';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import Modal from '../components/common/Modal.vue';
 
 const modules = [Autoplay, Pagination, Navigation];
-const authStore = useAuthStore();
-const showLoginModal = ref(false);
 
 const bannerImages = ref([
     { src: 'https://kosa-final-project-team-3.github.io/cdn/banner_1.png', alt: 'Banner 1' },
@@ -116,12 +107,6 @@ const lessonTypes = ref([
 const setActive = (index, isActive) => {
     lessonTypes.value[index].isActive = isActive;
 };
-
-const openLogin = () => {
-    showLoginModal.value = true;
-};
-
-authStore.openLogin = openLogin;
 
 const popularLessons = ref([
     {
