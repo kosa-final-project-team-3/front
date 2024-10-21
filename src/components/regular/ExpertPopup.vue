@@ -176,7 +176,7 @@ const submitApplication = async () => {
 
             const profiles = certificationCategories.flatMap((category) =>
                 category.certifications.map((cert) => ({
-                    trainerId: authStore.id,
+                    memberId: authStore.id,
                     categoryCode: getCategoryCode(category.name),
                     categoryName: category.name,
                     title: cert.name,
@@ -187,12 +187,28 @@ const submitApplication = async () => {
             );
 
             // 프로필 정보 저장
-            await jwtAxios.post(`http://${API_SERVER_HOST}/api/trainer/save`, profiles);
+            const response = await jwtAxios.post(`http://${API_SERVER_HOST}/api/trainer/save`, profiles);
+
+            const { profileIdList, memberId } = response.data;
+
+            const applyData = {
+                applicationId: null,
+                memberId: memberId,
+                exerciseCategoryCode: selectedCategory.value,
+                profileIdList: profileIdList,
+            };
 
             // 운동 카테고리 업데이트
-            await jwtAxios.put(`http://${API_SERVER_HOST}/api/trainer/${authStore.id}/update-category`, null, {
-                params: { exerciseCategoryCode: selectedCategory.value },
-            });
+            jwtAxios
+                .post(`http://${API_SERVER_HOST}/api/member/trainer-application`, applyData)
+                .then((res) => {
+                    const data = res.data;
+                    // 바로 승인 절차 진행. admin 페이지 생성 후 리팩토링
+                    jwtAxios.patch(`http://${API_SERVER_HOST}/api/admin/trainer-applications/${data.id}/approve`);
+                })
+                .catch((e) => {
+                    throw e;
+                });
 
             alert('전문가 전환 신청이 완료되었습니다.');
             emit('close');
