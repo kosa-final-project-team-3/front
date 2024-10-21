@@ -2,33 +2,32 @@
     <div class="lesson-detail-container">
         <div class="modal-content">
             <button class="close-button" @click="$emit('close')">×</button>
+            <button class="close-button" @click="$emit('close')">×</button>
 
             <div class="lesson-header">
-                <div class="lesson-image-container">
-                    <img v-if="lesson.image" :src="lesson.image" alt="레슨 이미지" class="lesson-image" />
-                    <div v-else class="lesson-image-placeholder">이미지 없음</div>
-                </div>
-                <div class="lesson-details">
-                    <p><strong>종목:</strong> {{ lesson.category }}</p>
-                    <p v-if="selectedType !== '온라인 피드백'"><strong>레슨명:</strong> {{ lesson.title }}</p>
-                    <p><strong>강사:</strong> {{ lesson.trainer }}</p>
-                    <p><strong>가격:</strong> {{ lesson.price }}원</p>
-                    <p><strong>강사 이력:</strong></p>
-                    <ul>
-                        <li v-for="profile in lesson.trainerProfile" :key="profile">{{ profile }}</li>
-                    </ul>
+                <h2>{{ lesson.title }}</h2>
+                <div class="lesson-header-container">
+                    <div class="lesson-image-container">
+                        <img v-if="lesson.image" :src="lesson.image" alt="레슨 이미지" class="lesson-image" />
+                        <div v-else class="lesson-image-placeholder">이미지 없음</div>
+                    </div>
+                    <div class="lesson-details">
+                        <p><strong>종목:</strong> {{ lesson.category }}</p>
+                        <p><strong>강사:</strong> {{ lesson.trainer }}</p>
+                        <p><strong>가격:</strong> {{ lesson.price }}원</p>
+                        <div class="lesson-description">
+                            <strong>레슨 상세 내역:</strong>
+                            <div class="description-content">
+                                {{ lesson.description }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="lesson-description">
-                <p><strong>레슨 상세 내역:</strong></p>
-                <p>{{ lesson.description }}</p>
-            </div>
-
-            <div v-if="selectedType === '그룹 레슨'">
+            <div class="lesson-info" v-if="selectedType === '그룹 레슨'">
                 <p><strong>모집 기간</strong>: {{ lesson.recruitmentPeriod }}</p>
                 <p><strong>최대 인원</strong>: {{ lesson.maxParticipants }}명</p>
-                <p><strong>레슨 일정</strong>: {{ lesson.schedule }}</p>
             </div>
 
             <div class="lesson-location" v-if="selectedType === '개인 레슨' || selectedType === '그룹 레슨'">
@@ -37,29 +36,29 @@
             </div>
 
             <div class="trainer-evaluation">
-                <p><strong>트레이너 평가:</strong></p>
                 <div class="evaluation-container">
-                    <radar-chart v-if="lesson.ratings" :ratings="lesson.ratings" />
-
-                    <div class="review-list">
-                        <h4>강사 한줄평</h4>
-                        <ul>
-                            <li v-for="(review, index) in lesson.reviews" :key="index">
-                                {{ review }}
-                            </li>
-                        </ul>
+                    <div class="evaluation-title">
+                        <strong>트레이너 평가</strong>
+                    </div>
+                    <div class="radar-chart-container">
+                        <radar-chart v-if="lesson.ratings" :ratings="lesson.ratings" />
                     </div>
                 </div>
-            </div>
-            <div class="inquiry-button-container">
-                <button class="inquiry-button" @click="handleInquiry">문의하기</button>
+                <div class="review-list">
+                    <div class="review-title"><strong>한줄평</strong></div>
+                    <ul>
+                        <li v-for="(review, index) in lesson.reviews" :key="index">
+                            {{ review }}
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
+        <button class="inquiry-button floating" @click="handleInquiry">문의하기</button>
     </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
 import RadarChart from './RadarChart.vue';
 import MapView from './MapView.vue';
 
@@ -87,18 +86,14 @@ const handleInquiry = () => {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 2;
-    font-family: 'Do Hyeon', sans-serif;
-    font-size: 1.2em;
-    border-radius: 5px;
+    z-index: 1000;
 }
 
 .modal-content {
     background-color: white;
-    padding: 30px;
     border-radius: 10px;
-    width: 500px;
-    height: 600px;
+    width: 70%;
+    height: 80%;
     overflow-y: auto;
     position: relative;
 }
@@ -109,13 +104,29 @@ const handleInquiry = () => {
 
 .lesson-header {
     display: flex;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.lesson-header h2 {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 2rem;
     margin-bottom: 20px;
 }
 
+.lesson-header-container {
+    display: flex;
+    flex-direction: row;
+}
+
 .lesson-image-container {
-    width: 200px;
-    height: 200px;
+    float: left;
+    width: 50%;
     margin-right: 20px;
+    max-height: 300px;
 }
 
 .lesson-image {
@@ -139,24 +150,82 @@ const handleInquiry = () => {
     flex: 1;
 }
 
+.lesson-description {
+    max-height: 200px;
+    margin-right: 20px;
+    overflow: hidden;
+}
+
+.description-content {
+    margin-top: 10px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.description-content::-webkit-scrollbar {
+    width: 5px;
+}
+
+.description-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.description-content::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+.description-content::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.lesson-info {
+    margin: 40px;
+}
+
+.lesson-location {
+    margin: 40px;
+}
+
+.trainer-evaluation {
+    margin: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 .evaluation-container {
+    width: 50%;
+    float: left;
     display: flex;
     flex-direction: row;
     align-items: center;
+    flex-direction: column;
+    margin-bottom: 30px;
+}
+
+.evaluation-title {
+    margin-bottom: 20px;
 }
 
 #radarChart {
-    width: 200px;
-    height: 200px;
+    width: 100%;
+    height: 100%;
 }
 
 .review-list {
-    padding-left: 20px;
+    width: 50%;
+    float: left;
+}
+
+.review-title {
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 .review-list ul {
     list-style-type: none;
-    padding: 0;
+    padding-left: 20px;
 }
 
 .review-list li {
@@ -164,33 +233,51 @@ const handleInquiry = () => {
 }
 
 .close-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: transparent;
+    position: fixed;
+    top: calc(10vh + 30px);
+    right: calc(20%);
+    background-color: white;
     border: none;
-    font-size: 20px;
+    font-size: 2rem;
     cursor: pointer;
     color: #333;
-}
-
-.inquiry-button-container {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
     display: flex;
-    justify-content: right;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
 }
 
 .inquiry-button {
-    margin: 10px 0px 0px 0px;
-    padding: 10px 20px;
-    background-color: #00bf63;
+    background-color: #f13223;
     color: white;
     border: none;
-    border-radius: 4px;
+    padding: 0.7rem 1.4rem;
     cursor: pointer;
-    transition: background-color 0.3s;
+    border-radius: 10px;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
+    float: right;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .inquiry-button:hover {
-    background-color: #009e52;
+    background-color: #d32f2f;
+    transform: translateY(-2px);
+}
+
+.inquiry-button.floating {
+    position: fixed;
+    bottom: calc(10vh + 20px);
+    right: calc(20%);
+    z-index: 1002;
+}
+
+.map-view {
+    position: relative;
+    z-index: 1;
 }
 </style>

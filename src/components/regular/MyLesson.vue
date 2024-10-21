@@ -42,7 +42,6 @@ const currentTabComponent = computed(() => {
 
 <style scoped>
 .my-lessons {
-    max-width: 1000px;
     margin: 40px;
     font-size: 1em;
 }
@@ -58,7 +57,7 @@ const currentTabComponent = computed(() => {
     display: flex;
     justify-content: space-between;
     margin-bottom: 1.5rem;
-    border-radius: 8px;
+    border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -87,7 +86,7 @@ const currentTabComponent = computed(() => {
 .tab-content {
     background-color: #fff;
     padding: 1.5rem;
-    border-radius: 8px;
+    border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 

@@ -252,7 +252,7 @@ const close = () => {
 .expert-popup {
     background-color: white;
     padding: 2rem;
-    border-radius: 12px;
+    border-radius: 10px;
     max-width: 600px;
     width: 90%;
     max-height: 85vh;
@@ -311,7 +311,7 @@ const close = () => {
 .remove-btn {
     padding: 0.4rem 0.8rem;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 10px;
     border: none;
     font-size: 1.1em;
     margin-left: 0.5rem;
@@ -344,7 +344,7 @@ const close = () => {
     padding: 0.6rem 1.2rem;
     font-size: 1.1em;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 10px;
     border: none;
     transition: background-color 0.3s ease;
 }
@@ -413,7 +413,7 @@ const close = () => {
 }
 
 .btn-file-upload:hover {
-    background-color: #00a854;
+    background-color: #d32f2f;
 }
 
 .form-group {

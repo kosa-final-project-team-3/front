@@ -38,7 +38,9 @@
                 <p><strong>열정:</strong> {{ selectedReview.passion }}</p>
                 <p><strong>코멘트:</strong></p>
                 <p>{{ selectedReview.comment }}</p>
-                <button @click="startEditing">수정</button>
+                <div class="button-container">
+                    <button @click="startEditing">수정</button>
+                </div>
             </div>
         </div>
 
@@ -54,7 +56,9 @@
                     코멘트:
                     <textarea v-model="editingReview.comment" rows="5"></textarea>
                 </label>
-                <button @click="saveReview">완료</button>
+                <div class="button-container">
+                    <button @click="saveReview">완료</button>
+                </div>
             </div>
         </div>
     </div>
@@ -133,6 +137,12 @@ const saveReview = () => {
     padding: 1rem;
 }
 
+.expert-review h3 {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.5em;
+    margin-bottom: 1.2rem;
+}
+
 .review-table {
     width: 100%;
     border-collapse: collapse;
@@ -171,11 +181,29 @@ const saveReview = () => {
 
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto;
+    margin: 10% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
     max-width: 600px;
+    border-radius: 10px;
+}
+
+.modal-content h4 {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.5em;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.modal-content p:last-child {
+    margin-bottom: 2rem;
+}
+
+.button-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
 }
 
 .close {
@@ -183,13 +211,6 @@ const saveReview = () => {
     float: right;
     font-size: 28px;
     font-weight: bold;
-    cursor: pointer;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
     cursor: pointer;
 }
 
@@ -206,15 +227,17 @@ textarea {
 }
 
 button {
-    margin-top: 10px;
-    padding: 5px 10px;
     background-color: #f13223;
     color: white;
     border: none;
+    padding: 0.7rem 1.4rem;
     cursor: pointer;
+    border-radius: 10px;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #d32f2f;
 }
 </style>

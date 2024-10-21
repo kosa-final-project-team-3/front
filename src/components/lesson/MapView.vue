@@ -22,9 +22,7 @@ onMounted(async () => {
     if (data.length > 0) {
         const { lat, lon } = data[0];
         const map = L.map(mapContainer.value).setView([lat, lon], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors',
-        }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
         L.marker([lat, lon]).addTo(map).bindPopup(`<b>${location}</b>`).openPopup();
     } else {
@@ -37,5 +35,7 @@ onMounted(async () => {
 .map-container {
     width: 100%;
     height: 300px;
+    position: relative;
+    z-index: 1; /* 명시적으로 낮은 z-index 설정 */
 }
 </style>
