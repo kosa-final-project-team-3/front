@@ -27,7 +27,6 @@
             <div class="lesson-info" v-if="selectedType === '그룹 레슨'">
                 <p><strong>모집 기간</strong>: {{ lesson.recruitmentPeriod }}</p>
                 <p><strong>최대 인원</strong>: {{ lesson.maxParticipants }}명</p>
-                <p><strong>레슨 일정</strong>: {{ lesson.schedule }}</p>
             </div>
 
             <div class="lesson-location" v-if="selectedType === '개인 레슨' || selectedType === '그룹 레슨'">
@@ -236,7 +235,7 @@ const handleInquiry = () => {
 .close-button {
     position: fixed;
     top: calc(10vh + 30px);
-    right: calc(50% - 370px);
+    right: calc(20%);
     background-color: white;
     border: none;
     font-size: 2rem;
@@ -273,7 +272,7 @@ const handleInquiry = () => {
 .inquiry-button.floating {
     position: fixed;
     bottom: calc(10vh + 20px);
-    right: calc(50% - 370px);
+    right: calc(20%);
     z-index: 1002;
 }
 

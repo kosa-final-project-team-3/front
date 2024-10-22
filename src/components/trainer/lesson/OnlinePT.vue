@@ -41,7 +41,7 @@ const onlinePTLessons = ref([
         category: '헬스',
         description: '초보자에게 적합한 전신 강화 트레이닝.',
         price: 60000,
-        image: 'https://www.example.com/online-pt-weight-loss.jpg',
+        image: 'https://kosa-final-project-team-3.github.io/cdn/lesson_image1.jpg',
     },
     {
         id: 2,
@@ -50,7 +50,7 @@ const onlinePTLessons = ref([
         category: '헬스',
         description: '근력 향상을 위한 온라인 PT 프로그램',
         price: 65000,
-        image: 'https://www.example.com/online-pt-strength.jpg',
+        image: 'https://kosa-final-project-team-3.github.io/cdn/lesson_image1.jpg',
     },
     {
         id: 3,
@@ -59,7 +59,7 @@ const onlinePTLessons = ref([
         category: '요가',
         description: '유연성과 균형 감각을 향상시키는 온라인 요가 클래스',
         price: 55000,
-        image: 'https://www.example.com/online-pt-yoga.jpg',
+        image: 'https://kosa-final-project-team-3.github.io/cdn/lesson_image1.jpg',
     },
     {
         id: 4,
@@ -68,7 +68,7 @@ const onlinePTLessons = ref([
         category: '홈트레이닝',
         description: '집에서 할 수 있는 기초 운동 프로그램',
         price: 50000,
-        image: 'https://www.example.com/online-pt-home-training.jpg',
+        image: 'https://kosa-final-project-team-3.github.io/cdn/lesson_image1.jpg',
     },
 ]);
 

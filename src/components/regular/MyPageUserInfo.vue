@@ -203,9 +203,14 @@ select {
     border: none;
     padding: 0.7rem 1.4rem;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 10px;
     font-size: 1.1em;
     transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+.btn-become-expert:hover {
+    background-color: #d32f2f;
 }
 
 .form-actions {
@@ -221,7 +226,7 @@ select {
     margin-left: 0.7rem;
     cursor: pointer;
     font-size: 1.1em;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 .btn-save,
@@ -232,10 +237,23 @@ select {
     transition: background-color 0.3s ease;
 }
 
+.btn-edit {
+    margin-bottom: 50px;
+}
+
 .btn-cancel {
     background-color: #ababa4;
     color: white;
     border: none;
+}
+
+.btn-cancel:hover {
+    background-color: #9a9a94;
+}
+
+.btn-save:hover,
+.btn-edit:hover {
+    background-color: #d32f2f;
 }
 
 .expert-info {

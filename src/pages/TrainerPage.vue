@@ -51,4 +51,8 @@
 .sidebar-item:hover {
     color: #f13223;
 }
+
+.router-link-active {
+    color: #f13223;
+}
 </style>

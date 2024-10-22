@@ -41,7 +41,7 @@ const lessons = ref([
         price: 60000,
         trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
         location: '서울 종로구 혜화로 20',
-        image: 'https://www.example.com/lesson-pt.jpg',
+        image: 'https://kosa-final-project-team-3.github.io/cdn/lesson_image1.jpg',
         reviews: [
             '친절하고 설명이 명확합니다.',
             '운동 동작을 세심하게 지도해줘서 좋았어요.',
@@ -64,7 +64,7 @@ const lessons = ref([
         price: 60000,
         trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
         location: '서울 종로구 혜화로 20',
-        image: 'https://www.example.com/lesson-pt.jpg',
+        image: 'https://kosa-final-project-team-3.github.io/cdn/lesson_image1.jpg',
         reviews: [
             '친절하고 설명이 명확합니다.',
             '운동 동작을 세심하게 지도해줘서 좋았어요.',
@@ -87,7 +87,7 @@ const lessons = ref([
         price: 60000,
         trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
         location: '서울 종로구 혜화로 20',
-        image: 'https://www.example.com/lesson-pt.jpg',
+        image: 'https://kosa-final-project-team-3.github.io/cdn/lesson_image1.jpg',
         reviews: [
             '친절하고 설명이 명확합니다.',
             '운동 동작을 세심하게 지도해줘서 좋았어요.',
@@ -110,7 +110,7 @@ const lessons = ref([
         price: 60000,
         trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
         location: '서울 종로구 혜화로 20',
-        image: 'https://www.example.com/lesson-pt.jpg',
+        image: 'https://kosa-final-project-team-3.github.io/cdn/lesson_image1.jpg',
         reviews: [
             '친절하고 설명이 명확합니다.',
             '운동 동작을 세심하게 지도해줘서 좋았어요.',
@@ -133,7 +133,7 @@ const lessons = ref([
         price: 60000,
         trainerProfile: ['국가대표 출신 강사', '스포츠지도사 자격증 보유'],
         location: '서울 종로구 혜화로 20',
-        image: 'https://www.example.com/lesson-pt.jpg',
+        image: 'https://kosa-final-project-team-3.github.io/cdn/lesson_image1.jpg',
         reviews: [
             '친절하고 설명이 명확합니다.',
             '운동 동작을 세심하게 지도해줘서 좋았어요.',

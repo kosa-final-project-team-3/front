@@ -49,7 +49,7 @@ const onlineFeedbackLessons = ref([
         category: '헬스',
         description: '운동 자세에 대한 전문적인 피드백을 제공합니다.',
         price: 30000,
-        image: 'https://www.example.com/online-feedback-posture.jpg',
+        image: 'https://kosa-final-project-team-3.github.io/cdn/lesson_image1.jpg',
     },
     {
         id: 2,
@@ -58,7 +58,7 @@ const onlineFeedbackLessons = ref([
         category: '영양',
         description: '개인 맞춤 식단 분석과 조언을 제공합니다.',
         price: 35000,
-        image: 'https://www.example.com/online-feedback-diet.jpg',
+        image: 'https://www.example.com/online-feedback-posture.jpg',
     },
     // 더 많은 온라인 피드백 레슨 데이터...
 ]);
