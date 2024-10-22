@@ -62,6 +62,7 @@ const inquirySubmit = () => {
     justify-content: center;
     align-items: center;
     z-index: 2;
+    z-index: 2;
 }
 
 .modal-content {
