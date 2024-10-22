@@ -28,7 +28,6 @@
 
 <script setup>
 import { ref } from 'vue';
-import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
     lesson: Object,
@@ -62,6 +61,7 @@ const inquirySubmit = () => {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 2;
     z-index: 2;
 }
 

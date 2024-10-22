@@ -386,7 +386,7 @@ const isSameDay = (date1, date2) => {
     background-color: #f13223;
     color: white;
     border: none;
-    border-radius: 10px;
+    border-radius: 5px;
     cursor: pointer;
 }
 
@@ -524,7 +524,7 @@ const isSameDay = (date1, date2) => {
     color: white;
     border: none;
     cursor: pointer;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 .selected-date-list .btn-delete {
     margin-left: 5px;
@@ -533,7 +533,7 @@ const isSameDay = (date1, date2) => {
     color: white;
     border: none;
     cursor: pointer;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
 .status-indicators {

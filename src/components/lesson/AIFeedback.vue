@@ -1,10 +1,19 @@
 <template>
-    <div class="container">
+    <div class="container" @keydown="handleKeydown" tabindex="0" ref="container">
         <aside class="sidebar">
             <h3>AI 피드백</h3>
+            <!-- 새로운 요소 추가 -->
+            <div class="sidebar-content">
+                <p>자세를 분석하고 개선하는 데 도움을 드립니다.</p>
+                <ul class="feature-list">
+                    <li>실시간 포즈 감지</li>
+                    <li>맞춤형 피드백</li>
+                    <li>음성 안내</li>
+                </ul>
+            </div>
         </aside>
         <main class="main-content">
-            <div class="video-container">
+            <div class="video-container" ref="videoContainer">
                 <div class="video-wrapper">
                     <video ref="video" width="960" height="540" autoplay playsinline></video>
                     <canvas ref="canvas" width="960" height="540" style="position: absolute; top: 0; left: 0"></canvas>
@@ -39,17 +48,22 @@
                 </div>
 
                 <div class="controls">
-                    타이머 : {{ duration }}초 &nbsp;
-                    <input
-                        type="range"
-                        v-model="duration"
-                        min="7"
-                        max="30"
-                        :disabled="isRunning || !isWebcamEnabled"
-                        class="timer-slider"
-                    />
+                    <div class="timer-control">
+                        <span class="timer-label">타이머: {{ duration }}초</span>
+                        <input
+                            type="range"
+                            v-model="duration"
+                            min="5"
+                            max="30"
+                            :disabled="isRunning || !isWebcamEnabled"
+                            class="timer-slider"
+                        />
+                    </div>
                     <button @click="startCountdown" :disabled="isRunning || !isWebcamEnabled" class="start-button">
-                        Start
+                        Start (S)
+                    </button>
+                    <button @click="toggleFullscreen" class="fullscreen-button">
+                        {{ isFullscreen ? '전체화면 종료 (F)' : '전체화면 (F)' }}
                     </button>
                 </div>
             </div>
@@ -72,10 +86,52 @@ let stream = null;
 
 const count = ref(7);
 const isRunning = ref(false);
-const duration = ref(7);
+const duration = ref(5);
 const circumference = 2 * Math.PI * 20;
 const shouldProcessResults = ref(false);
 const isWebcamEnabled = ref(false);
+
+const videoContainer = ref(null);
+const isFullscreen = ref(false);
+
+const container = ref(null);
+
+const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+        if (videoContainer.value.requestFullscreen) {
+            videoContainer.value.requestFullscreen();
+        } else if (videoContainer.value.mozRequestFullScreen) {
+            // Firefox
+            videoContainer.value.mozRequestFullScreen();
+        } else if (videoContainer.value.webkitRequestFullscreen) {
+            // Chrome, Safari and Opera
+            videoContainer.value.webkitRequestFullscreen();
+        } else if (videoContainer.value.msRequestFullscreen) {
+            // IE/Edge
+            videoContainer.value.msRequestFullscreen();
+        }
+        isFullscreen.value = true;
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            // Firefox
+            document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+            // Chrome, Safari and Opera
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            // IE/Edge
+            document.msExitFullscreen();
+        }
+        isFullscreen.value = false;
+    }
+};
+
+// 전체 화면 변경 이벤트 리스너
+const handleFullscreenChange = () => {
+    isFullscreen.value = !!document.fullscreenElement;
+};
 
 // 카운트다운 애니메이션
 const dashOffset = computed(() => {
@@ -129,6 +185,13 @@ onMounted(async () => {
     canvasCtx = canvas.value.getContext('2d');
 
     await enableWebcam();
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+    container.value.focus(); // 컨테이너에 포커스를 줍니다.
 });
 
 // 웹캠을 활성화하는 함수
@@ -289,6 +352,10 @@ onBeforeRouteLeave((to, from, next) => {
 // 컴포넌트가 언마운트될 때 웹캠 종료
 onUnmounted(() => {
     disableWebcam();
+    document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
 });
 
 const audio = new Audio();
@@ -315,6 +382,16 @@ const textToSpeech = async (text) => {
         console.error('Error with TTS API:', error);
     }
 };
+
+const handleKeydown = (event) => {
+    if (event.key === 's' || event.key === 'S') {
+        if (!isRunning.value && isWebcamEnabled.value) {
+            startCountdown();
+        }
+    } else if (event.key === 'f' || event.key === 'F') {
+        toggleFullscreen();
+    }
+};
 </script>
 
 <style scoped>
@@ -322,17 +399,46 @@ const textToSpeech = async (text) => {
     display: flex;
     font-family: 'Do Hyeon', sans-serif;
     height: 100vh;
+    background-color: #f0f4f8; /* 배경색 추가 */
+    outline: none; /* 포커스 시 외곽선을 제거합니다 */
 }
 
 .sidebar {
-    width: 250px;
-    padding: 3rem 0rem 3rem 3rem;
+    width: 410px;
+    padding: 3rem 2rem;
+    background-color: #ffffff; /* 사이드바 배경색 */
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
 }
 
 .sidebar h3 {
-    font-size: 1.5em;
+    font-size: 1.8em;
     padding: 0.5rem;
-    margin: 1rem 1rem 2rem 1rem;
+    margin: 0 0 1.5rem 0;
+    color: #f13223; /* 제목 색상 변경 */
+    border-bottom: 2px solid #f13223; /* 밑줄 추가 */
+}
+
+.sidebar-content {
+    margin-top: 2rem;
+    font-size: 25px;
+}
+
+.feature-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.feature-list li {
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.feature-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #f13223;
 }
 
 .main-content {
@@ -340,11 +446,15 @@ const textToSpeech = async (text) => {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 10px;
+    padding: 2rem;
 }
 
 .video-container {
     width: 960px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
 }
 
 .video-wrapper {
@@ -382,7 +492,7 @@ const textToSpeech = async (text) => {
 
 .start-button {
     margin-left: 30px;
-    padding: 8px 30px;
+    padding: 10px 30px;
     background-color: #f13223;
     color: white;
     border: none;
@@ -390,6 +500,15 @@ const textToSpeech = async (text) => {
     cursor: pointer;
     font-family: 'Do Hyeon', sans-serif;
     font-size: 0.8em;
+    transition: background-color 0.3s ease;
+}
+
+.start-button:hover {
+    background-color: #d62c1f;
+}
+
+.timer-label {
+    margin-right: 10px;
 }
 
 .timer-slider {
@@ -402,6 +521,7 @@ const textToSpeech = async (text) => {
     outline: none;
     opacity: 0.7;
     transition: opacity 0.2s;
+    min-width: 200px; /* 슬라이더의 최소 너비 설정 */
 }
 .timer-slider:hover {
     opacity: 1;
@@ -423,5 +543,131 @@ const textToSpeech = async (text) => {
     border-radius: 50%;
     background: #f13223;
     cursor: pointer;
+}
+
+.fullscreen-button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 0.8em;
+    transition: background-color 0.3s ease;
+}
+
+.fullscreen-button:hover {
+    background-color: #357abd;
+}
+
+/* 전체 화면 모드일 때 비디오 컨테이너 스타일 */
+:fullscreen .video-container {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+}
+
+:fullscreen .video-wrapper {
+    width: 100%;
+    height: 100%;
+}
+
+:fullscreen video,
+:fullscreen canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* 다른 브라우저를 위한 전체 화면 스타일 */
+:-webkit-full-screen .video-container {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+}
+:-moz-full-screen .video-container {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+}
+:-ms-fullscreen .video-container {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+}
+
+:-webkit-full-screen .video-wrapper {
+    width: 100%;
+    height: 100%;
+}
+:-moz-full-screen .video-wrapper {
+    width: 100%;
+    height: 100%;
+}
+:-ms-fullscreen .video-wrapper {
+    width: 100%;
+    height: 100%;
+}
+
+:-webkit-full-screen video,
+:-webkit-full-screen canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+:-moz-full-screen video,
+:-moz-full-screen canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+:-ms-fullscreen video,
+:-ms-fullscreen canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* 전체 화면 모드일 때 컨트롤 스타일 */
+:fullscreen .controls {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+:fullscreen .start-button,
+:fullscreen .fullscreen-button {
+    font-size: 1em;
+    padding: 12px 24px;
+}
+
+/* 다른 브라우저를 위한 전체 화면 컨트롤 스타일 */
+:-webkit-full-screen .controls {
+    /* ... */
+}
+:-moz-full-screen .controls {
+    /* ... */
+}
+:-ms-fullscreen .controls {
+    /* ... */
+}
+
+:-webkit-full-screen .start-button,
+:-webkit-full-screen .fullscreen-button {
+    /* ... */
+}
+:-moz-full-screen .start-button,
+:-moz-full-screen .fullscreen-button {
+    /* ... */
+}
+:-ms-fullscreen .start-button,
+:-ms-fullscreen .fullscreen-button {
+    /* ... */
 }
 </style>

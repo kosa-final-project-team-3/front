@@ -2,6 +2,7 @@
     <div class="lesson-detail-container">
         <div class="modal-content">
             <button class="close-button" @click="$emit('close')">×</button>
+            <button class="close-button" @click="$emit('close')">×</button>
 
             <div class="lesson-header">
                 <h2>{{ lesson.title }}</h2>
@@ -58,7 +59,6 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
 import RadarChart from './RadarChart.vue';
 import MapView from './MapView.vue';
 

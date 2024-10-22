@@ -94,7 +94,7 @@
             <div v-if="error" class="error-message">{{ error }}</div>
             <div class="button-group">
                 <button @click="generateFeedback" :disabled="isLoading">피드백 생성</button>
-                <button @click="$emit('close')">닫기</button>
+                <button class="close-button" @click="$emit('close')">닫기</button>
             </div>
         </div>
     </div>
@@ -192,9 +192,16 @@ const generateFeedback = async () => {
     overflow-y: auto;
 }
 
-h3,
+h3 {
+    font-family: 'Do Hyeon', sans-serif;
+    text-align: center;
+    font-size: 1.5em;
+}
+
 h4 {
     font-family: 'Do Hyeon', sans-serif;
+    text-align: right;
+    margin-right: 10%;
 }
 
 .member-feedback {
@@ -211,6 +218,10 @@ h4 {
     display: flex;
     align-items: center;
     gap: 10px;
+}
+
+.option:last-child {
+    margin-bottom: 10%;
 }
 
 .option > label {
@@ -256,15 +267,25 @@ h4 {
 }
 
 textarea {
-    width: calc(100% - 110px);
+    width: calc(100% - 80px);
     height: 60px;
     resize: vertical;
 }
 
 .button-group {
     display: flex;
-    justify-content: space-between;
     margin-top: 20px;
+    justify-content: center;
+    gap: 5px;
+}
+
+.close-button {
+    background-color: #ababa4;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.1em;
 }
 
 button {
@@ -275,7 +296,7 @@ button {
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    font-size: 1em;
+    font-size: 1.1em;
 }
 
 .error-message {
