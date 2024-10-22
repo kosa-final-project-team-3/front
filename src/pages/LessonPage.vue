@@ -1,42 +1,47 @@
 <template>
-    <SidebarLayout :title="'트레이너 페이지'" :links="links">
-        <router-view></router-view>
+    <SidebarLayout :title="title" :links="links">
+        <router-view />
+        <MBTICompo v-if="showMBTI" @close="showMBTI = false" />
     </SidebarLayout>
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import SidebarLayout from '../components/SidebarLayout.vue';
+import MBTICompo from '../components/MBTI/MBTICompo.vue';
 
-const links = [
-    { name: 'TrainerPageUserInfo', label: '나의 정보' },
-    { name: 'TrainerPageLessons', label: '나의 레슨 관리' },
-    { name: 'TrainerPageUserDiary', label: '회원 일지 관리' },
-];
+const props = defineProps({
+    title: String,
+    links: Array,
+});
+
+const showMBTI = ref(true);
 </script>
 
 <style scoped>
-.trainer-page {
+.container {
     display: flex;
-    height: 100vh;
+    gap: 45px;
 }
 
 .content-wrapper {
     font-family: 'Do Hyeon', sans-serif;
+    border-right: 1px solid #e0e0e0;
 }
 
-.sidebar {
+.lesson {
     width: 250px;
     padding: 1rem;
 }
 
-.sidebar h3 {
+.lesson h3 {
     font-size: 1.7em;
     padding: 0.5rem;
     margin: 1rem 1rem 2rem 1rem;
 }
 
-.sidebar-item {
-    font-size: 1.3em;
+.lesson-item {
+    font-size: 1.45em;
     display: block;
     color: #333;
     padding: 0.5rem;
@@ -45,11 +50,12 @@ const links = [
     transition: color 0.3s ease;
 }
 
-.sidebar-item:hover {
+.lesson-item:hover {
     color: #f13223;
 }
 
 .router-link-exact-active {
+    font-weight: bold;
     color: #f13223;
 }
 </style>

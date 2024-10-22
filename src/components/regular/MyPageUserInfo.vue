@@ -43,8 +43,55 @@ import { ref, reactive, computed, onMounted } from 'vue';
 import ExpertPopup from './ExpertPopup.vue';
 import { useAuthStore } from '../../stores/authStore';
 import jwtAxios, { API_SERVER_HOST } from '../../util/jwtUtil';
+import axios from 'axios';
 
 const host = API_SERVER_HOST;
+const apply = () => {
+    jwtAxios
+        .post(`http://${host}/api/trainer/save`, [
+            {
+                trainerId: 1,
+                categoryCode: '001',
+                title: 'Personal Trainer',
+                startDate: '2023-01-01',
+                endDate: '2023-12-31',
+                detail: 'Experienced in weight training and nutrition.',
+            },
+            {
+                trainerId: 1,
+                categoryCode: '001',
+                title: 'Yoga Instructor',
+                startDate: '2023-02-01',
+                endDate: '2023-11-30',
+                detail: 'Certified yoga instructor with 5 years of experience.',
+            },
+        ])
+        .then((res) => {
+            const data = res.data;
+            jwtAxios.post(`http://${host}/api/member/trainer-application`, {
+                applicationId: 1,
+                memberId: 1,
+                profileIdList: data,
+            });
+        });
+};
+
+const approve = () => {
+    const applicationId = 1;
+    jwtAxios
+        .patch(`http://${host}/api/admin/trainer-applications/${applicationId}/approve`, null, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then((res) => {
+            console.log(res);
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+};
+
 const authStore = useAuthStore();
 const isAuthenticated = computed(() => authStore.isAuthenticated);
 const memberId = computed(() => authStore.id);
@@ -203,9 +250,14 @@ select {
     border: none;
     padding: 0.7rem 1.4rem;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 10px;
     font-size: 1.1em;
     transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+.btn-become-expert:hover {
+    background-color: #d32f2f;
 }
 
 .form-actions {
@@ -221,7 +273,7 @@ select {
     margin-left: 0.7rem;
     cursor: pointer;
     font-size: 1.1em;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 .btn-save,
@@ -232,10 +284,23 @@ select {
     transition: background-color 0.3s ease;
 }
 
+.btn-edit {
+    margin-bottom: 50px;
+}
+
 .btn-cancel {
     background-color: #ababa4;
     color: white;
     border: none;
+}
+
+.btn-cancel:hover {
+    background-color: #9a9a94;
+}
+
+.btn-save:hover,
+.btn-edit:hover {
+    background-color: #d32f2f;
 }
 
 .expert-info {

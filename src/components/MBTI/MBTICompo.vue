@@ -11,7 +11,7 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 
 const mbtiContent = ref(null);
-const initialTop = 200;
+const initialTop = 250;
 const isVisible = ref(true);
 
 defineEmits(['close']);
@@ -53,7 +53,7 @@ onUnmounted(() => {
 
 .mbti-content {
     position: absolute;
-    top: 200px;
+    top: 250px;
     right: 50px;
     z-index: 1;
     transition: top 0.3s ease;

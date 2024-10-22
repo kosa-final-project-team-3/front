@@ -176,7 +176,7 @@ const submitApplication = async () => {
 
             const profiles = certificationCategories.flatMap((category) =>
                 category.certifications.map((cert) => ({
-                    trainerId: authStore.id,
+                    memberId: authStore.id,
                     categoryCode: getCategoryCode(category.name),
                     categoryName: category.name,
                     title: cert.name,
@@ -187,12 +187,28 @@ const submitApplication = async () => {
             );
 
             // 프로필 정보 저장
-            await jwtAxios.post(`http://${API_SERVER_HOST}/api/trainer/save`, profiles);
+            const response = await jwtAxios.post(`http://${API_SERVER_HOST}/api/trainer/save`, profiles);
+
+            const { profileIdList, memberId } = response.data;
+
+            const applyData = {
+                applicationId: null,
+                memberId: memberId,
+                exerciseCategoryCode: selectedCategory.value,
+                profileIdList: profileIdList,
+            };
 
             // 운동 카테고리 업데이트
-            await jwtAxios.put(`http://${API_SERVER_HOST}/api/trainer/${authStore.id}/update-category`, null, {
-                params: { exerciseCategoryCode: selectedCategory.value },
-            });
+            jwtAxios
+                .post(`http://${API_SERVER_HOST}/api/member/trainer-application`, applyData)
+                .then((res) => {
+                    const data = res.data;
+                    // 바로 승인 절차 진행. admin 페이지 생성 후 리팩토링
+                    jwtAxios.patch(`http://${API_SERVER_HOST}/api/admin/trainer-applications/${data.id}/approve`);
+                })
+                .catch((e) => {
+                    throw e;
+                });
 
             alert('전문가 전환 신청이 완료되었습니다.');
             emit('close');
@@ -236,7 +252,7 @@ const close = () => {
 .expert-popup {
     background-color: white;
     padding: 2rem;
-    border-radius: 12px;
+    border-radius: 10px;
     max-width: 600px;
     width: 90%;
     max-height: 85vh;
@@ -295,7 +311,7 @@ const close = () => {
 .remove-btn {
     padding: 0.4rem 0.8rem;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 10px;
     border: none;
     font-size: 1.1em;
     margin-left: 0.5rem;
@@ -328,7 +344,7 @@ const close = () => {
     padding: 0.6rem 1.2rem;
     font-size: 1.1em;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 10px;
     border: none;
     transition: background-color 0.3s ease;
 }
@@ -397,7 +413,7 @@ const close = () => {
 }
 
 .btn-file-upload:hover {
-    background-color: #00a854;
+    background-color: #d32f2f;
 }
 
 .form-group {
