@@ -53,6 +53,7 @@
         />
 
         <inquiry-form v-if="showInquiryForm" :lesson="inquiryLesson" @close="closeInquiryForm" />
+        <inquiry-form v-if="showInquiryForm" :lesson="inquiryLesson" @close="closeInquiryForm" />
     </div>
 </template>
 
